@@ -16,6 +16,6 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-	  distribution: 'adopt'
+          distribution: 'adopt'
       - name: Build and test with Maven
         run: mvn --batch-mode --update-snapshots verify
