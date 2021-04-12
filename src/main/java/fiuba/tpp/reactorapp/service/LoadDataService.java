@@ -93,7 +93,7 @@ public class LoadDataService {
                     Optional<Adsorbente> adsorbente = adsorbenteRepository.findByNombreAndAndParticulaT(nombreAdsorbente, sizeAdsorbente);
 
                     Adsorbente nuevoAdsorbente = new Adsorbente();
-                    if(adsorbente.isEmpty()){
+                    if(!adsorbente.isPresent()){
                         nuevoAdsorbente.setNombre(nombreAdsorbente);
                         nuevoAdsorbente.setParticulaT(sizeAdsorbente);
                         nuevoAdsorbente.setpHCargaCero(pHCargaCero);
@@ -107,7 +107,7 @@ public class LoadDataService {
                     Optional<Adsorbato> adsorbato = adsorbatoRepository.findByNombreIonAndCargaIonAndRadioIonico(nombreIon,cargaIon,radioIonico);
 
                     Adsorbato nuevoAdsorbato = new Adsorbato();
-                    if(adsorbato.isEmpty()){
+                    if(!adsorbato.isPresent()){
                         nuevoAdsorbato.setNombreIon(nombreIon);
                         nuevoAdsorbato.setCargaIon(cargaIon);
                         nuevoAdsorbato.setRadioIonico(radioIonico);
@@ -122,7 +122,7 @@ public class LoadDataService {
 
                     Optional<Reactor> reactor = reactorRepository.findByAdsorbenteAndAdsorbatoAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente,sorbato,qMax,tiempoEquilibrio,temperatura,pHInicial);
 
-                    if(reactor.isEmpty()){
+                    if(!reactor.isPresent()){
                         Reactor nuevoReactor = new Reactor();
                         nuevoReactor.setAdsorbente(sorbente);
                         nuevoReactor.setAdsorbato(sorbato);
@@ -138,8 +138,6 @@ public class LoadDataService {
 
                         reactorRepository.save(nuevoReactor);
                     }
-
-
                 }
             }
 
