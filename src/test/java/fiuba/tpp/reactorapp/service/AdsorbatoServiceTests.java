@@ -2,28 +2,26 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
+import org.junit.jupiter.api.Test;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
 import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @RunWith(SpringRunner.class)
-public class AdsorbatoServiceTest {
+public class AdsorbatoServiceTests {
 
     @Autowired
     private AdsorbatoService adsorbatoService;
 
 
     @Test
-    public void createAdsorbatoTest(){
+    public void testCreateAdsorbato(){
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(request);
 
@@ -34,7 +32,7 @@ public class AdsorbatoServiceTest {
 
 
     @Test
-    public void findAllTest() {
+    public void testFindAll() {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
         adsorbatoService.createAdsorbato(request);
         List<Adsorbato> adsorbatos = adsorbatoService.getAll();
