@@ -1,5 +1,7 @@
 package fiuba.tpp.reactorapp.entities;
 
+import fiuba.tpp.reactorapp.model.request.ReactorRequest;
+
 import javax.persistence.*;
 
 @Entity
@@ -50,6 +52,20 @@ public class Reactor {
         this.reaccionQuimica = reaccionQuimica;
         this.observacion = observacion;
         this.fuente = fuente;
+    }
+
+    public Reactor(Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
+        this.adsorbato = adsorbato;
+        this.adsorbente = adsorbente;
+        this.qmax = request.getQmax();
+        this.tiempoEquilibrio = request.getTiempoEquilibrio();
+        this.temperatura = request.getTemperatura();
+        this.phinicial = request.getPhinicial();
+        this.complejacion = request.isComplejacion();
+        this.intercambioIonico = request.isIntercambioIonico();
+        this.reaccionQuimica = request.isReaccionQuimica();
+        this.observacion = request.getObservacion();
+        this.fuente = request.getFuente();
     }
 
     public Long getId() {

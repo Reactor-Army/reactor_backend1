@@ -1,16 +1,6 @@
-package fiuba.tpp.reactorapp.entities;
+package fiuba.tpp.reactorapp.model.request;
 
-import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name ="ADSORBENTE")
-public class Adsorbente {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AdsorbenteRequest {
 
     private String nombre;
 
@@ -22,32 +12,15 @@ public class Adsorbente {
 
     private Float pHCargaCero;
 
-
-    public Adsorbente() {
+    public AdsorbenteRequest() {
     }
 
-    public Adsorbente(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
+    public AdsorbenteRequest(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
         this.nombre = nombre;
         this.particulaT = particulaT;
         this.sBet = sBet;
         this.vBet = vBet;
         this.pHCargaCero = pHCargaCero;
-    }
-
-    public Adsorbente(AdsorbenteRequest request){
-        this.nombre = request.getNombre();
-        this.particulaT = request.getParticulaT();
-        this.sBet = request.getsBet();
-        this.vBet = request.getvBet();
-        this.pHCargaCero = request.getpHCargaCero();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -89,9 +62,4 @@ public class Adsorbente {
     public void setpHCargaCero(Float pHCargaCero) {
         this.pHCargaCero = pHCargaCero;
     }
-
-    public String toString() {
-        return nombre + "|" + particulaT + "|" + sBet + "|" + vBet + "|" + pHCargaCero;
-    }
 }
-
