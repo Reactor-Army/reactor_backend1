@@ -17,8 +17,10 @@ import fiuba.tpp.reactorapp.service.AdsorbatoService;
 import fiuba.tpp.reactorapp.service.AdsorbenteService;
 import fiuba.tpp.reactorapp.service.ReactorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,48 +40,41 @@ public class ReactorController {
 
 
     @PostMapping(value= "/adsorbato")
-    public ResponseEntity<?> createAdsorbato(@RequestBody AdsorbatoRequest request) {
+    public AdsorbatoResponse createAdsorbato(@RequestBody AdsorbatoRequest request) {
         AdsorbatoResponse response = null;
         try{
             validateAdsorbato(request);
             response = new AdsorbatoResponse(adsorbatoService.createAdsorbato(request));
         } catch (InvalidRequestException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Los adsorbatos deben tener un nombre"));
-
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Los adsorbatos deben tener un nombre", e);
         }
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @PutMapping(value= "/adsorbato")
-    public ResponseEntity<?> updateAdsorbato(@RequestBody AdsorbatoRequest request) {
+    public AdsorbatoResponse updateAdsorbato(@RequestBody AdsorbatoRequest request) {
         AdsorbatoResponse response = null;
         try{
             validateAdsorbatoUpdate(request);
             response = new AdsorbatoResponse(adsorbatoService.updateAdsorbato(request));
         } catch (InvalidRequestException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Es necesario el ID del adsorbato"));
-
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbato", e);
         } catch (ComponentNotFoundException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("El adsorbato no existe"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El adsorbato no existe", e);
         }
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @DeleteMapping(value= "/adsorbato/{id}")
-    public ResponseEntity<?> deleteAdsorbato(@PathVariable Long id){
+    public void deleteAdsorbato(@PathVariable Long id){
         try {
             adsorbatoService.deleteAdsorbato(id);
-            return ResponseEntity.ok().body(new ErrorResponse("Adsorbato borrado correctamente"));
         } catch (ComponentNotFoundException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("El adsorbato no existe"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El adsorbato no existe", e);
         }
 
     }
@@ -94,47 +89,41 @@ public class ReactorController {
     }
 
     @PostMapping(value= "/adsorbente")
-    public ResponseEntity<?> createAdsorbente(@RequestBody AdsorbenteRequest request) {
+    public AdsorbenteResponse createAdsorbente(@RequestBody AdsorbenteRequest request) {
         AdsorbenteResponse response = null;
         try{
             validateAdsorbente(request);
             response = new AdsorbenteResponse(adsorbenteService.createAdsorbente(request));
         } catch (InvalidRequestException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Los adsorbentes deben tener un nombre"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Los adsorbentes deben tener un nombre", e);
         }
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @PutMapping(value= "/adsorbente")
-    public ResponseEntity<?> updateAdsorbente(@RequestBody AdsorbenteRequest request) {
+    public AdsorbenteResponse updateAdsorbente(@RequestBody AdsorbenteRequest request) {
         AdsorbenteResponse response = null;
         try{
             validateAdsorbenteUpdate(request);
             response = new AdsorbenteResponse(adsorbenteService.updateAdsorbente(request));
         } catch (InvalidRequestException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Es necesario el ID del adsorbente"));
-
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbente", e);
         } catch (ComponentNotFoundException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("El adsorbente no existe"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
         }
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @DeleteMapping(value= "/adsorbente/{id}")
-    public ResponseEntity<?> deleteAdsorbente(@PathVariable Long id){
+    public void deleteAdsorbente(@PathVariable Long id){
         try {
             adsorbenteService.deleteAdsorbente(id);
-            return ResponseEntity.ok().body(new ErrorResponse("Adsorbente borrado correctamente"));
         } catch (ComponentNotFoundException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("El adsorbente no existe"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
         }
     }
 
@@ -148,50 +137,44 @@ public class ReactorController {
     }
 
     @PostMapping(value= "/reactor")
-    public ResponseEntity<?> createReactor(@RequestBody ReactorRequest request) {
+    public ReactorResponse createReactor(@RequestBody ReactorRequest request) {
         ReactorResponse response = null;
         try{
             validateReactor(request);
             response = new ReactorResponse(reactorService.createReactor(request));
         } catch (InvalidRequestException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Los adsorbentes deben tener un nombre"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El reactor debe estar conformado de un adsorbato o un adsorbente", e);
         } catch (InvalidReactorException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Adsorbato o Adsorbente invalidos"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Adsorbente o Adsorbato invalidos", e);
         }
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @PutMapping(value= "/reactor")
-    public ResponseEntity<?> updateReactor(@RequestBody ReactorRequest request) {
+    public ReactorResponse updateReactor(@RequestBody ReactorRequest request) {
         ReactorResponse response = null;
         try{
             validateReactorUpdate(request);
             response = new ReactorResponse(reactorService.updateReactor(request));
         } catch (InvalidRequestException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Es necesario el ID del reactpr"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Es necesario el ID del reactor", e);
         } catch (InvalidReactorException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("Adsorbato,Adsorbente o reactor invalido"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Adsorbato,Adsorbente o reactor invalido", e);
         }
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     @DeleteMapping(value= "/reactor/{id}")
-    public ResponseEntity<?> deleteReactor(@PathVariable Long id){
+    public void deleteReactor(@PathVariable Long id){
         try {
             reactorService.deleteReactor(id);
-            return ResponseEntity.ok().body(new ErrorResponse("Reactor borrado correctamente"));
         } catch (ComponentNotFoundException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new ErrorResponse("El reactor no existe"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "El reactor no existe", e);
         }
     }
 
