@@ -28,6 +28,15 @@ public class Adsorbato {
     }
 
     public Adsorbato(AdsorbatoRequest adsorbato) {
+        copyData(adsorbato);
+    }
+
+    public Adsorbato update(AdsorbatoRequest adsorbato){
+        copyData(adsorbato);
+        return this;
+    }
+
+    private void copyData(AdsorbatoRequest adsorbato){
         this.nombreIon = adsorbato.getNombreIon();
         this.cargaIon = adsorbato.getCargaIon();
         this.radioIonico = adsorbato.getRadioIonico();

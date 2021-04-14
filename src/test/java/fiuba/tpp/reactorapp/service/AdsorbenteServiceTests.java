@@ -2,10 +2,12 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
+import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
 import org.junit.Assert;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,6 @@ public class AdsorbenteServiceTests {
         Assert.assertEquals(adsorbente.getvBet(), request.getvBet());
     }
 
-
     @Test
     public void testFindAll() {
         AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
@@ -42,4 +43,43 @@ public class AdsorbenteServiceTests {
         List<Adsorbente> adsorbentes = adsorbenteService.getAll();
         Assert.assertTrue(adsorbentes.size() == 1);
     }
+
+    @Test
+    public void testUpdateAdsorbente() throws ComponentNotFoundException {
+        AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbenteRequest requestUpdate = new AdsorbenteRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        requestUpdate.setId(1L);
+        adsorbenteService.createAdsorbente(request);
+        Adsorbente updated = adsorbenteService.updateAdsorbente(requestUpdate);
+
+        Assert.assertEquals(updated.getNombre(), requestUpdate.getNombre());
+        Assert.assertEquals(updated.getParticulaT(), requestUpdate.getParticulaT());
+        Assert.assertEquals(updated.getvBet(), requestUpdate.getvBet());
+    }
+
+    @Test
+    public void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
+        Assertions.assertThrows(ComponentNotFoundException.class, () -> {
+            AdsorbenteRequest requestUpdate = new AdsorbenteRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+            requestUpdate.setId(2L);
+            Adsorbente updated = adsorbenteService.updateAdsorbente(requestUpdate);
+        });
+    }
+
+    @Test
+    public void testDeleteAdsorbente() throws ComponentNotFoundException {
+        AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        adsorbenteService.createAdsorbente(request);
+        adsorbenteService.deleteAdsorbente(1L);
+        Assert.assertTrue(adsorbenteService.getAll().isEmpty());
+
+    }
+
+    @Test
+    public void testComponentNotFoundExceptionDelete() throws ComponentNotFoundException {
+        Assertions.assertThrows(ComponentNotFoundException.class, () -> {
+            adsorbenteService.deleteAdsorbente(2L);
+        });
+    }
+
 }

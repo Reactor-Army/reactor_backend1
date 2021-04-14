@@ -3,6 +3,8 @@ package fiuba.tpp.reactorapp.model.request;
 
 public class ReactorRequest {
 
+    private Long id;
+
     private Long idAdsorbato;
 
     private Long idAdsorbente;
@@ -128,5 +130,13 @@ public class ReactorRequest {
 
     public void setFuente(String fuente) {
         this.fuente = fuente;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

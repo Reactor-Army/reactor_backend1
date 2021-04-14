@@ -35,6 +35,15 @@ public class Adsorbente {
     }
 
     public Adsorbente(AdsorbenteRequest request){
+        copyData(request);
+    }
+
+    public Adsorbente update(AdsorbenteRequest request){
+        copyData(request);
+        return this;
+    }
+
+    private void copyData(AdsorbenteRequest request){
         this.nombre = request.getNombre();
         this.particulaT = request.getParticulaT();
         this.sBet = request.getsBet();

@@ -2,6 +2,8 @@ package fiuba.tpp.reactorapp.model.request;
 
 public class AdsorbatoRequest {
 
+    private Long id;
+
     private String nombreIon;
     private Float cargaIon;
     private Float radioIonico;
@@ -47,5 +49,13 @@ public class AdsorbatoRequest {
 
     public void setLimiteVertido(Float limiteVertido) {
         this.limiteVertido = limiteVertido;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

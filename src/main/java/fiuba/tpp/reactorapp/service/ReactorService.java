@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.service;
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
+import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbatoRepository;
@@ -33,6 +34,26 @@ public class ReactorService {
             return reactorRepository.save(new Reactor(adsorbato.get(),adsorbente.get(),request));
         }
         throw new InvalidReactorException();
+    }
+
+    public Reactor updateReactor(ReactorRequest request) throws InvalidReactorException {
+        Optional<Adsorbente> adsorbente = adsorbenteRepository.findById(request.getIdAdsorbente());
+        Optional<Adsorbato> adsorbato = adsorbatoRepository.findById(request.getIdAdsorbato());
+        Optional<Reactor> reactor = reactorRepository.findById(request.getId());
+        if(adsorbato.isPresent() && adsorbente.isPresent() && reactor.isPresent()){
+            return reactorRepository.save(reactor.get().update(adsorbato.get(),adsorbente.get(),request));
+        }
+        throw new InvalidReactorException();
+    }
+
+    public void deleteReactor(Long id) throws ComponentNotFoundException {
+        Optional<Reactor> reactor = reactorRepository.findById(id);
+        if(reactor.isPresent()){
+            reactorRepository.delete(reactor.get());
+            return;
+        }
+        throw new ComponentNotFoundException();
+
     }
 
     public List<Reactor> getAll(){

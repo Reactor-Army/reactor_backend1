@@ -55,6 +55,15 @@ public class Reactor {
     }
 
     public Reactor(Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
+        copyData(adsorbato,adsorbente,request);
+    }
+
+    public Reactor update (Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
+        copyData(adsorbato,adsorbente,request);
+        return this;
+    }
+
+    private void copyData(Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
         this.adsorbato = adsorbato;
         this.adsorbente = adsorbente;
         this.qmax = request.getQmax();

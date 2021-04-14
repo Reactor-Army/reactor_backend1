@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
+import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
@@ -51,6 +52,38 @@ public class ReactorController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping(value= "/adsorbato")
+    public ResponseEntity<?> updateAdsorbato(@RequestBody AdsorbatoRequest request) {
+        AdsorbatoResponse response = null;
+        try{
+            validateAdsorbatoUpdate(request);
+            response = new AdsorbatoResponse(adsorbatoService.updateAdsorbato(request));
+        } catch (InvalidRequestException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("Es necesario el ID del adsorbato"));
+
+        } catch (ComponentNotFoundException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("El adsorbato no existe"));
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value= "/adsorbato/{id}")
+    public ResponseEntity<?> deleteAdsorbato(@PathVariable Long id){
+        try {
+            adsorbatoService.deleteAdsorbato(id);
+            return ResponseEntity.ok().body(new ErrorResponse("Adsorbato borrado correctamente"));
+        } catch (ComponentNotFoundException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("El adsorbato no existe"));
+        }
+
+    }
+
     @GetMapping(value = "/adsorbato")
     public List<AdsorbatoResponse> getAdsorbatos(){
         List<AdsorbatoResponse> adsorbatos = new ArrayList<AdsorbatoResponse>();
@@ -72,6 +105,37 @@ public class ReactorController {
                     .body(new ErrorResponse("Los adsorbentes deben tener un nombre"));
         }
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping(value= "/adsorbente")
+    public ResponseEntity<?> updateAdsorbente(@RequestBody AdsorbenteRequest request) {
+        AdsorbenteResponse response = null;
+        try{
+            validateAdsorbenteUpdate(request);
+            response = new AdsorbenteResponse(adsorbenteService.updateAdsorbente(request));
+        } catch (InvalidRequestException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("Es necesario el ID del adsorbente"));
+
+        } catch (ComponentNotFoundException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("El adsorbente no existe"));
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value= "/adsorbente/{id}")
+    public ResponseEntity<?> deleteAdsorbente(@PathVariable Long id){
+        try {
+            adsorbenteService.deleteAdsorbente(id);
+            return ResponseEntity.ok().body(new ErrorResponse("Adsorbente borrado correctamente"));
+        } catch (ComponentNotFoundException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("El adsorbente no existe"));
+        }
     }
 
     @GetMapping(value = "/adsorbente")
@@ -101,6 +165,36 @@ public class ReactorController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping(value= "/reactor")
+    public ResponseEntity<?> updateReactor(@RequestBody ReactorRequest request) {
+        ReactorResponse response = null;
+        try{
+            validateReactorUpdate(request);
+            response = new ReactorResponse(reactorService.updateReactor(request));
+        } catch (InvalidRequestException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("Es necesario el ID del reactpr"));
+        } catch (InvalidReactorException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("Adsorbato,Adsorbente o reactor invalido"));
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value= "/reactor/{id}")
+    public ResponseEntity<?> deleteReactor(@PathVariable Long id){
+        try {
+            reactorService.deleteReactor(id);
+            return ResponseEntity.ok().body(new ErrorResponse("Reactor borrado correctamente"));
+        } catch (ComponentNotFoundException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ErrorResponse("El reactor no existe"));
+        }
+    }
+
     @GetMapping(value = "/reactor")
     public List<ReactorResponse> getReactores(){
         List<ReactorResponse> reactores = new ArrayList<ReactorResponse>();
@@ -114,13 +208,26 @@ public class ReactorController {
         if(request.getNombreIon() == null || request.getNombreIon().isEmpty()) throw new InvalidRequestException();
     }
 
+    private void validateAdsorbatoUpdate(AdsorbatoRequest request) throws InvalidRequestException {
+        if(request.getId() == null) throw new InvalidRequestException();
+    }
+
     private void validateAdsorbente(AdsorbenteRequest request) throws InvalidRequestException {
         if(request.getNombre() == null || request.getNombre().isEmpty()) throw new InvalidRequestException();
+    }
+    private void validateAdsorbenteUpdate(AdsorbenteRequest request) throws InvalidRequestException {
+        if(request.getId() == null) throw new InvalidRequestException();
     }
 
     private void validateReactor(ReactorRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbato() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbente() == null ) throw new InvalidRequestException();
+    }
+
+    private void validateReactorUpdate(ReactorRequest request) throws InvalidRequestException {
+        if(request.getIdAdsorbato() == null ) throw new InvalidRequestException();
+        if(request.getIdAdsorbente() == null ) throw new InvalidRequestException();
+        if(request.getId()== null ) throw new InvalidRequestException();
     }
 
 }
