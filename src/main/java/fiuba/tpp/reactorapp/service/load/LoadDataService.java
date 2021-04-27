@@ -1,4 +1,4 @@
-package fiuba.tpp.reactorapp.service;
+package fiuba.tpp.reactorapp.service.load;
 
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
