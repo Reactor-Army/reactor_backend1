@@ -39,7 +39,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -64,7 +64,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -79,7 +79,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -101,7 +101,7 @@ public class ReactorServiceTests {
             AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
             Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-            AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+            AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
             Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
             ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -118,7 +118,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");

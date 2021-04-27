@@ -24,7 +24,7 @@ public class AdsorbatoServiceTests {
 
     @Test
     public void testCreateAdsorbato(){
-        AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(request);
 
         Assert.assertEquals(adsorbato.getNombreIon(), request.getNombreIon());
@@ -35,7 +35,7 @@ public class AdsorbatoServiceTests {
 
     @Test
     public void testFindAll() {
-        AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         adsorbatoService.createAdsorbato(request);
         List<Adsorbato> adsorbatos = adsorbatoService.getAll();
         Assert.assertTrue(adsorbatos.size() == 1);
@@ -43,8 +43,8 @@ public class AdsorbatoServiceTests {
 
     @Test
     public void testUpdateAdsorbato() throws ComponentNotFoundException {
-        AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
-        AdsorbatoRequest requestUpdate = new AdsorbatoRequest("Prueba2",12f,10f,100f);
+        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+        AdsorbatoRequest requestUpdate = new AdsorbatoRequest("Prueba2","PruebaIUPAC",12f,10f,100f);
         requestUpdate.setId(1L);
         adsorbatoService.createAdsorbato(request);
         Adsorbato updated = adsorbatoService.updateAdsorbato(requestUpdate);
@@ -58,8 +58,8 @@ public class AdsorbatoServiceTests {
     @Test
     public void testComponentNotFoundExceptionUpdate() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
-            AdsorbatoRequest requestUpdate = new AdsorbatoRequest("Prueba2",12f,10f,100f);
+            AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+            AdsorbatoRequest requestUpdate = new AdsorbatoRequest("Prueba2","PruebaIUPAC",12f,10f,100f);
             requestUpdate.setId(2L);
             adsorbatoService.createAdsorbato(request);
             Adsorbato updated = adsorbatoService.updateAdsorbato(requestUpdate);
@@ -68,7 +68,7 @@ public class AdsorbatoServiceTests {
 
     @Test
     public void testDeleteAdsorbato() throws ComponentNotFoundException {
-        AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.deleteAdsorbato(1l);
         Assert.assertTrue(adsorbatoService.getAll().isEmpty());
@@ -78,7 +78,7 @@ public class AdsorbatoServiceTests {
     @Test
     public void testComponentNotFoundExceptionDelete() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            AdsorbatoRequest request = new AdsorbatoRequest("Prueba",1.2f,1f,10f);
+            AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
             adsorbatoService.createAdsorbato(request);
             adsorbatoService.deleteAdsorbato(2L);
         });
