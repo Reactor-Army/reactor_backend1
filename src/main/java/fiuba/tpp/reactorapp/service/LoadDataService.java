@@ -65,7 +65,7 @@ public class LoadDataService {
                     StringBuilder cargaBuilder = new StringBuilder();
                     cargaBuilder.append(cargaIonText);
                     cargaBuilder.reverse();
-                    Float cargaIon = Float.valueOf(cargaBuilder.toString());
+                    Integer cargaIon = Integer.valueOf(cargaBuilder.toString());
 
                     Float radioIonico = (float) row.getCell(4).getNumericCellValue();
                     Float qMax = (float) row.getCell(5).getNumericCellValue();

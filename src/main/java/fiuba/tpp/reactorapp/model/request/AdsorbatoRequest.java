@@ -5,15 +5,17 @@ public class AdsorbatoRequest {
     private Long id;
 
     private String nombreIon;
-    private Float cargaIon;
+    private String nombreIUPAC;
+    private Integer cargaIon;
     private Float radioIonico;
     private Float limiteVertido;
 
     public AdsorbatoRequest() {
     }
 
-    public AdsorbatoRequest(String nombreIon, Float cargaIon, Float radioIonico, Float limiteVertido) {
+    public AdsorbatoRequest(String nombreIon, String nombreIUPAC,Integer cargaIon, Float radioIonico, Float limiteVertido) {
         this.nombreIon = nombreIon;
+        this.nombreIUPAC = nombreIUPAC;
         this.cargaIon = cargaIon;
         this.radioIonico = radioIonico;
         this.limiteVertido = limiteVertido;
@@ -27,11 +29,11 @@ public class AdsorbatoRequest {
         this.nombreIon = nombreIon;
     }
 
-    public Float getCargaIon() {
+    public Integer getCargaIon() {
         return cargaIon;
     }
 
-    public void setCargaIon(Float cargaIon) {
+    public void setCargaIon(Integer cargaIon) {
         this.cargaIon = cargaIon;
     }
 
@@ -57,5 +59,13 @@ public class AdsorbatoRequest {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getNombreIUPAC() {
+        return nombreIUPAC;
+    }
+
+    public void setNombreIUPAC(String nombreIUPAC) {
+        this.nombreIUPAC = nombreIUPAC;
     }
 }

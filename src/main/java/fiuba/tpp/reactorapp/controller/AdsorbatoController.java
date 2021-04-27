@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
+import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbatoResponse;
 import fiuba.tpp.reactorapp.service.AdsorbatoService;
@@ -70,6 +71,18 @@ public class AdsorbatoController {
         }
         return adsorbatos;
     }
+
+    @GetMapping(value = "/search")
+    public List<AdsorbatoResponse> searchAdsorbatos(@RequestParam(required = false) String nombreIUPAC, @RequestParam(required = false) Integer cargaIon){
+        List<AdsorbatoResponse> adsorbatos = new ArrayList<AdsorbatoResponse>();
+        AdsorbatoFilter filter = new AdsorbatoFilter(nombreIUPAC,cargaIon);
+        for (Adsorbato adsorbato: adsorbatoService.search(filter)) {
+            adsorbatos.add(new AdsorbatoResponse(adsorbato));
+        }
+        return adsorbatos;
+    }
+
+
 
     private void validateAdsorbato(AdsorbatoRequest request) throws InvalidRequestException {
         if(request.getNombreIon() == null || request.getNombreIon().isEmpty()) throw new InvalidRequestException();

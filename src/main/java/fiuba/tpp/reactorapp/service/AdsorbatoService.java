@@ -2,8 +2,10 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbatoRepository;
+import fiuba.tpp.reactorapp.repository.AdsorbatoRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +43,11 @@ public class AdsorbatoService {
     public List<Adsorbato> getAll(){
         return (List<Adsorbato>) adsorbatoRepository.findAll();
     }
+
+    public List<Adsorbato> search(AdsorbatoFilter filter){
+        return adsorbatoRepository.getAll(filter);
+    }
+
 
 
 
