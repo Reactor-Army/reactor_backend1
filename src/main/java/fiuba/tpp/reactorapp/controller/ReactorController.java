@@ -1,24 +1,14 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
-import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
-import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
-import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
-import fiuba.tpp.reactorapp.model.response.AdsorbatoResponse;
-import fiuba.tpp.reactorapp.model.response.AdsorbenteResponse;
-import fiuba.tpp.reactorapp.model.response.ErrorResponse;
 import fiuba.tpp.reactorapp.model.response.ReactorResponse;
-import fiuba.tpp.reactorapp.service.AdsorbatoService;
-import fiuba.tpp.reactorapp.service.AdsorbenteService;
 import fiuba.tpp.reactorapp.service.ReactorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -77,7 +67,7 @@ public class ReactorController {
 
     @GetMapping(value = "")
     public List<ReactorResponse> getReactores(){
-        List<ReactorResponse> reactores = new ArrayList<ReactorResponse>();
+        List<ReactorResponse> reactores = new ArrayList<>();
         for (Reactor reactor: reactorService.getAll()) {
             reactores.add(new ReactorResponse(reactor));
         }

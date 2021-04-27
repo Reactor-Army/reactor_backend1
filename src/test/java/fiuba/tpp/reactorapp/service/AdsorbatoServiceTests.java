@@ -14,14 +14,14 @@ import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdsorbatoServiceTests {
+class AdsorbatoServiceTests {
 
     @Autowired
     private AdsorbatoService adsorbatoService;
 
 
     @Test
-    public void testCreateAdsorbato(){
+    void testCreateAdsorbato(){
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(request);
 
@@ -32,15 +32,15 @@ public class AdsorbatoServiceTests {
 
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         List<Adsorbato> adsorbatos = adsorbatoService.getAll();
-        Assert.assertTrue(adsorbatos.size() == 1);
+        Assert.assertEquals(1L,adsorbatos.size());
     }
 
     @Test
-    public void testUpdateAdsorbato() throws ComponentNotFoundException {
+    void testUpdateAdsorbato() throws ComponentNotFoundException {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbatoRequest requestUpdate = new AdsorbatoRequest("Prueba2","PruebaIUPAC",12,10f,100f);
         requestUpdate.setId(1L);
@@ -54,7 +54,7 @@ public class AdsorbatoServiceTests {
     }
 
     @Test
-    public void testComponentNotFoundExceptionUpdate() {
+    void testComponentNotFoundExceptionUpdate() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
             AdsorbatoRequest requestUpdate = new AdsorbatoRequest("Prueba2","PruebaIUPAC",1,10f,100f);
@@ -65,7 +65,7 @@ public class AdsorbatoServiceTests {
     }
 
     @Test
-    public void testDeleteAdsorbato() throws ComponentNotFoundException {
+    void testDeleteAdsorbato() throws ComponentNotFoundException {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.deleteAdsorbato(1l);
@@ -74,7 +74,7 @@ public class AdsorbatoServiceTests {
     }
 
     @Test
-    public void testComponentNotFoundExceptionDelete() {
+    void testComponentNotFoundExceptionDelete() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
             adsorbatoService.createAdsorbato(request);
@@ -83,43 +83,43 @@ public class AdsorbatoServiceTests {
     }
 
     @Test
-    public void testSearchAdsorbatoNoFilter() {
+    void testSearchAdsorbatoNoFilter() {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.createAdsorbato(request2);
         List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter(null,null));
-        Assert.assertTrue(adsorbatos.size() == 2);
+        Assert.assertEquals(2L,adsorbatos.size());
     }
 
     @Test
-    public void testSearchAdsorbatoFilterIUPAC() {
+    void testSearchAdsorbatoFilterIUPAC() {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.createAdsorbato(request2);
         List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("IUPAC2",null));
-        Assert.assertTrue(adsorbatos.size() == 1);
+        Assert.assertEquals(1L,adsorbatos.size());
     }
 
     @Test
-    public void testSearchAdsorbatoFilterIUPACAndCarga() {
+    void testSearchAdsorbatoFilterIUPACAndCarga() {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.createAdsorbato(request2);
         List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("IUPAC2",1));
-        Assert.assertTrue(adsorbatos.size() == 1);
+        Assert.assertEquals(1L,adsorbatos.size());
     }
 
     @Test
-    public void testSearchAdsorbatoFilterdCarga() {
+    void testSearchAdsorbatoFilterdCarga() {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.createAdsorbato(request2);
         List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter(null,1));
-        Assert.assertTrue(adsorbatos.size() == 2);
+        Assert.assertEquals(2L,adsorbatos.size());
     }
 
 }

@@ -40,19 +40,6 @@ public class Reactor {
     public Reactor() {
     }
 
-    public Reactor(Adsorbato adsorbato, Adsorbente adsorbente, Float qMax, Float tiempoEquilibrio, Float temperatura, Float pHInicial, boolean complejacion, boolean intercambioIonico, boolean reaccionQuimica, String observacion, String fuente) {
-        this.adsorbato = adsorbato;
-        this.adsorbente = adsorbente;
-        this.qmax = qMax;
-        this.tiempoEquilibrio = tiempoEquilibrio;
-        this.temperatura = temperatura;
-        this.phinicial = pHInicial;
-        this.complejacion = complejacion;
-        this.intercambioIonico = intercambioIonico;
-        this.reaccionQuimica = reaccionQuimica;
-        this.observacion = observacion;
-        this.fuente = fuente;
-    }
 
     public Reactor(Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
         copyData(adsorbato,adsorbente,request);

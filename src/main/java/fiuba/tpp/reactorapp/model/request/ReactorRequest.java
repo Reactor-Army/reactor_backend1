@@ -27,12 +27,7 @@ public class ReactorRequest {
 
     private String fuente;
 
-    public ReactorRequest() {
-    }
-
-    public ReactorRequest(Long idAdsorbato, Long idAdsorbente, Float qmax, Float tiempoEquilibrio, Float temperatura, Float phinicial, boolean complejacion, boolean intercambioIonico, boolean reaccionQuimica, String observacion, String fuente) {
-        this.idAdsorbato = idAdsorbato;
-        this.idAdsorbente = idAdsorbente;
+    public ReactorRequest(Float qmax, Float tiempoEquilibrio, Float temperatura, Float phinicial, boolean complejacion, boolean intercambioIonico, boolean reaccionQuimica) {
         this.qmax = qmax;
         this.tiempoEquilibrio = tiempoEquilibrio;
         this.temperatura = temperatura;
@@ -40,8 +35,6 @@ public class ReactorRequest {
         this.complejacion = complejacion;
         this.intercambioIonico = intercambioIonico;
         this.reaccionQuimica = reaccionQuimica;
-        this.observacion = observacion;
-        this.fuente = fuente;
     }
 
     public Long getIdAdsorbato() {
