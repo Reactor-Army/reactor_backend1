@@ -11,17 +11,14 @@ import fiuba.tpp.reactorapp.model.request.ReactorRequest;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@RunWith(SpringRunner.class)
 public class ReactorServiceTests {
 
     @Autowired
@@ -39,7 +36,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -64,7 +61,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -79,7 +76,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -101,7 +98,7 @@ public class ReactorServiceTests {
             AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
             Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-            AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+            AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
             Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
             ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
@@ -118,7 +115,7 @@ public class ReactorServiceTests {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
-        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1.2f,1f,10f);
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
         ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");

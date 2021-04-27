@@ -6,14 +6,14 @@ public class AdsorbatoRequest {
 
     private String nombreIon;
     private String nombreIUPAC;
-    private Float cargaIon;
+    private Integer cargaIon;
     private Float radioIonico;
     private Float limiteVertido;
 
     public AdsorbatoRequest() {
     }
 
-    public AdsorbatoRequest(String nombreIon, String nombreIUPAC,Float cargaIon, Float radioIonico, Float limiteVertido) {
+    public AdsorbatoRequest(String nombreIon, String nombreIUPAC,Integer cargaIon, Float radioIonico, Float limiteVertido) {
         this.nombreIon = nombreIon;
         this.nombreIUPAC = nombreIUPAC;
         this.cargaIon = cargaIon;
@@ -29,11 +29,11 @@ public class AdsorbatoRequest {
         this.nombreIon = nombreIon;
     }
 
-    public Float getCargaIon() {
+    public Integer getCargaIon() {
         return cargaIon;
     }
 
-    public void setCargaIon(Float cargaIon) {
+    public void setCargaIon(Integer cargaIon) {
         this.cargaIon = cargaIon;
     }
 

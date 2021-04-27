@@ -14,14 +14,14 @@ public class Adsorbato {
 
     private String nombreIon;
     private String nombreIUPAC;
-    private Float cargaIon;
+    private Integer cargaIon;
     private Float radioIonico;
     private Float limiteVertido;
 
     public Adsorbato() {
     }
 
-    public Adsorbato(String nombreIon, String nombreIUPAC,Float cargaIon, Float radioIonico, Float limiteVertido) {
+    public Adsorbato(String nombreIon, String nombreIUPAC,Integer cargaIon, Float radioIonico, Float limiteVertido) {
         this.nombreIon = nombreIon;
         this.nombreIUPAC = nombreIUPAC;
         this.cargaIon = cargaIon;
@@ -62,11 +62,11 @@ public class Adsorbato {
         this.nombreIon = nombreIon;
     }
 
-    public Float getCargaIon() {
+    public Integer getCargaIon() {
         return cargaIon;
     }
 
-    public void setCargaIon(Float cargaIon) {
+    public void setCargaIon(Integer cargaIon) {
         this.cargaIon = cargaIon;
     }
 

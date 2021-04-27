@@ -7,7 +7,7 @@ public class AdsorbatoResponse {
     private Long id;
     private String nombreIon;
     private String nombreIUPAC;
-    private Float cargaIon;
+    private Integer cargaIon;
     private Float radioIonico;
     private Float limiteVertido;
 
@@ -40,11 +40,11 @@ public class AdsorbatoResponse {
         this.nombreIon = nombreIon;
     }
 
-    public Float getCargaIon() {
+    public Integer getCargaIon() {
         return cargaIon;
     }
 
-    public void setCargaIon(Float cargaIon) {
+    public void setCargaIon(Integer cargaIon) {
         this.cargaIon = cargaIon;
     }
 
