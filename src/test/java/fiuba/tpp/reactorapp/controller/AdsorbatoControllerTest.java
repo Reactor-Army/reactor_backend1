@@ -1,11 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
-import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
-import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbatoResponse;
-import fiuba.tpp.reactorapp.repository.AdsorbatoRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,7 +14,7 @@ import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdsorbatoControllerTest {
+class AdsorbatoControllerTest {
 
     @Autowired
     private AdsorbatoController adsorbatoController;
