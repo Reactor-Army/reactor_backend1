@@ -4,9 +4,6 @@ import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-
 public class ReactorResponse {
 
     private Long id;

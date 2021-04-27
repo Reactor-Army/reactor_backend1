@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface AdsorbatoRepository extends CrudRepository<Adsorbato,Long> ,AdsorbatoRepositoryCustom{
 
-    Optional<Adsorbato> findByNombreIonAndCargaIonAndRadioIonico(String nombreIon, Integer cargaIon, Float RadioIonico);
+    Optional<Adsorbato> findByNombreIonAndCargaIonAndRadioIonico(String nombreIon, Integer cargaIon, Float radioIonico);
 
 }

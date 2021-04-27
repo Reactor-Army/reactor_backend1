@@ -6,7 +6,6 @@ import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbenteResponse;
 import fiuba.tpp.reactorapp.service.AdsorbenteService;
-import fiuba.tpp.reactorapp.service.ReactorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +63,7 @@ public class AdsorbenteController {
 
     @GetMapping(value = "")
     public List<AdsorbenteResponse> getAdsorbentes(){
-        List<AdsorbenteResponse> adsorbentes = new ArrayList<AdsorbenteResponse>();
+        List<AdsorbenteResponse> adsorbentes = new ArrayList<>();
         for (Adsorbente adsorbente: adsorbenteService.getAll()) {
             adsorbentes.add(new AdsorbenteResponse(adsorbente));
         }

@@ -65,7 +65,7 @@ public class AdsorbatoController {
 
     @GetMapping(value = "")
     public List<AdsorbatoResponse> getAdsorbatos(){
-        List<AdsorbatoResponse> adsorbatos = new ArrayList<AdsorbatoResponse>();
+        List<AdsorbatoResponse> adsorbatos = new ArrayList<>();
         for (Adsorbato adsorbato: adsorbatoService.getAll()) {
             adsorbatos.add(new AdsorbatoResponse(adsorbato));
         }
@@ -74,7 +74,7 @@ public class AdsorbatoController {
 
     @GetMapping(value = "/search")
     public List<AdsorbatoResponse> searchAdsorbatos(@RequestParam(required = false) String nombreIUPAC, @RequestParam(required = false) Integer cargaIon){
-        List<AdsorbatoResponse> adsorbatos = new ArrayList<AdsorbatoResponse>();
+        List<AdsorbatoResponse> adsorbatos = new ArrayList<>();
         AdsorbatoFilter filter = new AdsorbatoFilter(nombreIUPAC,cargaIon);
         for (Adsorbato adsorbato: adsorbatoService.search(filter)) {
             adsorbatos.add(new AdsorbatoResponse(adsorbato));

@@ -16,14 +16,14 @@ import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdsorbenteServiceTests {
+class AdsorbenteServiceTests {
 
     @Autowired
     private AdsorbenteService adsorbenteService;
 
 
     @Test
-    public void testCreateAdsorbente(){
+    void testCreateAdsorbente(){
         AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(request);
 
@@ -33,15 +33,15 @@ public class AdsorbenteServiceTests {
     }
 
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(request);
         List<Adsorbente> adsorbentes = adsorbenteService.getAll();
-        Assert.assertTrue(adsorbentes.size() == 1);
+        Assert.assertEquals(1L,adsorbentes.size());
     }
 
     @Test
-    public void testUpdateAdsorbente() throws ComponentNotFoundException {
+    void testUpdateAdsorbente() throws ComponentNotFoundException {
         AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbenteRequest requestUpdate = new AdsorbenteRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setId(1L);
@@ -54,7 +54,7 @@ public class AdsorbenteServiceTests {
     }
 
     @Test
-    public void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
+    void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbenteRequest requestUpdate = new AdsorbenteRequest("Prueba2", "Prueba2", 10f, 10f,10f);
             requestUpdate.setId(2L);
@@ -63,7 +63,7 @@ public class AdsorbenteServiceTests {
     }
 
     @Test
-    public void testDeleteAdsorbente() throws ComponentNotFoundException {
+    void testDeleteAdsorbente() throws ComponentNotFoundException {
         AdsorbenteRequest request = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbenteService.createAdsorbente(request);
         adsorbenteService.deleteAdsorbente(1L);
@@ -72,7 +72,7 @@ public class AdsorbenteServiceTests {
     }
 
     @Test
-    public void testComponentNotFoundExceptionDelete() throws ComponentNotFoundException {
+    void testComponentNotFoundExceptionDelete() throws ComponentNotFoundException {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             adsorbenteService.deleteAdsorbente(2L);
         });

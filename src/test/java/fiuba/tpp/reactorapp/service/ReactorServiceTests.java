@@ -19,7 +19,7 @@ import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReactorServiceTests {
+class ReactorServiceTests {
 
     @Autowired
     private ReactorService reactorService;
@@ -32,14 +32,16 @@ public class ReactorServiceTests {
 
 
     @Test
-    public void testCreateReactor() throws InvalidReactorException {
+    void testCreateReactor() throws InvalidReactorException {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
         AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
-        ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
         Reactor reactor = reactorService.createReactor(request);
 
         Assert.assertEquals(reactor.getAdsorbato().getId(), adsorbato.getId());
@@ -48,41 +50,49 @@ public class ReactorServiceTests {
     }
 
     @Test
-    public void testInvalidReactorExceptionCreate(){
+    void testInvalidReactorExceptionCreate(){
         Assertions.assertThrows(InvalidReactorException.class, () -> {
-            ReactorRequest request = new ReactorRequest(1L,1L,0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
+            ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+            request.setIdAdsorbato(1L);
+            request.setIdAdsorbente(1L);
             reactorService.createReactor(request);
         });
     }
 
 
     @Test
-    public void testFindAll() throws InvalidReactorException {
+    void testFindAll() throws InvalidReactorException {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
         AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
-        ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
         Reactor reactor = reactorService.createReactor(request);
 
         List<Reactor> reactores = reactorService.getAll();
-        Assert.assertTrue(reactores.size() == 1);
+        Assert.assertEquals(1L,reactores.size());
     }
 
     @Test
-    public void testUpdateReactor() throws InvalidReactorException {
+    void testUpdateReactor() throws InvalidReactorException {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
         AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
-        ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
         reactorService.createReactor(request);
 
-        ReactorRequest requestUpdate = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
+        ReactorRequest requestUpdate = new ReactorRequest(65f,1f,1f,1f,true,true,true);
+        requestUpdate.setIdAdsorbato(adsorbato.getId());
+        requestUpdate.setIdAdsorbente(adsorbente.getId());
         requestUpdate.setId(1L);
 
         Reactor reactor = reactorService.updateReactor(requestUpdate);
@@ -93,39 +103,46 @@ public class ReactorServiceTests {
     }
 
     @Test
-    public void testInvalidReactorExceptionUpdate(){
-        Assertions.assertThrows(InvalidReactorException.class, () -> {
-            AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-            Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
-
-            AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
-            Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
-
-            ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
-            reactorService.createReactor(request);
-
-            ReactorRequest requestUpdate = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
-            requestUpdate.setId(2L);
-            reactorService.updateReactor(requestUpdate);
-        });
-    }
-
-    @Test
-    public void testDeleteReactor() throws InvalidReactorException, ComponentNotFoundException {
+    void testInvalidReactorExceptionUpdate() throws InvalidReactorException {
         AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
 
         AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
 
-        ReactorRequest request = new ReactorRequest(adsorbato.getId(),adsorbente.getId(),0.65f,1f,1f,1f,true,true,true,"Prueba", "Prueba");
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
+        reactorService.createReactor(request);
+
+        Assertions.assertThrows(InvalidReactorException.class, () -> {
+
+            ReactorRequest requestUpdate = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+            requestUpdate.setIdAdsorbato(adsorbato.getId());
+            requestUpdate.setIdAdsorbente(adsorbente.getId());
+            requestUpdate.setId(2L);
+            reactorService.updateReactor(requestUpdate);
+        });
+    }
+
+    @Test
+    void testDeleteReactor() throws InvalidReactorException, ComponentNotFoundException {
+        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
+
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
+
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
         reactorService.createReactor(request);
         reactorService.deleteReactor(1L);
         Assert.assertTrue(reactorService.getAll().isEmpty());
     }
 
     @Test
-    public void testReactorNotFoundExceptionDelete() throws InvalidReactorException, ComponentNotFoundException {
+    void testReactorNotFoundExceptionDelete() throws InvalidReactorException, ComponentNotFoundException {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             reactorService.deleteReactor(1L);
         });
