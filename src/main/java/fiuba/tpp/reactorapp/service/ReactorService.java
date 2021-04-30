@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
+import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbatoRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbenteRepository;
@@ -53,10 +54,12 @@ public class ReactorService {
             return;
         }
         throw new ComponentNotFoundException();
-
     }
+
 
     public List<Reactor> getAll(){
         return (List<Reactor>) reactorRepository.findAll();
     }
+
+    public List<Reactor> search(ReactorFilter filter){ return reactorRepository.getAll(filter);}
 }

@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
+import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
@@ -151,5 +152,61 @@ class ReactorControllerTest {
             reactorController.deleteReactor(1L);
         });
     }
+
+    @Test
+    void testSearchReactor(){
+        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbatoResponse adsorbato = adsorbatoController.createAdsorbato(requestAdsorbato);
+
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
+        reactorController.createReactor(request);
+
+        List<ReactorResponse> reactores = reactorController.searchReactores(1L,1L);
+
+        Assert.assertEquals(1L,reactores.size());
+    }
+
+    @Test
+    void testSearchReactorAdsorbato(){
+        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbatoResponse adsorbato = adsorbatoController.createAdsorbato(requestAdsorbato);
+
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
+        reactorController.createReactor(request);
+
+        List<ReactorResponse> reactores = reactorController.searchReactores(1L,null);
+
+        Assert.assertEquals(1L,reactores.size());
+    }
+
+    @Test
+    void testSearchReactorAdsorbente(){
+        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbatoResponse adsorbato = adsorbatoController.createAdsorbato(requestAdsorbato);
+
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
+        reactorController.createReactor(request);
+
+        List<ReactorResponse> reactores = reactorController.searchReactores(null,1L);
+
+        Assert.assertEquals(1L,reactores.size());
+    }
+
+
 
 }

@@ -1,5 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.Adsorbato;
+import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbatoResponse;
 import org.junit.Assert;
@@ -133,6 +135,26 @@ class AdsorbatoControllerTest {
         adsorbatoController.createAdsorbato(request);
         adsorbatoController.createAdsorbato(request2);
         List<AdsorbatoResponse> adsorbatos = adsorbatoController.searchAdsorbatos(null,1);
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbatoFilterUpperAndLowerIUPAC() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoController.createAdsorbato(request);
+        adsorbatoController.createAdsorbato(request2);
+        List<AdsorbatoResponse> adsorbatos = adsorbatoController.searchAdsorbatos("PRUEBA",null);
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbatoFilterUpperAndLower() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoController.createAdsorbato(request);
+        adsorbatoController.createAdsorbato(request2);
+        List<AdsorbatoResponse> adsorbatos = adsorbatoController.searchAdsorbatos("CARLOS",null);
         Assert.assertEquals(2L,adsorbatos.size());
     }
 

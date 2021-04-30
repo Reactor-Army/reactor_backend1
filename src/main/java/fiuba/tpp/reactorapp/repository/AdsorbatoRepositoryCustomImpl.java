@@ -26,8 +26,10 @@ public class AdsorbatoRepositoryCustomImpl implements AdsorbatoRepositoryCustom{
         Root<Adsorbato> adsorbato = cq.from(Adsorbato.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getNombreIUPAC() != null && !filter.getNombreIUPAC().isEmpty()) {
-            predicates.add(cb.like(adsorbato.get("nombreIUPAC"), "%"+filter.getNombreIUPAC()+"%"));
+        if (filter.getNombre() != null && !filter.getNombre().isEmpty()) {
+            String nombreFilter = filter.getNombre().toLowerCase();
+            predicates.add(cb.or(cb.like(cb.lower(adsorbato.get("nombreIUPAC")), "%"+nombreFilter+"%"),
+                                cb.like(cb.lower(adsorbato.get("nombreIon")), "%"+nombreFilter+"%")));
         }
 
         if(filter.getCargaIon() != null){

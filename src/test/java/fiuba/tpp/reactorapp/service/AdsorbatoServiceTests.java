@@ -122,4 +122,24 @@ class AdsorbatoServiceTests {
         Assert.assertEquals(2L,adsorbatos.size());
     }
 
+    @Test
+    void testSearchAdsorbatoFilterUpperAndLowerIUPAC() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("prueba",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbatoFilterUpperAndLower() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("carlos",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
 }

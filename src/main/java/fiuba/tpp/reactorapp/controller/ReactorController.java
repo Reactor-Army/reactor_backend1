@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
+import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
 import fiuba.tpp.reactorapp.model.response.ReactorResponse;
 import fiuba.tpp.reactorapp.service.ReactorService;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/reactor")
+@RequestMapping("/proceso")
 public class ReactorController {
 
     @Autowired
@@ -69,6 +70,16 @@ public class ReactorController {
     public List<ReactorResponse> getReactores(){
         List<ReactorResponse> reactores = new ArrayList<>();
         for (Reactor reactor: reactorService.getAll()) {
+            reactores.add(new ReactorResponse(reactor));
+        }
+        return reactores;
+    }
+
+    @GetMapping(value = "/search")
+    public List<ReactorResponse> searchReactores(@RequestParam(required = false) Long idAdsorbato, @RequestParam(required = false) Long idAdsorbente){
+        List<ReactorResponse> reactores = new ArrayList<>();
+        ReactorFilter filter = new ReactorFilter(idAdsorbato,idAdsorbente);
+        for (Reactor reactor: reactorService.search(filter)) {
             reactores.add(new ReactorResponse(reactor));
         }
         return reactores;

@@ -73,9 +73,9 @@ public class AdsorbatoController {
     }
 
     @GetMapping(value = "/search")
-    public List<AdsorbatoResponse> searchAdsorbatos(@RequestParam(required = false) String nombreIUPAC, @RequestParam(required = false) Integer cargaIon){
+    public List<AdsorbatoResponse> searchAdsorbatos(@RequestParam(required = false) String nombre, @RequestParam(required = false) Integer cargaIon){
         List<AdsorbatoResponse> adsorbatos = new ArrayList<>();
-        AdsorbatoFilter filter = new AdsorbatoFilter(nombreIUPAC,cargaIon);
+        AdsorbatoFilter filter = new AdsorbatoFilter(nombre,cargaIon);
         for (Adsorbato adsorbato: adsorbatoService.search(filter)) {
             adsorbatos.add(new AdsorbatoResponse(adsorbato));
         }
