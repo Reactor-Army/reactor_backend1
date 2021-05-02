@@ -122,4 +122,65 @@ class AdsorbatoServiceTests {
         Assert.assertEquals(2L,adsorbatos.size());
     }
 
+    @Test
+    void testSearchAdsorbatoFilterdCargaAndNombreEmpty() {
+        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("",1));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+
+    @Test
+    void testSearchAdsorbatoFilterUpperAndLowerIUPAC() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("prueba",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbatoFilterUpperAndLower() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("carlos",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbatoFilterAccent1() {
+        AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("cárlos",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbatoFilterAccent2() {
+        AdsorbatoRequest request = new AdsorbatoRequest("prueba","cárlos",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("cárlos","prueba",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("carlos",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testDylan() {
+        AdsorbatoRequest request = new AdsorbatoRequest("Anália","",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("Analía","",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("ANALIA",null));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
 }

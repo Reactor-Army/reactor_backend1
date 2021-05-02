@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
+import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
@@ -147,5 +148,56 @@ class ReactorServiceTests {
             reactorService.deleteReactor(1L);
         });
     }
+
+    @Test
+    void testSearchReactor() throws InvalidReactorException {
+        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
+
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
+
+        AdsorbatoRequest requestAdsorbato2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
+        Adsorbato adsorbato2 = adsorbatoService.createAdsorbato(requestAdsorbato2);
+
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
+        reactorService.createReactor(request);
+
+        request.setIdAdsorbato(adsorbato2.getId());
+        reactorService.createReactor(request);
+
+
+        List<Reactor> reactores = reactorService.search(new ReactorFilter(null, 1L));
+        Assert.assertEquals(2L, reactores.size());
+
+    }
+
+    @Test
+    void testSearchReactorAdsorbatoAdsorbente() throws InvalidReactorException {
+        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbente adsorbente = adsorbenteService.createAdsorbente(requestAdsorbente);
+
+        AdsorbatoRequest requestAdsorbato = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbato adsorbato = adsorbatoService.createAdsorbato(requestAdsorbato);
+
+        AdsorbatoRequest requestAdsorbato2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
+        Adsorbato adsorbato2 = adsorbatoService.createAdsorbato(requestAdsorbato2);
+
+        ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbato(adsorbato.getId());
+        request.setIdAdsorbente(adsorbente.getId());
+        reactorService.createReactor(request);
+
+        request.setIdAdsorbato(adsorbato2.getId());
+        reactorService.createReactor(request);
+
+
+        List<Reactor> reactores = reactorService.search(new ReactorFilter(1L, 1L));
+        Assert.assertEquals(1L, reactores.size());
+
+    }
+
 
 }

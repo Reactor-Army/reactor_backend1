@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ReactorRepository extends CrudRepository<Reactor,Long> {
+public interface ReactorRepository extends CrudRepository<Reactor,Long>, ReactorRepositoryCustom {
 
     Optional<Reactor> findByAdsorbenteAndAdsorbatoAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(Adsorbente adsorbente, Adsorbato adsorbato, Float qMax, Float tiempoEquilibrio, Float temperatura, Float pH);
 }

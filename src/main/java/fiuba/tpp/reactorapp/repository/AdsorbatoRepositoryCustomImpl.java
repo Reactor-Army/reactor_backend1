@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.repository;
 
 import fiuba.tpp.reactorapp.entities.Adsorbato;
 import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -26,8 +27,10 @@ public class AdsorbatoRepositoryCustomImpl implements AdsorbatoRepositoryCustom{
         Root<Adsorbato> adsorbato = cq.from(Adsorbato.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getNombreIUPAC() != null && !filter.getNombreIUPAC().isEmpty()) {
-            predicates.add(cb.like(adsorbato.get("nombreIUPAC"), "%"+filter.getNombreIUPAC()+"%"));
+        if (filter.getNombre() != null && !filter.getNombre().isEmpty()) {
+            String nombreFilter = StringUtils.stripAccents(filter.getNombre().toLowerCase());
+            predicates.add(cb.or(cb.like(adsorbato.get("nombreIUPACNormalizado"), "%"+nombreFilter+"%"),
+                                cb.like(adsorbato.get("nombreIonNormalizado"), "%"+nombreFilter+"%")));
         }
 
         if(filter.getCargaIon() != null){
