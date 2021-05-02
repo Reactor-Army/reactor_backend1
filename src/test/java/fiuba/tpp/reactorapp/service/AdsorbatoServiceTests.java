@@ -7,6 +7,8 @@ import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.Assert;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -102,14 +104,16 @@ class AdsorbatoServiceTests {
         Assert.assertEquals(1L,adsorbatos.size());
     }
 
-    @Test
-    void testSearchAdsorbatoFilterIUPACAndCarga() {
+
+    @ParameterizedTest
+    @ValueSource(strings = {"IUPAC2", ""}, longs = {1L,2L})
+    void testSearchAdsorbatoFilter(String arg1, long arg2) {
         AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbatoService.createAdsorbato(request);
         adsorbatoService.createAdsorbato(request2);
-        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("IUPAC2",1));
-        Assert.assertEquals(1L,adsorbatos.size());
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter(arg1,1));
+        Assert.assertEquals(arg2,adsorbatos.size());
     }
 
     @Test
@@ -121,17 +125,6 @@ class AdsorbatoServiceTests {
         List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter(null,1));
         Assert.assertEquals(2L,adsorbatos.size());
     }
-
-    @Test
-    void testSearchAdsorbatoFilterdCargaAndNombreEmpty() {
-        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
-        adsorbatoService.createAdsorbato(request);
-        adsorbatoService.createAdsorbato(request2);
-        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("",1));
-        Assert.assertEquals(2L,adsorbatos.size());
-    }
-
 
     @Test
     void testSearchAdsorbatoFilterUpperAndLowerIUPAC() {

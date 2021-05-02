@@ -9,6 +9,7 @@ import fiuba.tpp.reactorapp.model.response.AdsorbatoResponse;
 import fiuba.tpp.reactorapp.service.AdsorbatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,6 +25,7 @@ public class AdsorbatoController {
     private AdsorbatoService adsorbatoService;
 
     @PostMapping(value= "")
+    @PreAuthorize("hasRole('ADMIN')")
     public AdsorbatoResponse createAdsorbato(@RequestBody AdsorbatoRequest request) {
         AdsorbatoResponse response = null;
         try{
@@ -37,6 +39,7 @@ public class AdsorbatoController {
     }
 
     @PutMapping(value= "")
+    @PreAuthorize("hasRole('ADMIN')")
     public AdsorbatoResponse updateAdsorbato(@RequestBody AdsorbatoRequest request) {
         AdsorbatoResponse response = null;
         try{
@@ -52,7 +55,9 @@ public class AdsorbatoController {
         return response;
     }
 
+
     @DeleteMapping(value= "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteAdsorbato(@PathVariable Long id){
         try {
             adsorbatoService.deleteAdsorbato(id);
@@ -81,8 +86,6 @@ public class AdsorbatoController {
         }
         return adsorbatos;
     }
-
-
 
     private void validateAdsorbato(AdsorbatoRequest request) throws InvalidRequestException {
         if(request.getNombreIon() == null || request.getNombreIon().isEmpty()) throw new InvalidRequestException();
