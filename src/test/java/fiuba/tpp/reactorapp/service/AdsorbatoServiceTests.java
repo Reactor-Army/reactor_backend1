@@ -123,6 +123,17 @@ class AdsorbatoServiceTests {
     }
 
     @Test
+    void testSearchAdsorbatoFilterdCargaAndNombreEmpty() {
+        AdsorbatoRequest request = new AdsorbatoRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbatoRequest request2 = new AdsorbatoRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
+        adsorbatoService.createAdsorbato(request);
+        adsorbatoService.createAdsorbato(request2);
+        List<Adsorbato> adsorbatos = adsorbatoService.search(new AdsorbatoFilter("",1));
+        Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+
+    @Test
     void testSearchAdsorbatoFilterUpperAndLowerIUPAC() {
         AdsorbatoRequest request = new AdsorbatoRequest("CARLOS","PRUEBA",1,1f,10f);
         AdsorbatoRequest request2 = new AdsorbatoRequest("carlos","prueba",1,1f,10f);
