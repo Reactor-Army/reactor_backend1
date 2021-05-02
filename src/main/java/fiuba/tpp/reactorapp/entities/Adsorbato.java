@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.entities;
 
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 
@@ -13,7 +14,9 @@ public class Adsorbato {
     private Long id;
 
     private String nombreIon;
+    private String nombreIonNormalizado;
     private String nombreIUPAC;
+    private String nombreIUPACNormalizado;
     private Integer cargaIon;
     private Float radioIonico;
     private Float limiteVertido;
@@ -96,5 +99,28 @@ public class Adsorbato {
 
     public void setNombreIUPAC(String nombreIUPAC) {
         this.nombreIUPAC = nombreIUPAC;
+    }
+
+    public String getNombreIonNormalizado() {
+        return nombreIonNormalizado;
+    }
+
+    public void setNombreIonNormalizado(String nombreIonNormalizado) {
+        this.nombreIonNormalizado = nombreIonNormalizado;
+    }
+
+    public String getNombreIUPACNormalizado() {
+        return nombreIUPACNormalizado;
+    }
+
+    public void setNombreIUPACNormalizado(String nombreIUPACNormalizado) {
+        this.nombreIUPACNormalizado = nombreIUPACNormalizado;
+    }
+
+    @PreUpdate
+    @PrePersist
+    protected void normalize() {
+        nombreIonNormalizado = StringUtils.stripAccents(nombreIon.toLowerCase());
+        nombreIUPACNormalizado= StringUtils.stripAccents(nombreIUPAC.toLowerCase());
     }
 }
