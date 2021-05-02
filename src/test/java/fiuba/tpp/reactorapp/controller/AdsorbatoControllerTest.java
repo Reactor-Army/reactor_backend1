@@ -1,7 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
-import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
+
 import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbatoResponse;
 import org.junit.Assert;
@@ -9,11 +8,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@WithMockUser(username = "usertest", password = "password", roles = "ADMIN")
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AdsorbatoControllerTest {
