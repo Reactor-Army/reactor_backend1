@@ -120,7 +120,7 @@ public class Adsorbato {
     @PreUpdate
     @PrePersist
     protected void normalize() {
-        nombreIonNormalizado = StringUtils.stripAccents(nombreIon.toLowerCase());
-        nombreIUPACNormalizado= StringUtils.stripAccents(nombreIUPAC.toLowerCase());
+        nombreIonNormalizado = (nombreIon == null)? "" : StringUtils.stripAccents(nombreIon.toLowerCase());
+        nombreIUPACNormalizado= (nombreIUPAC == null)? "" : StringUtils.stripAccents(nombreIUPAC.toLowerCase());
     }
 }
