@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.persistence.*;
 
 @Entity
-@Table(name ="ADSORBATO")
+@Table(name ="ADSORBATE")
 public class Adsorbate {
 
     @Id

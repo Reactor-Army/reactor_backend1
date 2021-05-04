@@ -1,12 +1,12 @@
 package fiuba.tpp.reactorapp.entities;
 
-import fiuba.tpp.reactorapp.model.request.ReactorRequest;
+import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name ="REACTOR")
-public class Reactor {
+@Table(name ="PROCESS")
+public class Process {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,20 +37,20 @@ public class Reactor {
     private String fuente;
 
 
-    public Reactor() {
+    public Process() {
     }
 
 
-    public Reactor(Adsorbate adsorbate, Adsorbent adsorbent, ReactorRequest request){
+    public Process(Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
         copyData(adsorbate, adsorbent,request);
     }
 
-    public Reactor update (Adsorbate adsorbate, Adsorbent adsorbent, ReactorRequest request){
+    public Process update (Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
         copyData(adsorbate, adsorbent,request);
         return this;
     }
 
-    private void copyData(Adsorbate adsorbate, Adsorbent adsorbent, ReactorRequest request){
+    private void copyData(Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
         this.adsorbate = adsorbate;
         this.adsorbent = adsorbent;
         this.qmax = request.getQmax();

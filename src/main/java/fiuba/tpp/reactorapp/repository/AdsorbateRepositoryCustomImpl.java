@@ -24,17 +24,17 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Adsorbate> cq = cb.createQuery(Adsorbate.class);
 
-        Root<Adsorbate> adsorbato = cq.from(Adsorbate.class);
+        Root<Adsorbate> adsorbate = cq.from(Adsorbate.class);
         List<Predicate> predicates = new ArrayList<>();
 
         if (filter.getNombre() != null && !filter.getNombre().isEmpty()) {
             String nombreFilter = StringUtils.stripAccents(filter.getNombre().toLowerCase());
-            predicates.add(cb.or(cb.like(adsorbato.get("nombreIUPACNormalizado"), "%"+nombreFilter+"%"),
-                                cb.like(adsorbato.get("nombreIonNormalizado"), "%"+nombreFilter+"%")));
+            predicates.add(cb.or(cb.like(adsorbate.get("nombreIUPACNormalizado"), "%"+nombreFilter+"%"),
+                                cb.like(adsorbate.get("nombreIonNormalizado"), "%"+nombreFilter+"%")));
         }
 
         if(filter.getCargaIon() != null){
-            predicates.add(cb.equal(adsorbato.get("cargaIon"), filter.getCargaIon()));
+            predicates.add(cb.equal(adsorbate.get("cargaIon"), filter.getCargaIon()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

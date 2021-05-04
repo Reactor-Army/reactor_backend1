@@ -5,7 +5,7 @@ import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import javax.persistence.*;
 
 @Entity
-@Table(name ="ADSORBENTE")
+@Table(name ="ADSORBENT")
 public class Adsorbent {
 
     @Id

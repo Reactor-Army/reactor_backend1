@@ -2,10 +2,10 @@ package fiuba.tpp.reactorapp.service.load;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
-import fiuba.tpp.reactorapp.entities.Reactor;
+import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
-import fiuba.tpp.reactorapp.repository.ReactorRepository;
+import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -35,7 +35,7 @@ public class LoadDataService {
     private AdsorbateRepository adsorbateRepository;
 
     @Autowired
-    private ReactorRepository reactorRepository;
+    private ProcessRepository processRepository;
 
     @Value("${reactorapp.loadata}")
     private boolean loadData;
@@ -132,23 +132,23 @@ public class LoadDataService {
             Adsorbate sorbato = (nuevoSorbato ? newAdsorbate : adsorbato.get());
             Adsorbent sorbente = (nuevoSorbente ? nuevoAdsorbent : adsorbente.get());
 
-            Optional<Reactor> reactor = reactorRepository.findByAdsorbentAndAdsorbateAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
+            Optional<Process> reactor = processRepository.findByAdsorbentAndAdsorbateAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
 
             if (!reactor.isPresent()) {
-                Reactor nuevoReactor = new Reactor();
-                nuevoReactor.setAdsorbent(sorbente);
-                nuevoReactor.setAdsorbate(sorbato);
-                nuevoReactor.setComplejacion(complejacionBool);
-                nuevoReactor.setIntercambioIonico(intercambioBool);
-                nuevoReactor.setReaccionQuimica(reaccionBool);
-                nuevoReactor.setFuente(fuente);
-                nuevoReactor.setObservacion(observaciones);
-                nuevoReactor.setPhinicial(pHInicial);
-                nuevoReactor.setQmax(qMax);
-                nuevoReactor.setTemperatura(temperatura);
-                nuevoReactor.setTiempoEquilibrio(tiempoEquilibrio);
+                Process nuevoProcess = new Process();
+                nuevoProcess.setAdsorbent(sorbente);
+                nuevoProcess.setAdsorbate(sorbato);
+                nuevoProcess.setComplejacion(complejacionBool);
+                nuevoProcess.setIntercambioIonico(intercambioBool);
+                nuevoProcess.setReaccionQuimica(reaccionBool);
+                nuevoProcess.setFuente(fuente);
+                nuevoProcess.setObservacion(observaciones);
+                nuevoProcess.setPhinicial(pHInicial);
+                nuevoProcess.setQmax(qMax);
+                nuevoProcess.setTemperatura(temperatura);
+                nuevoProcess.setTiempoEquilibrio(tiempoEquilibrio);
 
-                reactorRepository.save(nuevoReactor);
+                processRepository.save(nuevoProcess);
             }
         }
     }

@@ -1,11 +1,11 @@
 package fiuba.tpp.reactorapp.model.filter;
 
-public class ReactorFilter {
+public class ProcessFilter {
 
     private Long idAdsorbato;
     private Long idAdsorbente;
 
-    public ReactorFilter(Long idAdsorbato, Long idAdsorbente) {
+    public ProcessFilter(Long idAdsorbato, Long idAdsorbente) {
         this.idAdsorbato = idAdsorbato;
         this.idAdsorbente = idAdsorbente;
     }

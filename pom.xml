@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>8</java.version>
 		<sonar.projectKey>Reactor-Army_reactor_backend1</sonar.projectKey>
-		<sonar.organization>reactor-army</sonar.organization>
+		<sonar.organization>process-army</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>

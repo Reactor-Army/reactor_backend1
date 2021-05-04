@@ -1,13 +1,16 @@
-package fiuba.tpp.reactorapp.model.request;
+package fiuba.tpp.reactorapp.model.response;
 
+import fiuba.tpp.reactorapp.entities.Adsorbate;
+import fiuba.tpp.reactorapp.entities.Adsorbent;
+import fiuba.tpp.reactorapp.entities.Process;
 
-public class ReactorRequest {
+public class ProcessResponse {
 
     private Long id;
 
-    private Long idAdsorbato;
+    private Adsorbate adsorbato;
 
-    private Long idAdsorbente;
+    private Adsorbent adsorbente;
 
     private Float qmax;
 
@@ -27,30 +30,46 @@ public class ReactorRequest {
 
     private String fuente;
 
-    public ReactorRequest(Float qmax, Float tiempoEquilibrio, Float temperatura, Float phinicial, boolean complejacion, boolean intercambioIonico, boolean reaccionQuimica) {
-        this.qmax = qmax;
-        this.tiempoEquilibrio = tiempoEquilibrio;
-        this.temperatura = temperatura;
-        this.phinicial = phinicial;
-        this.complejacion = complejacion;
-        this.intercambioIonico = intercambioIonico;
-        this.reaccionQuimica = reaccionQuimica;
+    public ProcessResponse() {
     }
 
-    public Long getIdAdsorbato() {
-        return idAdsorbato;
+    public ProcessResponse(Process process) {
+        this.id = process.getId();
+        this.adsorbato = process.getAdsorbate();
+        this.adsorbente = process.getAdsorbent();
+        this.qmax = process.getQmax();
+        this.tiempoEquilibrio = process.getTiempoEquilibrio();
+        this.temperatura = process.getTemperatura();
+        this.phinicial = process.getPhinicial();
+        this.complejacion = process.isComplejacion();
+        this.intercambioIonico = process.isIntercambioIonico();
+        this.reaccionQuimica = process.isReaccionQuimica();
+        this.observacion = process.getObservacion();
+        this.fuente = process.getFuente();
     }
 
-    public void setIdAdsorbato(Long idAdsorbato) {
-        this.idAdsorbato = idAdsorbato;
+    public Long getId() {
+        return id;
     }
 
-    public Long getIdAdsorbente() {
-        return idAdsorbente;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setIdAdsorbente(Long idAdsorbente) {
-        this.idAdsorbente = idAdsorbente;
+    public Adsorbate getAdsorbato() {
+        return adsorbato;
+    }
+
+    public void setAdsorbato(Adsorbate adsorbato) {
+        this.adsorbato = adsorbato;
+    }
+
+    public Adsorbent getAdsorbente() {
+        return adsorbente;
+    }
+
+    public void setAdsorbente(Adsorbent adsorbente) {
+        this.adsorbente = adsorbente;
     }
 
     public Float getQmax() {
@@ -123,13 +142,5 @@ public class ReactorRequest {
 
     public void setFuente(String fuente) {
         this.fuente = fuente;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }

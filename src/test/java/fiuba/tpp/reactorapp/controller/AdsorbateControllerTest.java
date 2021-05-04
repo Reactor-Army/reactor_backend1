@@ -54,7 +54,7 @@ class AdsorbateControllerTest {
     }
 
     @Test
-    void testUpdateAdsorbatoThatNotExist() {
+    void testUpdateAdsorbateThatNotExist() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
         requestUpdate.setId(2L);
@@ -82,7 +82,7 @@ class AdsorbateControllerTest {
     }
 
     @Test
-    void testDeleteAdsorbatoWithoutID() {
+    void testDeleteAdsorbateWithoutID() {
         Assertions.assertThrows(ResponseStatusException.class, () -> {
             adsorbateController.deleteAdsorbate(1L);
         });
