@@ -1,56 +1,69 @@
 package fiuba.tpp.reactorapp.model.request;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ProcessRequest {
 
     private Long id;
 
-    private Long idAdsorbato;
+    @JsonProperty("idAdsorbato")
+    private Long idAdsorbate;
 
-    private Long idAdsorbente;
+    @JsonProperty("idAdsorbente")
+    private Long idAdsorbent;
 
+    @JsonProperty("qmax")
     private Float qmax;
 
-    private Float tiempoEquilibrio;
+    @JsonProperty("tiempoEquilibrio")
+    private Float equilibriumTime;
 
-    private Float temperatura;
+    @JsonProperty("temperatura")
+    private Float temperature;
 
-    private Float phinicial;
+    @JsonProperty("phinicial")
+    private Float initialPH;
 
-    private boolean complejacion;
+    @JsonProperty("complejacion")
+    private boolean complexation;
 
-    private boolean intercambioIonico;
+    @JsonProperty("intercambioIonico")
+    private boolean ionicInterchange;
 
-    private boolean reaccionQuimica;
+    @JsonProperty("reaccionQuimica")
+    private boolean chemicalReaction;
 
-    private String observacion;
+    @JsonProperty("observacion")
+    private String observation;
 
-    private String fuente;
+    @JsonProperty("fuente")
+    private String source;
 
-    public ProcessRequest(Float qmax, Float tiempoEquilibrio, Float temperatura, Float phinicial, boolean complejacion, boolean intercambioIonico, boolean reaccionQuimica) {
+    public ProcessRequest(Float qmax, Float equilibriumTime, Float temperature, Float initialPH, boolean complexation, boolean ionicInterchange, boolean chemicalReaction) {
         this.qmax = qmax;
-        this.tiempoEquilibrio = tiempoEquilibrio;
-        this.temperatura = temperatura;
-        this.phinicial = phinicial;
-        this.complejacion = complejacion;
-        this.intercambioIonico = intercambioIonico;
-        this.reaccionQuimica = reaccionQuimica;
+        this.equilibriumTime = equilibriumTime;
+        this.temperature = temperature;
+        this.initialPH = initialPH;
+        this.complexation = complexation;
+        this.ionicInterchange = ionicInterchange;
+        this.chemicalReaction = chemicalReaction;
     }
 
-    public Long getIdAdsorbato() {
-        return idAdsorbato;
+    public Long getIdAdsorbate() {
+        return idAdsorbate;
     }
 
-    public void setIdAdsorbato(Long idAdsorbato) {
-        this.idAdsorbato = idAdsorbato;
+    public void setIdAdsorbate(Long idAdsorbate) {
+        this.idAdsorbate = idAdsorbate;
     }
 
-    public Long getIdAdsorbente() {
-        return idAdsorbente;
+    public Long getIdAdsorbent() {
+        return idAdsorbent;
     }
 
-    public void setIdAdsorbente(Long idAdsorbente) {
-        this.idAdsorbente = idAdsorbente;
+    public void setIdAdsorbent(Long idAdsorbent) {
+        this.idAdsorbent = idAdsorbent;
     }
 
     public Float getQmax() {
@@ -61,68 +74,68 @@ public class ProcessRequest {
         this.qmax = qmax;
     }
 
-    public Float getTiempoEquilibrio() {
-        return tiempoEquilibrio;
+    public Float getEquilibriumTime() {
+        return equilibriumTime;
     }
 
-    public void setTiempoEquilibrio(Float tiempoEquilibrio) {
-        this.tiempoEquilibrio = tiempoEquilibrio;
+    public void setEquilibriumTime(Float equilibriumTime) {
+        this.equilibriumTime = equilibriumTime;
     }
 
-    public Float getTemperatura() {
-        return temperatura;
+    public Float getTemperature() {
+        return temperature;
     }
 
-    public void setTemperatura(Float temperatura) {
-        this.temperatura = temperatura;
+    public void setTemperature(Float temperature) {
+        this.temperature = temperature;
     }
 
-    public Float getPhinicial() {
-        return phinicial;
+    public Float getInitialPH() {
+        return initialPH;
     }
 
-    public void setPhinicial(Float phinicial) {
-        this.phinicial = phinicial;
+    public void setInitialPH(Float initialPH) {
+        this.initialPH = initialPH;
     }
 
-    public boolean isComplejacion() {
-        return complejacion;
+    public boolean isComplexation() {
+        return complexation;
     }
 
-    public void setComplejacion(boolean complejacion) {
-        this.complejacion = complejacion;
+    public void setComplexation(boolean complexation) {
+        this.complexation = complexation;
     }
 
-    public boolean isIntercambioIonico() {
-        return intercambioIonico;
+    public boolean isIonicInterchange() {
+        return ionicInterchange;
     }
 
-    public void setIntercambioIonico(boolean intercambioIonico) {
-        this.intercambioIonico = intercambioIonico;
+    public void setIonicInterchange(boolean ionicInterchange) {
+        this.ionicInterchange = ionicInterchange;
     }
 
-    public boolean isReaccionQuimica() {
-        return reaccionQuimica;
+    public boolean isChemicalReaction() {
+        return chemicalReaction;
     }
 
-    public void setReaccionQuimica(boolean reaccionQuimica) {
-        this.reaccionQuimica = reaccionQuimica;
+    public void setChemicalReaction(boolean chemicalReaction) {
+        this.chemicalReaction = chemicalReaction;
     }
 
-    public String getObservacion() {
-        return observacion;
+    public String getObservation() {
+        return observation;
     }
 
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 
-    public String getFuente() {
-        return fuente;
+    public String getSource() {
+        return source;
     }
 
-    public void setFuente(String fuente) {
-        this.fuente = fuente;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public Long getId() {

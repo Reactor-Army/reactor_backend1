@@ -54,14 +54,14 @@ public class Process {
         this.adsorbate = adsorbate;
         this.adsorbent = adsorbent;
         this.qmax = request.getQmax();
-        this.equilibriumTime = request.getTiempoEquilibrio();
-        this.temperature = request.getTemperatura();
-        this.initialPH = request.getPhinicial();
-        this.complexation = request.isComplejacion();
-        this.ionicInterchange = request.isIntercambioIonico();
-        this.chemicalReaction = request.isReaccionQuimica();
-        this.observation = request.getObservacion();
-        this.source = request.getFuente();
+        this.equilibriumTime = request.getEquilibriumTime();
+        this.temperature = request.getTemperature();
+        this.initialPH = request.getInitialPH();
+        this.complexation = request.isComplexation();
+        this.ionicInterchange = request.isIonicInterchange();
+        this.chemicalReaction = request.isChemicalReaction();
+        this.observation = request.getObservation();
+        this.source = request.getSource();
     }
 
     public Long getId() {

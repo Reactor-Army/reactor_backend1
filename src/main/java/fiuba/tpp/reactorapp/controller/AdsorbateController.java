@@ -85,7 +85,7 @@ public class AdsorbateController {
 
 
     private void validateAdsorbate(AdsorbateRequest request) throws InvalidRequestException {
-        if(request.getNombreIon() == null || request.getNombreIon().isEmpty()) throw new InvalidRequestException();
+        if(request.getIonName() == null || request.getIonName().isEmpty()) throw new InvalidRequestException();
     }
 
     private void validateAdsorbateUpdate(AdsorbateRequest request) throws InvalidRequestException {

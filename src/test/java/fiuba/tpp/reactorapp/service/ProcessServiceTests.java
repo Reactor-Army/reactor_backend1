@@ -41,8 +41,8 @@ class ProcessServiceTests {
         Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         Process process = processService.createProcess(request);
 
         Assert.assertEquals(process.getAdsorbate().getId(), adsorbate.getId());
@@ -54,8 +54,8 @@ class ProcessServiceTests {
     void testInvalidProcessExceptionCreate(){
         Assertions.assertThrows(InvalidProcessException.class, () -> {
             ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-            request.setIdAdsorbato(1L);
-            request.setIdAdsorbente(1L);
+            request.setIdAdsorbate(1L);
+            request.setIdAdsorbent(1L);
             processService.createProcess(request);
         });
     }
@@ -70,8 +70,8 @@ class ProcessServiceTests {
         Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
         List<Process> processes = processService.getAll();
@@ -87,13 +87,13 @@ class ProcessServiceTests {
         Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
         ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
-        requestUpdate.setIdAdsorbato(adsorbate.getId());
-        requestUpdate.setIdAdsorbente(adsorbent.getId());
+        requestUpdate.setIdAdsorbate(adsorbate.getId());
+        requestUpdate.setIdAdsorbent(adsorbent.getId());
         requestUpdate.setId(1L);
 
         Process process = processService.updateProcess(requestUpdate);
@@ -112,15 +112,15 @@ class ProcessServiceTests {
         Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbato);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
         Assertions.assertThrows(InvalidProcessException.class, () -> {
 
             ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-            requestUpdate.setIdAdsorbato(adsorbate.getId());
-            requestUpdate.setIdAdsorbente(adsorbent.getId());
+            requestUpdate.setIdAdsorbate(adsorbate.getId());
+            requestUpdate.setIdAdsorbent(adsorbent.getId());
             requestUpdate.setId(2L);
             processService.updateProcess(requestUpdate);
         });
@@ -135,8 +135,8 @@ class ProcessServiceTests {
         Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
         processService.deleteProcess(1L);
         Assert.assertTrue(processService.getAll().isEmpty());
@@ -161,11 +161,11 @@ class ProcessServiceTests {
         Adsorbate adsorbate2 = adsorbateService.createAdsorbate(requestAdsorbate2);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
-        request.setIdAdsorbato(adsorbate2.getId());
+        request.setIdAdsorbate(adsorbate2.getId());
         processService.createProcess(request);
 
 
@@ -186,11 +186,11 @@ class ProcessServiceTests {
         Adsorbate adsorbate2 = adsorbateService.createAdsorbate(requestAdsorbate2);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbate.getId());
-        request.setIdAdsorbente(adsorbent.getId());
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
-        request.setIdAdsorbato(adsorbate2.getId());
+        request.setIdAdsorbate(adsorbate2.getId());
         processService.createProcess(request);
 
         List<Process> processes = processService.search(new ProcessFilter(1L, 1L));

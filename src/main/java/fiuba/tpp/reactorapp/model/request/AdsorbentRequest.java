@@ -1,44 +1,59 @@
 package fiuba.tpp.reactorapp.model.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AdsorbentRequest {
 
     private Long id;
 
-    private String nombre;
+    @JsonProperty("nombre")
+    private String name;
 
-    private String particulaT;
+    @JsonProperty("particulaT")
+    private String particleSize;
 
+    @JsonProperty("sBet")
     private Float sBet;
 
+    @JsonProperty("vBet")
     private Float vBet;
 
-    private Float pHCargaCero;
+    @JsonProperty("pHCargaCero")
+    private Float pHZeroCharge;
 
     public AdsorbentRequest() {
     }
 
-    public AdsorbentRequest(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
-        this.nombre = nombre;
-        this.particulaT = particulaT;
+    public AdsorbentRequest(String name, String particleSize, Float sBet, Float vBet, Float pHZeroCharge) {
+        this.name = name;
+        this.particleSize = particleSize;
         this.sBet = sBet;
         this.vBet = vBet;
-        this.pHCargaCero = pHCargaCero;
+        this.pHZeroCharge = pHZeroCharge;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Long getId() {
+        return id;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getParticulaT() {
-        return particulaT;
+    public String getName() {
+        return name;
     }
 
-    public void setParticulaT(String particulaT) {
-        this.particulaT = particulaT;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getParticleSize() {
+        return particleSize;
+    }
+
+    public void setParticleSize(String particleSize) {
+        this.particleSize = particleSize;
     }
 
     public Float getsBet() {
@@ -57,19 +72,11 @@ public class AdsorbentRequest {
         this.vBet = vBet;
     }
 
-    public Float getpHCargaCero() {
-        return pHCargaCero;
+    public Float getpHZeroCharge() {
+        return pHZeroCharge;
     }
 
-    public void setpHCargaCero(Float pHCargaCero) {
-        this.pHCargaCero = pHCargaCero;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setpHZeroCharge(Float pHZeroCharge) {
+        this.pHZeroCharge = pHZeroCharge;
     }
 }

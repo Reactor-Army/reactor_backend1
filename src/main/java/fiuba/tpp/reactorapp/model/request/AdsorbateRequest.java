@@ -1,56 +1,35 @@
 package fiuba.tpp.reactorapp.model.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AdsorbateRequest {
 
     private Long id;
 
-    private String nombreIon;
-    private String nombreIUPAC;
-    private Integer cargaIon;
-    private Float radioIonico;
-    private Float limiteVertido;
+    @JsonProperty("nombreIon")
+    private String ionName;
+
+    @JsonProperty("nombreIUPAC")
+    private String nameIUPAC;
+
+    @JsonProperty("cargaIon")
+    private Integer ionCharge;
+
+    @JsonProperty("radioIonico")
+    private Float ionRadius;
+
+    @JsonProperty("limiteVertido")
+    private Float dischargeLimit;
 
     public AdsorbateRequest() {
     }
 
-    public AdsorbateRequest(String nombreIon, String nombreIUPAC, Integer cargaIon, Float radioIonico, Float limiteVertido) {
-        this.nombreIon = nombreIon;
-        this.nombreIUPAC = nombreIUPAC;
-        this.cargaIon = cargaIon;
-        this.radioIonico = radioIonico;
-        this.limiteVertido = limiteVertido;
-    }
-
-    public String getNombreIon() {
-        return nombreIon;
-    }
-
-    public void setNombreIon(String nombreIon) {
-        this.nombreIon = nombreIon;
-    }
-
-    public Integer getCargaIon() {
-        return cargaIon;
-    }
-
-    public void setCargaIon(Integer cargaIon) {
-        this.cargaIon = cargaIon;
-    }
-
-    public Float getRadioIonico() {
-        return radioIonico;
-    }
-
-    public void setRadioIonico(Float radioIonico) {
-        this.radioIonico = radioIonico;
-    }
-
-    public Float getLimiteVertido() {
-        return limiteVertido;
-    }
-
-    public void setLimiteVertido(Float limiteVertido) {
-        this.limiteVertido = limiteVertido;
+    public AdsorbateRequest(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit) {
+        this.ionName = ionName;
+        this.nameIUPAC = nameIUPAC;
+        this.ionCharge = ionCharge;
+        this.ionRadius = ionRadius;
+        this.dischargeLimit = dischargeLimit;
     }
 
     public Long getId() {
@@ -61,11 +40,43 @@ public class AdsorbateRequest {
         this.id = id;
     }
 
-    public String getNombreIUPAC() {
-        return nombreIUPAC;
+    public String getIonName() {
+        return ionName;
     }
 
-    public void setNombreIUPAC(String nombreIUPAC) {
-        this.nombreIUPAC = nombreIUPAC;
+    public void setIonName(String ionName) {
+        this.ionName = ionName;
+    }
+
+    public String getNameIUPAC() {
+        return nameIUPAC;
+    }
+
+    public void setNameIUPAC(String nameIUPAC) {
+        this.nameIUPAC = nameIUPAC;
+    }
+
+    public Integer getIonCharge() {
+        return ionCharge;
+    }
+
+    public void setIonCharge(Integer ionCharge) {
+        this.ionCharge = ionCharge;
+    }
+
+    public Float getIonRadius() {
+        return ionRadius;
+    }
+
+    public void setIonRadius(Float ionRadius) {
+        this.ionRadius = ionRadius;
+    }
+
+    public Float getDischargeLimit() {
+        return dischargeLimit;
+    }
+
+    public void setDischargeLimit(Float dischargeLimit) {
+        this.dischargeLimit = dischargeLimit;
     }
 }

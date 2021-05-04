@@ -71,7 +71,7 @@ public class AdsorbentController {
     }
 
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
-        if(request.getNombre() == null || request.getNombre().isEmpty()) throw new InvalidRequestException();
+        if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
     }
     private void validateAdsorbentUpdate(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getId() == null) throw new InvalidRequestException();

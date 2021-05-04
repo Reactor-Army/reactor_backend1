@@ -27,9 +27,9 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
-        Assert.assertEquals(adsorbate.getIonName(), request.getNombreIon());
-        Assert.assertEquals(adsorbate.getIonCharge(), request.getCargaIon());
-        Assert.assertEquals(adsorbate.getIonRadius(), request.getRadioIonico());
+        Assert.assertEquals(adsorbate.getIonName(), request.getIonName());
+        Assert.assertEquals(adsorbate.getIonCharge(), request.getIonCharge());
+        Assert.assertEquals(adsorbate.getIonRadius(), request.getIonRadius());
     }
 
     @Test
@@ -37,9 +37,9 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba",null,1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
-        Assert.assertEquals(adsorbate.getIonName(), request.getNombreIon());
-        Assert.assertEquals(adsorbate.getIonCharge(), request.getCargaIon());
-        Assert.assertEquals(adsorbate.getIonRadius(), request.getRadioIonico());
+        Assert.assertEquals(adsorbate.getIonName(), request.getIonName());
+        Assert.assertEquals(adsorbate.getIonCharge(), request.getIonCharge());
+        Assert.assertEquals(adsorbate.getIonRadius(), request.getIonRadius());
     }
 
 
@@ -60,9 +60,9 @@ class AdsorbateServiceTests {
         Adsorbate updated = adsorbateService.updateAdsorbate(requestUpdate);
 
 
-        Assert.assertEquals(updated.getIonName(), requestUpdate.getNombreIon());
-        Assert.assertEquals(updated.getIonCharge(), requestUpdate.getCargaIon());
-        Assert.assertEquals(updated.getIonRadius(), requestUpdate.getRadioIonico());
+        Assert.assertEquals(updated.getIonName(), requestUpdate.getIonName());
+        Assert.assertEquals(updated.getIonCharge(), requestUpdate.getIonCharge());
+        Assert.assertEquals(updated.getIonRadius(), requestUpdate.getIonRadius());
     }
 
     @Test

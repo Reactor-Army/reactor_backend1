@@ -23,12 +23,12 @@ class AdsorbateControllerTest {
     void testCreateAdsorbate(){
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
 
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(request);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(request);
 
-        Assert.assertEquals(adsorbato.getNombreIon(), request.getNombreIon());
-        Assert.assertEquals(adsorbato.getCargaIon(), request.getCargaIon());
-        Assert.assertEquals(adsorbato.getRadioIonico(), request.getRadioIonico());
-        Assert.assertEquals(1L, (long) adsorbato.getId());
+        Assert.assertEquals(adsorbate.getIonName(), request.getIonName());
+        Assert.assertEquals(adsorbate.getIonCharge(), request.getIonCharge());
+        Assert.assertEquals(adsorbate.getIonRadius(), request.getIonRadius());
+        Assert.assertEquals(1L, (long) adsorbate.getId());
     }
 
     @Test
@@ -48,9 +48,9 @@ class AdsorbateControllerTest {
         adsorbateController.createAdsorbate(request);
         AdsorbateResponse updated = adsorbateController.updateAdsorbate(requestUpdate);
 
-        Assert.assertEquals(updated.getNombreIon(), requestUpdate.getNombreIon());
-        Assert.assertEquals(updated.getCargaIon(), requestUpdate.getCargaIon());
-        Assert.assertEquals(updated.getRadioIonico(), requestUpdate.getRadioIonico());
+        Assert.assertEquals(updated.getIonName(), requestUpdate.getIonName());
+        Assert.assertEquals(updated.getIonCharge(), requestUpdate.getIonCharge());
+        Assert.assertEquals(updated.getIonRadius(), requestUpdate.getIonRadius());
     }
 
     @Test

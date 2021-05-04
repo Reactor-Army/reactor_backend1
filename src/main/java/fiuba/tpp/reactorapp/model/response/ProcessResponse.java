@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Process;
@@ -8,44 +9,55 @@ public class ProcessResponse {
 
     private Long id;
 
-    private Adsorbate adsorbato;
+    @JsonProperty("adsorbato")
+    private AdsorbateResponse adsorbate;
 
-    private Adsorbent adsorbente;
+    @JsonProperty("adsorbente")
+    private AdsorbentResponse adsorbent;
 
+    @JsonProperty("qmax")
     private Float qmax;
 
-    private Float tiempoEquilibrio;
+    @JsonProperty("tiempoEquilibrio")
+    private Float equilibriumTime;
 
-    private Float temperatura;
+    @JsonProperty("temperatura")
+    private Float temperature;
 
-    private Float phinicial;
+    @JsonProperty("phinicial")
+    private Float initialPH;
 
-    private boolean complejacion;
+    @JsonProperty("complejacion")
+    private boolean complexation;
 
-    private boolean intercambioIonico;
+    @JsonProperty("intercambioIonico")
+    private boolean ionicInterchange;
 
-    private boolean reaccionQuimica;
+    @JsonProperty("reaccionQuimica")
+    private boolean chemicalReaction;
 
-    private String observacion;
+    @JsonProperty("observacion")
+    private String observation;
 
-    private String fuente;
+    @JsonProperty("fuente")
+    private String source;
 
     public ProcessResponse() {
     }
 
     public ProcessResponse(Process process) {
         this.id = process.getId();
-        this.adsorbato = process.getAdsorbate();
-        this.adsorbente = process.getAdsorbent();
+        this.adsorbate = new AdsorbateResponse(process.getAdsorbate());
+        this.adsorbent = new AdsorbentResponse(process.getAdsorbent());
         this.qmax = process.getQmax();
-        this.tiempoEquilibrio = process.getEquilibriumTime();
-        this.temperatura = process.getTemperature();
-        this.phinicial = process.getInitialPH();
-        this.complejacion = process.isComplexation();
-        this.intercambioIonico = process.isIonicInterchange();
-        this.reaccionQuimica = process.isChemicalReaction();
-        this.observacion = process.getObservation();
-        this.fuente = process.getSource();
+        this.equilibriumTime = process.getEquilibriumTime();
+        this.temperature = process.getTemperature();
+        this.initialPH = process.getInitialPH();
+        this.complexation = process.isComplexation();
+        this.ionicInterchange = process.isIonicInterchange();
+        this.chemicalReaction = process.isChemicalReaction();
+        this.observation = process.getObservation();
+        this.source = process.getSource();
     }
 
     public Long getId() {
@@ -56,20 +68,20 @@ public class ProcessResponse {
         this.id = id;
     }
 
-    public Adsorbate getAdsorbato() {
-        return adsorbato;
+    public AdsorbateResponse getAdsorbate() {
+        return adsorbate;
     }
 
-    public void setAdsorbato(Adsorbate adsorbato) {
-        this.adsorbato = adsorbato;
+    public void setAdsorbate(AdsorbateResponse adsorbate) {
+        this.adsorbate = adsorbate;
     }
 
-    public Adsorbent getAdsorbente() {
-        return adsorbente;
+    public AdsorbentResponse getAdsorbent() {
+        return adsorbent;
     }
 
-    public void setAdsorbente(Adsorbent adsorbente) {
-        this.adsorbente = adsorbente;
+    public void setAdsorbent(AdsorbentResponse adsorbent) {
+        this.adsorbent = adsorbent;
     }
 
     public Float getQmax() {
@@ -80,67 +92,67 @@ public class ProcessResponse {
         this.qmax = qmax;
     }
 
-    public Float getTiempoEquilibrio() {
-        return tiempoEquilibrio;
+    public Float getEquilibriumTime() {
+        return equilibriumTime;
     }
 
-    public void setTiempoEquilibrio(Float tiempoEquilibrio) {
-        this.tiempoEquilibrio = tiempoEquilibrio;
+    public void setEquilibriumTime(Float equilibriumTime) {
+        this.equilibriumTime = equilibriumTime;
     }
 
-    public Float getTemperatura() {
-        return temperatura;
+    public Float getTemperature() {
+        return temperature;
     }
 
-    public void setTemperatura(Float temperatura) {
-        this.temperatura = temperatura;
+    public void setTemperature(Float temperature) {
+        this.temperature = temperature;
     }
 
-    public Float getPhinicial() {
-        return phinicial;
+    public Float getInitialPH() {
+        return initialPH;
     }
 
-    public void setPhinicial(Float phinicial) {
-        this.phinicial = phinicial;
+    public void setInitialPH(Float initialPH) {
+        this.initialPH = initialPH;
     }
 
-    public boolean isComplejacion() {
-        return complejacion;
+    public boolean isComplexation() {
+        return complexation;
     }
 
-    public void setComplejacion(boolean complejacion) {
-        this.complejacion = complejacion;
+    public void setComplexation(boolean complexation) {
+        this.complexation = complexation;
     }
 
-    public boolean isIntercambioIonico() {
-        return intercambioIonico;
+    public boolean isIonicInterchange() {
+        return ionicInterchange;
     }
 
-    public void setIntercambioIonico(boolean intercambioIonico) {
-        this.intercambioIonico = intercambioIonico;
+    public void setIonicInterchange(boolean ionicInterchange) {
+        this.ionicInterchange = ionicInterchange;
     }
 
-    public boolean isReaccionQuimica() {
-        return reaccionQuimica;
+    public boolean isChemicalReaction() {
+        return chemicalReaction;
     }
 
-    public void setReaccionQuimica(boolean reaccionQuimica) {
-        this.reaccionQuimica = reaccionQuimica;
+    public void setChemicalReaction(boolean chemicalReaction) {
+        this.chemicalReaction = chemicalReaction;
     }
 
-    public String getObservacion() {
-        return observacion;
+    public String getObservation() {
+        return observation;
     }
 
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 
-    public String getFuente() {
-        return fuente;
+    public String getSource() {
+        return source;
     }
 
-    public void setFuente(String fuente) {
-        this.fuente = fuente;
+    public void setSource(String source) {
+        this.source = source;
     }
 }

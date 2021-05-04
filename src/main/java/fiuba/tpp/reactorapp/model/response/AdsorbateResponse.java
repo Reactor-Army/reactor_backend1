@@ -1,15 +1,26 @@
 package fiuba.tpp.reactorapp.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 
 public class AdsorbateResponse {
 
     private Long id;
-    private String nombreIon;
-    private String nombreIUPAC;
-    private Integer cargaIon;
-    private Float radioIonico;
-    private Float limiteVertido;
+
+    @JsonProperty("nombreIon")
+    private String ionName;
+
+    @JsonProperty("nombreIUPAC")
+    private String nameIUPAC;
+
+    @JsonProperty("cargaIon")
+    private Integer ionCharge;
+
+    @JsonProperty("radioIonico")
+    private Float ionRadius;
+
+    @JsonProperty("limiteVertido")
+    private Float dischargeLimit;
 
 
     public AdsorbateResponse() {
@@ -17,11 +28,11 @@ public class AdsorbateResponse {
 
     public AdsorbateResponse(Adsorbate adsorbate) {
         this.id = adsorbate.getId();
-        this.cargaIon = adsorbate.getIonCharge();
-        this.nombreIUPAC = adsorbate.getNameIUPAC();
-        this.nombreIon = adsorbate.getIonName();
-        this.radioIonico = adsorbate.getIonRadius();
-        this.limiteVertido = adsorbate.getDischargeLimit();
+        this.ionCharge = adsorbate.getIonCharge();
+        this.nameIUPAC = adsorbate.getNameIUPAC();
+        this.ionName= adsorbate.getIonName();
+        this.ionRadius = adsorbate.getIonRadius();
+        this.dischargeLimit = adsorbate.getDischargeLimit();
     }
 
     public Long getId() {
@@ -32,43 +43,43 @@ public class AdsorbateResponse {
         this.id = id;
     }
 
-    public String getNombreIon() {
-        return nombreIon;
+    public String getIonName() {
+        return ionName;
     }
 
-    public void setNombreIon(String nombreIon) {
-        this.nombreIon = nombreIon;
+    public void setIonName(String ionName) {
+        this.ionName = ionName;
     }
 
-    public Integer getCargaIon() {
-        return cargaIon;
+    public String getNameIUPAC() {
+        return nameIUPAC;
     }
 
-    public void setCargaIon(Integer cargaIon) {
-        this.cargaIon = cargaIon;
+    public void setNameIUPAC(String nameIUPAC) {
+        this.nameIUPAC = nameIUPAC;
     }
 
-    public Float getRadioIonico() {
-        return radioIonico;
+    public Integer getIonCharge() {
+        return ionCharge;
     }
 
-    public void setRadioIonico(Float radioIonico) {
-        this.radioIonico = radioIonico;
+    public void setIonCharge(Integer ionCharge) {
+        this.ionCharge = ionCharge;
     }
 
-    public Float getLimiteVertido() {
-        return limiteVertido;
+    public Float getIonRadius() {
+        return ionRadius;
     }
 
-    public void setLimiteVertido(Float limiteVertido) {
-        this.limiteVertido = limiteVertido;
+    public void setIonRadius(Float ionRadius) {
+        this.ionRadius = ionRadius;
     }
 
-    public String getNombreIUPAC() {
-        return nombreIUPAC;
+    public Float getDischargeLimit() {
+        return dischargeLimit;
     }
 
-    public void setNombreIUPAC(String nombreIUPAC) {
-        this.nombreIUPAC = nombreIUPAC;
+    public void setDischargeLimit(Float dischargeLimit) {
+        this.dischargeLimit = dischargeLimit;
     }
 }

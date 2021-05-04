@@ -42,11 +42,11 @@ public class Adsorbate {
     }
 
     private void copyData(AdsorbateRequest adsorbate){
-        this.ionName = adsorbate.getNombreIon();
-        this.nameIUPAC = adsorbate.getNombreIUPAC();
-        this.ionCharge = adsorbate.getCargaIon();
-        this.ionRadius = adsorbate.getRadioIonico();
-        this.dischargeLimit = adsorbate.getLimiteVertido();
+        this.ionName = adsorbate.getIonName();
+        this.nameIUPAC = adsorbate.getNameIUPAC();
+        this.ionCharge = adsorbate.getIonCharge();
+        this.ionRadius = adsorbate.getIonRadius();
+        this.dischargeLimit = adsorbate.getDischargeLimit();
     }
 
     public Long getId() {

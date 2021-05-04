@@ -29,8 +29,8 @@ public class ProcessService {
     private AdsorbentRepository adsorbentRepository;
 
     public Process createProcess(ProcessRequest request) throws InvalidProcessException {
-        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbente());
-        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getIdAdsorbato());
+        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbent());
+        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getIdAdsorbate());
         if(adsorbate.isPresent() && adsorbent.isPresent()){
             return processRepository.save(new Process(adsorbate.get(),adsorbent.get(),request));
         }
@@ -38,8 +38,8 @@ public class ProcessService {
     }
 
     public Process updateProcess(ProcessRequest request) throws InvalidProcessException {
-        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbente());
-        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getIdAdsorbato());
+        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbent());
+        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getIdAdsorbate());
         Optional<Process> process = processRepository.findById(request.getId());
         if(adsorbate.isPresent() && adsorbent.isPresent() && process.isPresent()){
             return processRepository.save(process.get().update(adsorbate.get(),adsorbent.get(),request));

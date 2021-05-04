@@ -1,31 +1,37 @@
 package fiuba.tpp.reactorapp.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 
 public class AdsorbentResponse {
 
     private Long id;
 
-    private String nombre;
+    @JsonProperty("nombre")
+    private String name;
 
-    private String particulaT;
+    @JsonProperty("particulaT")
+    private String particleSize;
 
+    @JsonProperty("sBet")
     private Float sBet;
 
+    @JsonProperty("vBet")
     private Float vBet;
 
-    private Float pHCargaCero;
+    @JsonProperty("pHCargaCero")
+    private Float pHZeroCharge;
 
     public AdsorbentResponse() {
     }
 
     public AdsorbentResponse(Adsorbent adsorbent) {
         this.id = adsorbent.getId();
-        this.nombre = adsorbent.getName();
-        this.particulaT = adsorbent.getParticleSize();
+        this.name = adsorbent.getName();
+        this.particleSize = adsorbent.getParticleSize();
         this.sBet = adsorbent.getsBet();
         this.vBet = adsorbent.getvBet();
-        this.pHCargaCero = adsorbent.getpHZeroCharge();
+        this.pHZeroCharge = adsorbent.getpHZeroCharge();
     }
 
     public Long getId() {
@@ -36,20 +42,20 @@ public class AdsorbentResponse {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getParticulaT() {
-        return particulaT;
+    public String getParticleSize() {
+        return particleSize;
     }
 
-    public void setParticulaT(String particulaT) {
-        this.particulaT = particulaT;
+    public void setParticleSize(String particleSize) {
+        this.particleSize = particleSize;
     }
 
     public Float getsBet() {
@@ -68,11 +74,11 @@ public class AdsorbentResponse {
         this.vBet = vBet;
     }
 
-    public Float getpHCargaCero() {
-        return pHCargaCero;
+    public Float getpHZeroCharge() {
+        return pHZeroCharge;
     }
 
-    public void setpHCargaCero(Float pHCargaCero) {
-        this.pHCargaCero = pHCargaCero;
+    public void setpHZeroCharge(Float pHZeroCharge) {
+        this.pHZeroCharge = pHZeroCharge;
     }
 }

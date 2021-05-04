@@ -44,11 +44,11 @@ public class Adsorbent {
     }
 
     private void copyData(AdsorbentRequest request){
-        this.name = request.getNombre();
-        this.particleSize = request.getParticulaT();
+        this.name = request.getName();
+        this.particleSize = request.getParticleSize();
         this.sBet = request.getsBet();
         this.vBet = request.getvBet();
-        this.pHZeroCharge = request.getpHCargaCero();
+        this.pHZeroCharge = request.getpHZeroCharge();
     }
 
     public Long getId() {

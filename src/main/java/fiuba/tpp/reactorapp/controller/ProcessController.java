@@ -86,13 +86,13 @@ public class ProcessController {
     }
 
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {
-        if(request.getIdAdsorbato() == null ) throw new InvalidRequestException();
-        if(request.getIdAdsorbente() == null ) throw new InvalidRequestException();
+        if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
+        if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
     }
 
     private void validateProcessUpdate(ProcessRequest request) throws InvalidRequestException {
-        if(request.getIdAdsorbato() == null ) throw new InvalidRequestException();
-        if(request.getIdAdsorbente() == null ) throw new InvalidRequestException();
+        if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
+        if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
         if(request.getId()== null ) throw new InvalidRequestException();
     }
 
