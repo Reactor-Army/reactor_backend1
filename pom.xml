@@ -12,11 +12,11 @@
 	<artifactId>reactorapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>reactorapp</name>
-	<description>App para informacion de reactores Adsorbato Adsorbente</description>
+	<description>App para informacion de procesos Adsorbato Adsorbente</description>
 	<properties>
 		<java.version>8</java.version>
 		<sonar.projectKey>Reactor-Army_reactor_backend1</sonar.projectKey>
-		<sonar.organization>process-army</sonar.organization>
+		<sonar.organization>reactor-army</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
