@@ -1,10 +1,10 @@
 package fiuba.tpp.reactorapp.service.load;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
-import fiuba.tpp.reactorapp.entities.Adsorbente;
+import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
-import fiuba.tpp.reactorapp.repository.AdsorbenteRepository;
+import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.repository.ReactorRepository;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -29,7 +29,7 @@ public class LoadDataService {
 
 
     @Autowired
-    private AdsorbenteRepository adsorbenteRepository;
+    private AdsorbentRepository adsorbentRepository;
 
     @Autowired
     private AdsorbateRepository adsorbateRepository;
@@ -102,16 +102,16 @@ public class LoadDataService {
             String observaciones = row.getCell(16).getStringCellValue();
             String fuente = row.getCell(17).getStringCellValue();
 
-            Optional<Adsorbente> adsorbente = adsorbenteRepository.findByNombreAndAndParticulaT(nombreAdsorbente, sizeAdsorbente);
+            Optional<Adsorbent> adsorbente = adsorbentRepository.findByNombreAndAndParticulaT(nombreAdsorbente, sizeAdsorbente);
 
-            Adsorbente nuevoAdsorbente = new Adsorbente();
+            Adsorbent nuevoAdsorbent = new Adsorbent();
             if (!adsorbente.isPresent()) {
-                nuevoAdsorbente.setNombre(nombreAdsorbente);
-                nuevoAdsorbente.setParticulaT(sizeAdsorbente);
-                nuevoAdsorbente.setpHCargaCero(pHCargaCero);
-                nuevoAdsorbente.setsBet(sBet);
-                nuevoAdsorbente.setvBet(vBet);
-                adsorbenteRepository.save(nuevoAdsorbente);
+                nuevoAdsorbent.setNombre(nombreAdsorbente);
+                nuevoAdsorbent.setParticulaT(sizeAdsorbente);
+                nuevoAdsorbent.setpHCargaCero(pHCargaCero);
+                nuevoAdsorbent.setsBet(sBet);
+                nuevoAdsorbent.setvBet(vBet);
+                adsorbentRepository.save(nuevoAdsorbent);
 
                 nuevoSorbente = true;
             }
@@ -130,13 +130,13 @@ public class LoadDataService {
             }
 
             Adsorbate sorbato = (nuevoSorbato ? newAdsorbate : adsorbato.get());
-            Adsorbente sorbente = (nuevoSorbente ? nuevoAdsorbente : adsorbente.get());
+            Adsorbent sorbente = (nuevoSorbente ? nuevoAdsorbent : adsorbente.get());
 
-            Optional<Reactor> reactor = reactorRepository.findByAdsorbenteAndAdsorbateAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
+            Optional<Reactor> reactor = reactorRepository.findByAdsorbentAndAdsorbateAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
 
             if (!reactor.isPresent()) {
                 Reactor nuevoReactor = new Reactor();
-                nuevoReactor.setAdsorbente(sorbente);
+                nuevoReactor.setAdsorbent(sorbente);
                 nuevoReactor.setAdsorbate(sorbato);
                 nuevoReactor.setComplejacion(complejacionBool);
                 nuevoReactor.setIntercambioIonico(intercambioBool);

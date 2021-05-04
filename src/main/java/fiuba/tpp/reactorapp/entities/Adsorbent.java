@@ -1,12 +1,12 @@
 package fiuba.tpp.reactorapp.entities;
 
-import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
+import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name ="ADSORBENTE")
-public class Adsorbente {
+public class Adsorbent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +23,10 @@ public class Adsorbente {
     private Float pHCargaCero;
 
 
-    public Adsorbente() {
+    public Adsorbent() {
     }
 
-    public Adsorbente(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
+    public Adsorbent(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
         this.nombre = nombre;
         this.particulaT = particulaT;
         this.sBet = sBet;
@@ -34,16 +34,16 @@ public class Adsorbente {
         this.pHCargaCero = pHCargaCero;
     }
 
-    public Adsorbente(AdsorbenteRequest request){
+    public Adsorbent(AdsorbentRequest request){
         copyData(request);
     }
 
-    public Adsorbente update(AdsorbenteRequest request){
+    public Adsorbent update(AdsorbentRequest request){
         copyData(request);
         return this;
     }
 
-    private void copyData(AdsorbenteRequest request){
+    private void copyData(AdsorbentRequest request){
         this.nombre = request.getNombre();
         this.particulaT = request.getParticulaT();
         this.sBet = request.getsBet();

@@ -1,10 +1,10 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
-import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
+import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
-import fiuba.tpp.reactorapp.model.response.AdsorbenteResponse;
+import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ReactorResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +24,7 @@ class ReactorControllerTest {
     private ReactorController reactorController;
 
     @Autowired
-    private AdsorbenteController adsorbenteController;
+    private AdsorbentController adsorbentController;
 
     @Autowired
     private AdsorbateController adsorbateController;
@@ -32,8 +32,8 @@ class ReactorControllerTest {
 
     @Test
     void testCreateReactorController() {
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbente = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbente = adsorbentController.createAdsorbent(requestAdsorbente);
 
         AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
@@ -44,7 +44,7 @@ class ReactorControllerTest {
         ReactorResponse reactor = reactorController.createReactor(request);
 
         Assert.assertEquals(reactor.getAdsorbato().getId(), adsorbato.getId());
-        Assert.assertEquals(reactor.getAdsorbente().getId(), adsorbente.getId());
+        Assert.assertEquals(reactor.getAdsorbent().getId(), adsorbente.getId());
         Assert.assertEquals(reactor.getQmax(), request.getQmax());
     }
 
@@ -61,8 +61,8 @@ class ReactorControllerTest {
 
     @Test
     void testGetReactors(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbente = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbente = adsorbentController.createAdsorbent(requestAdsorbente);
 
         AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
@@ -78,45 +78,45 @@ class ReactorControllerTest {
 
     @Test
     void testUpdateReactor(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
-        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
         ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbato.getId());
-        request.setIdAdsorbente(adsorbente.getId());
+        request.setIdAdsorbato(adsorbate.getId());
+        request.setIdAdsorbente(adsorbent.getId());
         reactorController.createReactor(request);
 
         ReactorRequest requestUpdate = new ReactorRequest(65f,1f,1f,1f,true,true,true);
-        requestUpdate.setIdAdsorbato(adsorbato.getId());
-        requestUpdate.setIdAdsorbente(adsorbente.getId());
+        requestUpdate.setIdAdsorbato(adsorbate.getId());
+        requestUpdate.setIdAdsorbente(adsorbent.getId());
         requestUpdate.setId(1L);
 
         ReactorResponse reactor = reactorController.updateReactor(requestUpdate);
 
-        Assert.assertEquals(reactor.getAdsorbato().getId(), adsorbato.getId());
-        Assert.assertEquals(reactor.getAdsorbente().getId(), adsorbente.getId());
+        Assert.assertEquals(reactor.getAdsorbato().getId(), adsorbate.getId());
+        Assert.assertEquals(reactor.getAdsorbent().getId(), adsorbent.getId());
         Assert.assertEquals(reactor.getQmax(), requestUpdate.getQmax());
     }
 
     @Test
     void testInvalidReactorExceptionUpdate(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
-        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
         ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbato.getId());
-        request.setIdAdsorbente(adsorbente.getId());
+        request.setIdAdsorbato(adsorbate.getId());
+        request.setIdAdsorbente(adsorbent.getId());
         reactorController.createReactor(request);
 
         ReactorRequest requestUpdate = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        requestUpdate.setIdAdsorbato(adsorbato.getId());
-        requestUpdate.setIdAdsorbente(adsorbente.getId());
+        requestUpdate.setIdAdsorbato(adsorbate.getId());
+        requestUpdate.setIdAdsorbente(adsorbent.getId());
         requestUpdate.setId(2L);
 
         Assertions.assertThrows(ResponseStatusException.class, () -> {
@@ -126,15 +126,15 @@ class ReactorControllerTest {
 
     @Test
     void testDeleteReactor(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
-        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
         ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbato.getId());
-        request.setIdAdsorbente(adsorbente.getId());
+        request.setIdAdsorbato(adsorbate.getId());
+        request.setIdAdsorbente(adsorbent.getId());
         reactorController.createReactor(request);
         reactorController.deleteReactor(1L);
         Assert.assertTrue(reactorController.getReactores().isEmpty());
@@ -149,15 +149,15 @@ class ReactorControllerTest {
 
     @Test
     void testSearchReactor(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
-        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
         ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbato.getId());
-        request.setIdAdsorbente(adsorbente.getId());
+        request.setIdAdsorbato(adsorbate.getId());
+        request.setIdAdsorbente(adsorbent.getId());
         reactorController.createReactor(request);
 
         List<ReactorResponse> reactores = reactorController.searchReactores(1L,1L);
@@ -167,15 +167,15 @@ class ReactorControllerTest {
 
     @Test
     void testSearchReactorAdsorbato(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
-        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
         ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbato.getId());
-        request.setIdAdsorbente(adsorbente.getId());
+        request.setIdAdsorbato(adsorbate.getId());
+        request.setIdAdsorbente(adsorbent.getId());
         reactorController.createReactor(request);
 
         List<ReactorResponse> reactores = reactorController.searchReactores(1L,null);
@@ -185,15 +185,15 @@ class ReactorControllerTest {
 
     @Test
     void testSearchReactorAdsorbente(){
-        AdsorbenteRequest requestAdsorbente = new AdsorbenteRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbenteResponse adsorbente = adsorbenteController.createAdsorbente(requestAdsorbente);
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
-        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
         ReactorRequest request = new ReactorRequest(0.65f,1f,1f,1f,true,true,true);
-        request.setIdAdsorbato(adsorbato.getId());
-        request.setIdAdsorbente(adsorbente.getId());
+        request.setIdAdsorbato(adsorbate.getId());
+        request.setIdAdsorbente(adsorbent.getId());
         reactorController.createReactor(request);
 
         List<ReactorResponse> reactores = reactorController.searchReactores(null,1L);

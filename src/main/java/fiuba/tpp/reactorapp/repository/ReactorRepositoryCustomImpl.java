@@ -30,7 +30,7 @@ public class ReactorRepositoryCustomImpl implements  ReactorRepositoryCustom{
         }
 
         if(filter.getIdAdsorbente() != null){
-            predicates.add(cb.equal(reactorRoot.get("adsorbente").get("id"),filter.getIdAdsorbente()));
+            predicates.add(cb.equal(reactorRoot.get("adsorbent").get("id"),filter.getIdAdsorbente()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

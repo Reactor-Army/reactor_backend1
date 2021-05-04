@@ -1,6 +1,8 @@
-package fiuba.tpp.reactorapp.model.request;
+package fiuba.tpp.reactorapp.model.response;
 
-public class AdsorbenteRequest {
+import fiuba.tpp.reactorapp.entities.Adsorbent;
+
+public class AdsorbentResponse {
 
     private Long id;
 
@@ -14,15 +16,24 @@ public class AdsorbenteRequest {
 
     private Float pHCargaCero;
 
-    public AdsorbenteRequest() {
+    public AdsorbentResponse() {
     }
 
-    public AdsorbenteRequest(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
-        this.nombre = nombre;
-        this.particulaT = particulaT;
-        this.sBet = sBet;
-        this.vBet = vBet;
-        this.pHCargaCero = pHCargaCero;
+    public AdsorbentResponse(Adsorbent adsorbent) {
+        this.id = adsorbent.getId();
+        this.nombre = adsorbent.getNombre();
+        this.particulaT = adsorbent.getParticulaT();
+        this.sBet = adsorbent.getsBet();
+        this.vBet = adsorbent.getvBet();
+        this.pHCargaCero = adsorbent.getpHCargaCero();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -63,13 +74,5 @@ public class AdsorbenteRequest {
 
     public void setpHCargaCero(Float pHCargaCero) {
         this.pHCargaCero = pHCargaCero;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }

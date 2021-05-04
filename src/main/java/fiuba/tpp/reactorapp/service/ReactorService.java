@@ -1,14 +1,14 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
-import fiuba.tpp.reactorapp.entities.Adsorbente;
+import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
 import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
-import fiuba.tpp.reactorapp.repository.AdsorbenteRepository;
+import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.repository.ReactorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +26,10 @@ public class ReactorService {
     private AdsorbateRepository adsorbateRepository;
 
     @Autowired
-    private AdsorbenteRepository adsorbenteRepository;
+    private AdsorbentRepository adsorbentRepository;
 
     public Reactor createReactor(ReactorRequest request) throws InvalidReactorException {
-        Optional<Adsorbente> adsorbente = adsorbenteRepository.findById(request.getIdAdsorbente());
+        Optional<Adsorbent> adsorbente = adsorbentRepository.findById(request.getIdAdsorbente());
         Optional<Adsorbate> adsorbato = adsorbateRepository.findById(request.getIdAdsorbato());
         if(adsorbato.isPresent() && adsorbente.isPresent()){
             return reactorRepository.save(new Reactor(adsorbato.get(),adsorbente.get(),request));
@@ -38,7 +38,7 @@ public class ReactorService {
     }
 
     public Reactor updateReactor(ReactorRequest request) throws InvalidReactorException {
-        Optional<Adsorbente> adsorbente = adsorbenteRepository.findById(request.getIdAdsorbente());
+        Optional<Adsorbent> adsorbente = adsorbentRepository.findById(request.getIdAdsorbente());
         Optional<Adsorbate> adsorbato = adsorbateRepository.findById(request.getIdAdsorbato());
         Optional<Reactor> reactor = reactorRepository.findById(request.getId());
         if(adsorbato.isPresent() && adsorbente.isPresent() && reactor.isPresent()){
