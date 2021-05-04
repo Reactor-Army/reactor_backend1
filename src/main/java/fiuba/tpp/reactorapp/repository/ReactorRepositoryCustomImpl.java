@@ -25,12 +25,12 @@ public class ReactorRepositoryCustomImpl implements  ReactorRepositoryCustom{
         Root<Process> processRoot = cq.from(Process.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getIdAdsorbato() != null) {
-            predicates.add(cb.equal(processRoot.get("adsorbate").get("id"), filter.getIdAdsorbato()));
+        if (filter.getIdAdsorbate() != null) {
+            predicates.add(cb.equal(processRoot.get("adsorbate").get("id"), filter.getIdAdsorbate()));
         }
 
-        if(filter.getIdAdsorbente() != null){
-            predicates.add(cb.equal(processRoot.get("adsorbent").get("id"),filter.getIdAdsorbente()));
+        if(filter.getIdAdsorbent() != null){
+            predicates.add(cb.equal(processRoot.get("adsorbent").get("id"),filter.getIdAdsorbent()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

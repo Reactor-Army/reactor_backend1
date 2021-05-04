@@ -21,11 +21,11 @@ public class AdsorbentResponse {
 
     public AdsorbentResponse(Adsorbent adsorbent) {
         this.id = adsorbent.getId();
-        this.nombre = adsorbent.getNombre();
-        this.particulaT = adsorbent.getParticulaT();
+        this.nombre = adsorbent.getName();
+        this.particulaT = adsorbent.getParticleSize();
         this.sBet = adsorbent.getsBet();
         this.vBet = adsorbent.getvBet();
-        this.pHCargaCero = adsorbent.getpHCargaCero();
+        this.pHCargaCero = adsorbent.getpPHZeroCharge();
     }
 
     public Long getId() {

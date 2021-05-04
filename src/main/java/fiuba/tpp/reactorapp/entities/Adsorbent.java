@@ -12,26 +12,26 @@ public class Adsorbent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
+    private String name;
 
-    private String particulaT;
+    private String particleSize;
 
     private Float sBet;
 
     private Float vBet;
 
-    private Float pHCargaCero;
+    private Float pHZeroCharge;
 
 
     public Adsorbent() {
     }
 
-    public Adsorbent(String nombre, String particulaT, Float sBet, Float vBet, Float pHCargaCero) {
-        this.nombre = nombre;
-        this.particulaT = particulaT;
+    public Adsorbent(String name, String particleSize, Float sBet, Float vBet, Float pHZeroCharge) {
+        this.name = name;
+        this.particleSize = particleSize;
         this.sBet = sBet;
         this.vBet = vBet;
-        this.pHCargaCero = pHCargaCero;
+        this.pHZeroCharge = pHZeroCharge;
     }
 
     public Adsorbent(AdsorbentRequest request){
@@ -44,11 +44,11 @@ public class Adsorbent {
     }
 
     private void copyData(AdsorbentRequest request){
-        this.nombre = request.getNombre();
-        this.particulaT = request.getParticulaT();
+        this.name = request.getNombre();
+        this.particleSize = request.getParticulaT();
         this.sBet = request.getsBet();
         this.vBet = request.getvBet();
-        this.pHCargaCero = request.getpHCargaCero();
+        this.pHZeroCharge = request.getpHCargaCero();
     }
 
     public Long getId() {
@@ -59,20 +59,20 @@ public class Adsorbent {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String nombre) {
+        this.name = nombre;
     }
 
-    public String getParticulaT() {
-        return particulaT;
+    public String getParticleSize() {
+        return particleSize;
     }
 
-    public void setParticulaT(String particulaT) {
-        this.particulaT = particulaT;
+    public void setParticleSize(String particulaT) {
+        this.particleSize = particulaT;
     }
 
     public Float getsBet() {
@@ -91,16 +91,16 @@ public class Adsorbent {
         this.vBet = vBet;
     }
 
-    public Float getpHCargaCero() {
-        return pHCargaCero;
+    public Float getpPHZeroCharge() {
+        return pHZeroCharge;
     }
 
-    public void setpHCargaCero(Float pHCargaCero) {
-        this.pHCargaCero = pHCargaCero;
+    public void setpPHZeroCharge(Float pHCargaCero) {
+        this.pHZeroCharge = pHCargaCero;
     }
 
     public String toString() {
-        return nombre + "|" + particulaT + "|" + sBet + "|" + vBet + "|" + pHCargaCero;
+        return name + "|" + particleSize + "|" + sBet + "|" + vBet + "|" + pHZeroCharge;
     }
 }
 

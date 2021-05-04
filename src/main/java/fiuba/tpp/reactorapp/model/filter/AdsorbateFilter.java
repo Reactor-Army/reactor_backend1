@@ -2,28 +2,28 @@ package fiuba.tpp.reactorapp.model.filter;
 
 public class AdsorbateFilter {
 
-    private String nombre;
-    private Integer cargaIon;
+    private String name;
+    private Integer ionCharge;
 
-    public AdsorbateFilter(String nombre, Integer cargaIon) {
-        this.nombre = nombre;
-        this.cargaIon = cargaIon;
+    public AdsorbateFilter(String name, Integer ionCharge) {
+        this.name = name;
+        this.ionCharge = ionCharge;
     }
 
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getCargaIon() {
-        return cargaIon;
+    public Integer getIonCharge() {
+        return ionCharge;
     }
 
-    public void setCargaIon(Integer cargaIon) {
-        this.cargaIon = cargaIon;
+    public void setIonCharge(Integer ionCharge) {
+        this.ionCharge = ionCharge;
     }
 }

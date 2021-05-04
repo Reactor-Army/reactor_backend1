@@ -27,8 +27,8 @@ class AdsorbentServiceTests {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
 
-        Assert.assertEquals(adsorbent.getNombre(), request.getNombre());
-        Assert.assertEquals(adsorbent.getParticulaT(), request.getParticulaT());
+        Assert.assertEquals(adsorbent.getName(), request.getNombre());
+        Assert.assertEquals(adsorbent.getParticleSize(), request.getParticulaT());
         Assert.assertEquals(adsorbent.getvBet(), request.getvBet());
     }
 
@@ -48,8 +48,8 @@ class AdsorbentServiceTests {
         adsorbentService.createAdsorbent(request);
         Adsorbent updated = adsorbentService.updateAdsorbent(requestUpdate);
 
-        Assert.assertEquals(updated.getNombre(), requestUpdate.getNombre());
-        Assert.assertEquals(updated.getParticulaT(), requestUpdate.getParticulaT());
+        Assert.assertEquals(updated.getName(), requestUpdate.getNombre());
+        Assert.assertEquals(updated.getParticleSize(), requestUpdate.getParticulaT());
         Assert.assertEquals(updated.getvBet(), requestUpdate.getvBet());
     }
 

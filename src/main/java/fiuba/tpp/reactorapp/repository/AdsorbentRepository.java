@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface AdsorbentRepository extends CrudRepository<Adsorbent,Long> {
-    Optional<Adsorbent> findByNombreAndAndParticulaT(String nombre, String particulaT);
+
+    Optional<Adsorbent> findByNameAndAndParticleSize(String name, String particleSize);
 
 }

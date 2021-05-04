@@ -17,11 +17,11 @@ public class AdsorbateResponse {
 
     public AdsorbateResponse(Adsorbate adsorbate) {
         this.id = adsorbate.getId();
-        this.cargaIon = adsorbate.getCargaIon();
-        this.nombreIUPAC = adsorbate.getNombreIUPAC();
-        this.nombreIon = adsorbate.getNombreIon();
-        this.radioIonico = adsorbate.getRadioIonico();
-        this.limiteVertido = adsorbate.getLimiteVertido();
+        this.cargaIon = adsorbate.getIonCharge();
+        this.nombreIUPAC = adsorbate.getIUPACName();
+        this.nombreIon = adsorbate.getIonName();
+        this.radioIonico = adsorbate.getIonRadius();
+        this.limiteVertido = adsorbate.getDischargeLimit();
     }
 
     public Long getId() {

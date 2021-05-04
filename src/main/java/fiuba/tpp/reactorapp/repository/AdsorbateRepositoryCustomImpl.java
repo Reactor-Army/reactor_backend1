@@ -27,14 +27,14 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
         Root<Adsorbate> adsorbate = cq.from(Adsorbate.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getNombre() != null && !filter.getNombre().isEmpty()) {
-            String nombreFilter = StringUtils.stripAccents(filter.getNombre().toLowerCase());
-            predicates.add(cb.or(cb.like(adsorbate.get("nombreIUPACNormalizado"), "%"+nombreFilter+"%"),
-                                cb.like(adsorbate.get("nombreIonNormalizado"), "%"+nombreFilter+"%")));
+        if (filter.getName() != null && !filter.getName().isEmpty()) {
+            String nombreFilter = StringUtils.stripAccents(filter.getName().toLowerCase());
+            predicates.add(cb.or(cb.like(adsorbate.get("IUPACNameNormalized"), "%"+nombreFilter+"%"),
+                                cb.like(adsorbate.get("ionNameNormalized"), "%"+nombreFilter+"%")));
         }
 
-        if(filter.getCargaIon() != null){
-            predicates.add(cb.equal(adsorbate.get("cargaIon"), filter.getCargaIon()));
+        if(filter.getIonCharge() != null){
+            predicates.add(cb.equal(adsorbate.get("ionCharge"), filter.getIonCharge()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

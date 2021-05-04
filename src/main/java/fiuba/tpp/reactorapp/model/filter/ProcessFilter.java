@@ -2,27 +2,27 @@ package fiuba.tpp.reactorapp.model.filter;
 
 public class ProcessFilter {
 
-    private Long idAdsorbato;
-    private Long idAdsorbente;
+    private Long idAdsorbate;
+    private Long idAdsorbent;
 
-    public ProcessFilter(Long idAdsorbato, Long idAdsorbente) {
-        this.idAdsorbato = idAdsorbato;
-        this.idAdsorbente = idAdsorbente;
+    public ProcessFilter(Long idAdsorbate, Long idAdsorbente) {
+        this.idAdsorbate = idAdsorbate;
+        this.idAdsorbent = idAdsorbente;
     }
 
-    public Long getIdAdsorbato() {
-        return idAdsorbato;
+    public Long getIdAdsorbate() {
+        return idAdsorbate;
     }
 
-    public void setIdAdsorbato(Long idAdsorbato) {
-        this.idAdsorbato = idAdsorbato;
+    public void setIdAdsorbate(Long idAdsorbate) {
+        this.idAdsorbate = idAdsorbate;
     }
 
-    public Long getIdAdsorbente() {
-        return idAdsorbente;
+    public Long getIdAdsorbent() {
+        return idAdsorbent;
     }
 
-    public void setIdAdsorbente(Long idAdsorbente) {
-        this.idAdsorbente = idAdsorbente;
+    public void setIdAdsorbent(Long idAdsorbent) {
+        this.idAdsorbent = idAdsorbent;
     }
 }

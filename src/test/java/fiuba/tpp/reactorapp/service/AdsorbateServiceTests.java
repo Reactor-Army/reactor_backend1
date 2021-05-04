@@ -27,9 +27,9 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
-        Assert.assertEquals(adsorbate.getNombreIon(), request.getNombreIon());
-        Assert.assertEquals(adsorbate.getCargaIon(), request.getCargaIon());
-        Assert.assertEquals(adsorbate.getRadioIonico(), request.getRadioIonico());
+        Assert.assertEquals(adsorbate.getIonName(), request.getNombreIon());
+        Assert.assertEquals(adsorbate.getIonCharge(), request.getCargaIon());
+        Assert.assertEquals(adsorbate.getIonRadius(), request.getRadioIonico());
     }
 
     @Test
@@ -37,9 +37,9 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba",null,1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
-        Assert.assertEquals(adsorbate.getNombreIon(), request.getNombreIon());
-        Assert.assertEquals(adsorbate.getCargaIon(), request.getCargaIon());
-        Assert.assertEquals(adsorbate.getRadioIonico(), request.getRadioIonico());
+        Assert.assertEquals(adsorbate.getIonName(), request.getNombreIon());
+        Assert.assertEquals(adsorbate.getIonCharge(), request.getCargaIon());
+        Assert.assertEquals(adsorbate.getIonRadius(), request.getRadioIonico());
     }
 
 
@@ -60,9 +60,9 @@ class AdsorbateServiceTests {
         Adsorbate updated = adsorbateService.updateAdsorbate(requestUpdate);
 
 
-        Assert.assertEquals(updated.getNombreIon(), requestUpdate.getNombreIon());
-        Assert.assertEquals(updated.getCargaIon(), requestUpdate.getCargaIon());
-        Assert.assertEquals(updated.getRadioIonico(), requestUpdate.getRadioIonico());
+        Assert.assertEquals(updated.getIonName(), requestUpdate.getNombreIon());
+        Assert.assertEquals(updated.getIonCharge(), requestUpdate.getCargaIon());
+        Assert.assertEquals(updated.getIonRadius(), requestUpdate.getRadioIonico());
     }
 
     @Test

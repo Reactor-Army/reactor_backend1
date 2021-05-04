@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface ProcessRepository extends CrudRepository<Process,Long>, ReactorRepositoryCustom {
 
-    Optional<Process> findByAdsorbentAndAdsorbateAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(Adsorbent adsorbent, Adsorbate adsorbate, Float qMax, Float tiempoEquilibrio, Float temperatura, Float pH);
+    Optional<Process> findByAdsorbentAndAdsorbateAndQmaxAndEquilibriumTimeAndTemperatureAndInitialPH(Adsorbent adsorbent, Adsorbate adsorbate, Float qMax, Float equilibriumTime, Float temperature, Float pH);
 }

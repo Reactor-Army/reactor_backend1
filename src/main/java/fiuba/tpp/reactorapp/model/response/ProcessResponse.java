@@ -38,14 +38,14 @@ public class ProcessResponse {
         this.adsorbato = process.getAdsorbate();
         this.adsorbente = process.getAdsorbent();
         this.qmax = process.getQmax();
-        this.tiempoEquilibrio = process.getTiempoEquilibrio();
-        this.temperatura = process.getTemperatura();
-        this.phinicial = process.getPhinicial();
-        this.complejacion = process.isComplejacion();
-        this.intercambioIonico = process.isIntercambioIonico();
-        this.reaccionQuimica = process.isReaccionQuimica();
-        this.observacion = process.getObservacion();
-        this.fuente = process.getFuente();
+        this.tiempoEquilibrio = process.getEquilibriumTime();
+        this.temperatura = process.getTemperature();
+        this.phinicial = process.getInitialPH();
+        this.complejacion = process.isComplexation();
+        this.intercambioIonico = process.isIonicInterchange();
+        this.reaccionQuimica = process.isChemicalReaction();
+        this.observacion = process.getObservation();
+        this.fuente = process.getSource();
     }
 
     public Long getId() {
