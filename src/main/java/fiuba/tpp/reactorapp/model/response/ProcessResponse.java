@@ -1,8 +1,6 @@
 package fiuba.tpp.reactorapp.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fiuba.tpp.reactorapp.entities.Adsorbate;
-import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Process;
 
 public class ProcessResponse {
