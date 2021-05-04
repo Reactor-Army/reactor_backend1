@@ -1,11 +1,11 @@
 package fiuba.tpp.reactorapp.repository;
 
-import fiuba.tpp.reactorapp.entities.Reactor;
-import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
+import fiuba.tpp.reactorapp.entities.Process;
+import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 
 import java.util.List;
 
 public interface ReactorRepositoryCustom {
 
-    List<Reactor> getAll(ReactorFilter filter);
+    List<Process> getAll(ProcessFilter filter);
 }

@@ -1,7 +1,7 @@
 package fiuba.tpp.reactorapp.repository;
 
-import fiuba.tpp.reactorapp.entities.Reactor;
-import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
+import fiuba.tpp.reactorapp.entities.Process;
+import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -18,19 +18,19 @@ public class ReactorRepositoryCustomImpl implements  ReactorRepositoryCustom{
     EntityManager em;
 
     @Override
-    public List<Reactor> getAll(ReactorFilter filter) {
+    public List<Process> getAll(ProcessFilter filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Reactor> cq = cb.createQuery(Reactor.class);
+        CriteriaQuery<Process> cq = cb.createQuery(Process.class);
 
-        Root<Reactor> reactorRoot = cq.from(Reactor.class);
+        Root<Process> processRoot = cq.from(Process.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getIdAdsorbato() != null) {
-            predicates.add(cb.equal(reactorRoot.get("adsorbato").get("id"), filter.getIdAdsorbato()));
+        if (filter.getIdAdsorbate() != null) {
+            predicates.add(cb.equal(processRoot.get("adsorbate").get("id"), filter.getIdAdsorbate()));
         }
 
-        if(filter.getIdAdsorbente() != null){
-            predicates.add(cb.equal(reactorRoot.get("adsorbente").get("id"),filter.getIdAdsorbente()));
+        if(filter.getIdAdsorbent() != null){
+            predicates.add(cb.equal(processRoot.get("adsorbent").get("id"),filter.getIdAdsorbent()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

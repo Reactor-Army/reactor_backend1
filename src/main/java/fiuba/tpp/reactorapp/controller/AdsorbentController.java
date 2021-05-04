@@ -1,11 +1,11 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.entities.Adsorbente;
+import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
-import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
-import fiuba.tpp.reactorapp.model.response.AdsorbenteResponse;
-import fiuba.tpp.reactorapp.service.AdsorbenteService;
+import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
+import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +17,17 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/adsorbente")
-public class AdsorbenteController {
+public class AdsorbentController {
 
     @Autowired
-    private AdsorbenteService adsorbenteService;
+    private AdsorbentService adsorbentService;
 
     @PostMapping(value= "")
-    public AdsorbenteResponse createAdsorbente(@RequestBody AdsorbenteRequest request) {
-        AdsorbenteResponse response = null;
+    public AdsorbentResponse createAdsorbent(@RequestBody AdsorbentRequest request) {
+        AdsorbentResponse response = null;
         try{
-            validateAdsorbente(request);
-            response = new AdsorbenteResponse(adsorbenteService.createAdsorbente(request));
+            validateAdsorbent(request);
+            response = new AdsorbentResponse(adsorbentService.createAdsorbent(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Los adsorbentes deben tener un nombre", e);
@@ -36,11 +36,11 @@ public class AdsorbenteController {
     }
 
     @PutMapping(value= "")
-    public AdsorbenteResponse updateAdsorbente(@RequestBody AdsorbenteRequest request) {
-        AdsorbenteResponse response = null;
+    public AdsorbentResponse updateAdsorbent(@RequestBody AdsorbentRequest request) {
+        AdsorbentResponse response = null;
         try{
-            validateAdsorbenteUpdate(request);
-            response = new AdsorbenteResponse(adsorbenteService.updateAdsorbente(request));
+            validateAdsorbentUpdate(request);
+            response = new AdsorbentResponse(adsorbentService.updateAdsorbent(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbente", e);
@@ -52,9 +52,9 @@ public class AdsorbenteController {
     }
 
     @DeleteMapping(value= "/{id}")
-    public void deleteAdsorbente(@PathVariable Long id){
+    public void deleteAdsorbent(@PathVariable Long id){
         try {
-            adsorbenteService.deleteAdsorbente(id);
+            adsorbentService.deleteAdsorbent(id);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
@@ -62,18 +62,18 @@ public class AdsorbenteController {
     }
 
     @GetMapping(value = "")
-    public List<AdsorbenteResponse> getAdsorbentes(){
-        List<AdsorbenteResponse> adsorbentes = new ArrayList<>();
-        for (Adsorbente adsorbente: adsorbenteService.getAll()) {
-            adsorbentes.add(new AdsorbenteResponse(adsorbente));
+    public List<AdsorbentResponse> getAdsorbents(){
+        List<AdsorbentResponse> adsorbents = new ArrayList<>();
+        for (Adsorbent adsorbent : adsorbentService.getAll()) {
+            adsorbents.add(new AdsorbentResponse(adsorbent));
         }
-        return adsorbentes;
+        return adsorbents;
     }
 
-    private void validateAdsorbente(AdsorbenteRequest request) throws InvalidRequestException {
-        if(request.getNombre() == null || request.getNombre().isEmpty()) throw new InvalidRequestException();
+    private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
+        if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
     }
-    private void validateAdsorbenteUpdate(AdsorbenteRequest request) throws InvalidRequestException {
+    private void validateAdsorbentUpdate(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getId() == null) throw new InvalidRequestException();
     }
 }
