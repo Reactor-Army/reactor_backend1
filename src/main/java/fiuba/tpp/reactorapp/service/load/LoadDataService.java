@@ -63,90 +63,90 @@ public class LoadDataService {
     }
 
     private void loadRowData(XSSFSheet worksheet, int i){
-        boolean nuevoSorbente= false;
-        boolean nuevoSorbato = false;
+        boolean isNewAdsorbent = false;
+        boolean isNewAdsorbate = false;
 
         XSSFRow row = worksheet.getRow(i);
 
         if(row.getCell(0) != null) {
-            String nombreAdsorbente = row.getCell(0).getStringCellValue();
-            String sizeAdsorbente = row.getCell(1).getStringCellValue();
-            String nombreIon = row.getCell(2).getStringCellValue();
+            String nameAdsorbent = row.getCell(0).getStringCellValue();
+            String sizeAdsorbent = row.getCell(1).getStringCellValue();
+            String ionName = row.getCell(2).getStringCellValue();
 
-            String cargaIonText = row.getCell(3).getStringCellValue();
-            StringBuilder cargaBuilder = new StringBuilder();
-            cargaBuilder.append(cargaIonText);
-            cargaBuilder.reverse();
-            Integer cargaIon = Integer.valueOf(cargaBuilder.toString());
+            String ionChargeText = row.getCell(3).getStringCellValue();
+            StringBuilder chargeBuilder = new StringBuilder();
+            chargeBuilder.append(ionChargeText);
+            chargeBuilder.reverse();
+            Integer ionCharge = Integer.valueOf(chargeBuilder.toString());
 
-            Float radioIonico = (float) row.getCell(4).getNumericCellValue();
+            Float ionRadius = (float) row.getCell(4).getNumericCellValue();
             Float qMax = (float) row.getCell(5).getNumericCellValue();
-            Float tiempoEquilibrio = (float) row.getCell(6).getNumericCellValue();
-            Float temperatura = (float) row.getCell(7).getNumericCellValue();
-            Float pHInicial = (float) row.getCell(8).getNumericCellValue();
+            Float equilibriumTime = (float) row.getCell(6).getNumericCellValue();
+            Float temperature = (float) row.getCell(7).getNumericCellValue();
+            Float initialPH = (float) row.getCell(8).getNumericCellValue();
             Float sBet = (float) row.getCell(9).getNumericCellValue();
             Float vBet = (float) row.getCell(10).getNumericCellValue();
-            Float pHCargaCero = (float) row.getCell(11).getNumericCellValue();
+            Float pHZeroCharge = (float) row.getCell(11).getNumericCellValue();
 
-            String complejacion = row.getCell(12).getStringCellValue();
-            boolean complejacionBool = stringToBoolean(complejacion);
+            String complexation = row.getCell(12).getStringCellValue();
+            boolean complexationBool = stringToBoolean(complexation);
 
-            String intercambio = row.getCell(13).getStringCellValue();
-            boolean intercambioBool = stringToBoolean(intercambio);
+            String interchange = row.getCell(13).getStringCellValue();
+            boolean interchangeBool = stringToBoolean(interchange);
 
-            String reaccion = row.getCell(14).getStringCellValue();
-            boolean reaccionBool = stringToBoolean(reaccion);
+            String reaction = row.getCell(14).getStringCellValue();
+            boolean reactionBool = stringToBoolean(reaction);
 
-            Float limite = (float) row.getCell(15).getNumericCellValue();
+            Float limit = (float) row.getCell(15).getNumericCellValue();
 
-            String observaciones = row.getCell(16).getStringCellValue();
-            String fuente = row.getCell(17).getStringCellValue();
+            String observation = row.getCell(16).getStringCellValue();
+            String source = row.getCell(17).getStringCellValue();
 
-            Optional<Adsorbent> adsorbente = adsorbentRepository.findByNameAndAndParticleSize(nombreAdsorbente, sizeAdsorbente);
+            Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndAndParticleSize(nameAdsorbent, sizeAdsorbent);
 
-            Adsorbent nuevoAdsorbent = new Adsorbent();
-            if (!adsorbente.isPresent()) {
-                nuevoAdsorbent.setName(nombreAdsorbente);
-                nuevoAdsorbent.setParticleSize(sizeAdsorbente);
-                nuevoAdsorbent.setpHZeroCharge(pHCargaCero);
-                nuevoAdsorbent.setsBet(sBet);
-                nuevoAdsorbent.setvBet(vBet);
-                adsorbentRepository.save(nuevoAdsorbent);
+            Adsorbent newAdsorbent = new Adsorbent();
+            if (!adsorbent.isPresent()) {
+                newAdsorbent.setName(nameAdsorbent);
+                newAdsorbent.setParticleSize(sizeAdsorbent);
+                newAdsorbent.setpHZeroCharge(pHZeroCharge);
+                newAdsorbent.setsBet(sBet);
+                newAdsorbent.setvBet(vBet);
+                adsorbentRepository.save(newAdsorbent);
 
-                nuevoSorbente = true;
+                isNewAdsorbent = true;
             }
 
-            Optional<Adsorbate> adsorbato = adsorbateRepository.findByIonNameAndIonChargeAndIonRadius(nombreIon, cargaIon, radioIonico);
+            Optional<Adsorbate> adsorbate = adsorbateRepository.findByIonNameAndIonChargeAndIonRadius(ionName, ionCharge, ionRadius);
 
             Adsorbate newAdsorbate = new Adsorbate();
-            if (!adsorbato.isPresent()) {
-                newAdsorbate.setIonName(nombreIon);
-                newAdsorbate.setIonCharge(cargaIon);
-                newAdsorbate.setIonRadius(radioIonico);
-                newAdsorbate.setDischargeLimit(limite);
+            if (!adsorbate.isPresent()) {
+                newAdsorbate.setIonName(ionName);
+                newAdsorbate.setIonCharge(ionCharge);
+                newAdsorbate.setIonRadius(ionRadius);
+                newAdsorbate.setDischargeLimit(limit);
                 adsorbateRepository.save(newAdsorbate);
 
-                nuevoSorbato = true;
+                isNewAdsorbate = true;
             }
 
-            Adsorbate sorbato = (nuevoSorbato ? newAdsorbate : adsorbato.get());
-            Adsorbent sorbente = (nuevoSorbente ? nuevoAdsorbent : adsorbente.get());
+            Adsorbate sorbate = (isNewAdsorbate ? newAdsorbate : adsorbate.get());
+            Adsorbent sorbent = (isNewAdsorbent ? newAdsorbent : adsorbent.get());
 
-            Optional<Process> reactor = processRepository.findByAdsorbentAndAdsorbateAndQmaxAndEquilibriumTimeAndTemperatureAndInitialPH(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
+            Optional<Process> reactor = processRepository.findByAdsorbentAndAdsorbateAndQmaxAndEquilibriumTimeAndTemperatureAndInitialPH(sorbent, sorbate, qMax, equilibriumTime, temperature, initialPH);
 
             if (!reactor.isPresent()) {
                 Process nuevoProcess = new Process();
-                nuevoProcess.setAdsorbent(sorbente);
-                nuevoProcess.setAdsorbate(sorbato);
-                nuevoProcess.setComplexation(complejacionBool);
-                nuevoProcess.setIonicInterchange(intercambioBool);
-                nuevoProcess.setChemicalReaction(reaccionBool);
-                nuevoProcess.setSource(fuente);
-                nuevoProcess.setObservation(observaciones);
-                nuevoProcess.setInitialPH(pHInicial);
+                nuevoProcess.setAdsorbent(sorbent);
+                nuevoProcess.setAdsorbate(sorbate);
+                nuevoProcess.setComplexation(complexationBool);
+                nuevoProcess.setIonicInterchange(interchangeBool);
+                nuevoProcess.setChemicalReaction(reactionBool);
+                nuevoProcess.setSource(source);
+                nuevoProcess.setObservation(observation);
+                nuevoProcess.setInitialPH(initialPH);
                 nuevoProcess.setQmax(qMax);
-                nuevoProcess.setTemperature(temperatura);
-                nuevoProcess.setEquilibriumTime(tiempoEquilibrio);
+                nuevoProcess.setTemperature(temperature);
+                nuevoProcess.setEquilibriumTime(equilibriumTime);
 
                 processRepository.save(nuevoProcess);
             }

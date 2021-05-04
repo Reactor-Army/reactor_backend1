@@ -117,7 +117,7 @@ class AdsorbateControllerTest {
     }
 
     @Test
-    void testSearchAdsorbateFilterIUPACAndCarga() {
+    void testSearchAdsorbateFilterIUPACAndCharge() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
@@ -127,7 +127,7 @@ class AdsorbateControllerTest {
     }
 
     @Test
-    void testSearchAdsorbateFilterdCarga() {
+    void testSearchAdsorbateFilterCharge() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request);

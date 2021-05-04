@@ -23,7 +23,7 @@ class AdsorbateServiceTests {
 
 
     @Test
-    void testCreateAdsorbato(){
+    void testCreateAdsorbate(){
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
@@ -33,7 +33,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testCreateAdsorbatoNombreIUPACNull(){
+    void testCreateAdsorbateNameIUPACNull(){
         AdsorbateRequest request = new AdsorbateRequest("Prueba",null,1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
@@ -52,7 +52,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testUpdateAdsorbato() throws ComponentNotFoundException {
+    void testUpdateAdsorbate() throws ComponentNotFoundException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
         requestUpdate.setId(1L);
@@ -121,7 +121,7 @@ class AdsorbateServiceTests {
             "2, ",
             "2, ''"
     })
-    void testSearchAdsorbatoFilterIUPACAndCarga(long size, String filter) {
+    void testSearchAdsorbateFilterIUPACAndCharge(long size, String filter) {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -132,7 +132,7 @@ class AdsorbateServiceTests {
 
 
     @Test
-    void testSearchAdsorbatoFilterUpperAndLowerIUPAC() {
+    void testSearchAdsorbateFilterUpperAndLowerIUPAC() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -142,7 +142,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbatoFilterUpperAndLower() {
+    void testSearchAdsorbateFilterUpperAndLower() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -152,7 +152,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbatoFilterAccent1() {
+    void testSearchAdsorbateFilterAccent1() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -162,7 +162,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbatoFilterAccent2() {
+    void testSearchAdsorbateFilterAccent2() {
         AdsorbateRequest request = new AdsorbateRequest("prueba","cárlos",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("cárlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
