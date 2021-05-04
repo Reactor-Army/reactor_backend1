@@ -76,9 +76,9 @@ public class ProcessController {
     }
 
     @GetMapping(value = "/buscar")
-    public List<ProcessResponse> searchProcesses(@RequestParam(required = false) Long idAdsorbato, @RequestParam(required = false) Long idAdsorbente){
+    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId){
         List<ProcessResponse> processes = new ArrayList<>();
-        ProcessFilter filter = new ProcessFilter(idAdsorbato,idAdsorbente);
+        ProcessFilter filter = new ProcessFilter(adsorbateId,adsorbentId);
         for (Process process : processService.search(filter)) {
             processes.add(new ProcessResponse(process));
         }

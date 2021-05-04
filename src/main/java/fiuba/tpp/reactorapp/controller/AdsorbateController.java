@@ -73,9 +73,9 @@ public class AdsorbateController {
     }
 
     @GetMapping(value = "/buscar")
-    public List<AdsorbateResponse> searchAdsorbates(@RequestParam(required = false) String nombre, @RequestParam(required = false) Integer cargaIon){
+    public List<AdsorbateResponse> searchAdsorbates(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="cargaIon",required = false) Integer ionicCharge){
         List<AdsorbateResponse> adsorbates = new ArrayList<>();
-        AdsorbateFilter filter = new AdsorbateFilter(nombre,cargaIon);
+        AdsorbateFilter filter = new AdsorbateFilter(name, ionicCharge);
         for (Adsorbate adsorbate : adsorbateService.search(filter)) {
             adsorbates.add(new AdsorbateResponse(adsorbate));
         }
