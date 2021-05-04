@@ -58,7 +58,10 @@ public class LoadDataService {
             for(int i=3;i<worksheet.getPhysicalNumberOfRows() ;i++) {
                loadRowData(worksheet,i);
             }
+            logger.info("Proceso de carga terminado");
         }
+
+
 
     }
 
