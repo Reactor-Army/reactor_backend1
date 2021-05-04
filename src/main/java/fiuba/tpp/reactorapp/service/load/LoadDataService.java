@@ -60,9 +60,6 @@ public class LoadDataService {
             }
             logger.info("Proceso de carga terminado");
         }
-
-
-
     }
 
     private void loadRowData(XSSFSheet worksheet, int i){
