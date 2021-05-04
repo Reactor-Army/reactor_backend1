@@ -25,7 +25,7 @@ public class AdsorbentResponse {
         this.particulaT = adsorbent.getParticleSize();
         this.sBet = adsorbent.getsBet();
         this.vBet = adsorbent.getvBet();
-        this.pHCargaCero = adsorbent.getpPHZeroCharge();
+        this.pHCargaCero = adsorbent.getpHZeroCharge();
     }
 
     public Long getId() {

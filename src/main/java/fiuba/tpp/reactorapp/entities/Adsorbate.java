@@ -32,21 +32,21 @@ public class Adsorbate {
         this.dischargeLimit = dischargeLimit;
     }
 
-    public Adsorbate(AdsorbateRequest adsorbato) {
-        copyData(adsorbato);
+    public Adsorbate(AdsorbateRequest adsorbate) {
+        copyData(adsorbate);
     }
 
-    public Adsorbate update(AdsorbateRequest adsorbato){
-        copyData(adsorbato);
+    public Adsorbate update(AdsorbateRequest adsorbate){
+        copyData(adsorbate);
         return this;
     }
 
-    private void copyData(AdsorbateRequest adsorbato){
-        this.ionName = adsorbato.getNombreIon();
-        this.IUPACName = adsorbato.getNombreIUPAC();
-        this.ionCharge = adsorbato.getCargaIon();
-        this.ionRadius = adsorbato.getRadioIonico();
-        this.dischargeLimit = adsorbato.getLimiteVertido();
+    private void copyData(AdsorbateRequest adsorbate){
+        this.ionName = adsorbate.getNombreIon();
+        this.IUPACName = adsorbate.getNombreIUPAC();
+        this.ionCharge = adsorbate.getCargaIon();
+        this.ionRadius = adsorbate.getRadioIonico();
+        this.dischargeLimit = adsorbate.getLimiteVertido();
     }
 
     public Long getId() {
@@ -61,60 +61,56 @@ public class Adsorbate {
         return ionName;
     }
 
-    public void setIonName(String nombreIon) {
-        this.ionName = nombreIon;
-    }
-
-    public Integer getIonCharge() {
-        return ionCharge;
-    }
-
-    public void setIonCharge(Integer cargaIon) {
-        this.ionCharge = cargaIon;
-    }
-
-    public Float getIonRadius() {
-        return ionRadius;
-    }
-
-    public void setIonRadius(Float radioIonico) {
-        this.ionRadius = radioIonico;
-    }
-
-    public Float getDischargeLimit() {
-        return dischargeLimit;
-    }
-
-    public void setDischargeLimit(Float limiteVertido) {
-        this.dischargeLimit = limiteVertido;
-    }
-
-    public String toString(){
-        return ionName + "|" + ionCharge + "|" + ionRadius +"|" + dischargeLimit;
-    }
-
-    public String getIUPACName() {
-        return IUPACName;
-    }
-
-    public void setIUPACName(String nombreIUPAC) {
-        this.IUPACName = nombreIUPAC;
+    public void setIonName(String ionName) {
+        this.ionName = ionName;
     }
 
     public String getIonNameNormalized() {
         return ionNameNormalized;
     }
 
-    public void setIonNameNormalized(String nombreIonNormalizado) {
-        this.ionNameNormalized = nombreIonNormalizado;
+    public void setIonNameNormalized(String ionNameNormalized) {
+        this.ionNameNormalized = ionNameNormalized;
+    }
+
+    public String getIUPACName() {
+        return IUPACName;
+    }
+
+    public void setIUPACName(String IUPACName) {
+        this.IUPACName = IUPACName;
     }
 
     public String getIUPACNameNormalized() {
         return IUPACNameNormalized;
     }
 
-    public void setIUPACNameNormalized(String nombreIUPACNormalizado) {
-        this.IUPACNameNormalized = nombreIUPACNormalizado;
+    public void setIUPACNameNormalized(String IUPACNameNormalized) {
+        this.IUPACNameNormalized = IUPACNameNormalized;
+    }
+
+    public Integer getIonCharge() {
+        return ionCharge;
+    }
+
+    public void setIonCharge(Integer ionCharge) {
+        this.ionCharge = ionCharge;
+    }
+
+    public Float getIonRadius() {
+        return ionRadius;
+    }
+
+    public void setIonRadius(Float ionRadius) {
+        this.ionRadius = ionRadius;
+    }
+
+    public Float getDischargeLimit() {
+        return dischargeLimit;
+    }
+
+    public void setDischargeLimit(Float dischargeLimit) {
+        this.dischargeLimit = dischargeLimit;
     }
 
     @PreUpdate

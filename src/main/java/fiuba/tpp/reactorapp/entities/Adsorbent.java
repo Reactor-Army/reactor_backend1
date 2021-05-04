@@ -63,16 +63,16 @@ public class Adsorbent {
         return name;
     }
 
-    public void setName(String nombre) {
-        this.name = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getParticleSize() {
         return particleSize;
     }
 
-    public void setParticleSize(String particulaT) {
-        this.particleSize = particulaT;
+    public void setParticleSize(String particleSize) {
+        this.particleSize = particleSize;
     }
 
     public Float getsBet() {
@@ -91,16 +91,12 @@ public class Adsorbent {
         this.vBet = vBet;
     }
 
-    public Float getpPHZeroCharge() {
+    public Float getpHZeroCharge() {
         return pHZeroCharge;
     }
 
-    public void setpPHZeroCharge(Float pHCargaCero) {
-        this.pHZeroCharge = pHCargaCero;
-    }
-
-    public String toString() {
-        return name + "|" + particleSize + "|" + sBet + "|" + vBet + "|" + pHZeroCharge;
+    public void setpHZeroCharge(Float pHZeroCharge) {
+        this.pHZeroCharge = pHZeroCharge;
     }
 }
 

@@ -108,7 +108,7 @@ public class LoadDataService {
             if (!adsorbente.isPresent()) {
                 nuevoAdsorbent.setName(nombreAdsorbente);
                 nuevoAdsorbent.setParticleSize(sizeAdsorbente);
-                nuevoAdsorbent.setpPHZeroCharge(pHCargaCero);
+                nuevoAdsorbent.setpHZeroCharge(pHCargaCero);
                 nuevoAdsorbent.setsBet(sBet);
                 nuevoAdsorbent.setvBet(vBet);
                 adsorbentRepository.save(nuevoAdsorbent);

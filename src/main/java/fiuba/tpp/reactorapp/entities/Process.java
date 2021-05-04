@@ -88,22 +88,6 @@ public class Process {
         this.adsorbent = adsorbent;
     }
 
-    public Float getEquilibriumTime() {
-        return equilibriumTime;
-    }
-
-    public void setEquilibriumTime(Float tiempoEquilibrio) {
-        this.equilibriumTime = tiempoEquilibrio;
-    }
-
-    public Float getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Float temperatura) {
-        this.temperature = temperatura;
-    }
-
     public Float getQmax() {
         return qmax;
     }
@@ -112,68 +96,84 @@ public class Process {
         this.qmax = qmax;
     }
 
+    public Float getEquilibriumTime() {
+        return equilibriumTime;
+    }
+
+    public void setEquilibriumTime(Float equilibriumTime) {
+        this.equilibriumTime = equilibriumTime;
+    }
+
+    public Float getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(Float temperature) {
+        this.temperature = temperature;
+    }
+
     public Float getInitialPH() {
         return initialPH;
     }
 
-    public void setInitialPH(Float phinicial) {
-        this.initialPH = phinicial;
+    public void setInitialPH(Float initialPH) {
+        this.initialPH = initialPH;
     }
 
     public boolean isComplexation() {
         return complexation;
     }
 
-    public void setComplexation(boolean complejacion) {
-        this.complexation = complejacion;
+    public void setComplexation(boolean complexation) {
+        this.complexation = complexation;
     }
 
     public boolean isIonicInterchange() {
         return ionicInterchange;
     }
 
-    public void setIonicInterchange(boolean intercambioIonico) {
-        this.ionicInterchange = intercambioIonico;
+    public void setIonicInterchange(boolean ionicInterchange) {
+        this.ionicInterchange = ionicInterchange;
     }
 
     public boolean isChemicalReaction() {
         return chemicalReaction;
     }
 
-    public void setChemicalReaction(boolean reaccionQuimica) {
-        this.chemicalReaction = reaccionQuimica;
+    public void setChemicalReaction(boolean chemicalReaction) {
+        this.chemicalReaction = chemicalReaction;
     }
 
     public String getObservation() {
         return observation;
     }
 
-    public void setObservation(String observacion) {
-        this.observation = observacion;
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 
     public String getSource() {
         return source;
     }
 
-    public void setSource(String fuente) {
-        this.source = fuente;
+    public void setSource(String source) {
+        this.source = source;
     }
 
     @Override
     public String toString() {
         return "Reactor{" +
                 "adsorbate=" + adsorbate.getIonName() +
-                ", adsorbente=" + adsorbent.getName() +
+                ", adsorbent=" + adsorbent.getName() +
                 ", qMax=" + qmax +
-                ", tiempoEquilibrio=" + equilibriumTime +
-                ", temperatura=" + temperature +
-                ", pHInicial=" + initialPH +
-                ", complejacion=" + complexation +
-                ", intercambioIonico=" + ionicInterchange +
-                ", reaccionQuimica=" + chemicalReaction +
-                ", observacion='" + observation + '\'' +
-                ", fuente='" + source + '\'' +
+                ", equilibriumTime=" + equilibriumTime +
+                ", temperature=" + temperature +
+                ", initialPH=" + initialPH +
+                ", complexation=" + complexation +
+                ", ionicInterchange=" + ionicInterchange +
+                ", chemicalReaction=" + chemicalReaction +
+                ", observation='" + observation + '\'' +
+                ", source='" + source + '\'' +
                 '}';
     }
 }
