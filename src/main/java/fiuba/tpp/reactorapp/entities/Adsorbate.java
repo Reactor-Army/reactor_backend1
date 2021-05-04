@@ -15,8 +15,8 @@ public class Adsorbate {
 
     private String ionName;
     private String ionNameNormalized;
-    private String IUPACName;
-    private String IUPACNameNormalized;
+    private String nameIUPAC;
+    private String nameIUPACNormalized;
     private Integer ionCharge;
     private Float ionRadius;
     private Float dischargeLimit;
@@ -24,9 +24,9 @@ public class Adsorbate {
     public Adsorbate() {
     }
 
-    public Adsorbate(String ionName, String IUPACName, Integer ionCharge, Float ionRadius, Float dischargeLimit) {
+    public Adsorbate(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit) {
         this.ionName = ionName;
-        this.IUPACName = IUPACName;
+        this.nameIUPAC = nameIUPAC;
         this.ionCharge = ionCharge;
         this.ionRadius = ionRadius;
         this.dischargeLimit = dischargeLimit;
@@ -43,7 +43,7 @@ public class Adsorbate {
 
     private void copyData(AdsorbateRequest adsorbate){
         this.ionName = adsorbate.getNombreIon();
-        this.IUPACName = adsorbate.getNombreIUPAC();
+        this.nameIUPAC = adsorbate.getNombreIUPAC();
         this.ionCharge = adsorbate.getCargaIon();
         this.ionRadius = adsorbate.getRadioIonico();
         this.dischargeLimit = adsorbate.getLimiteVertido();
@@ -73,20 +73,20 @@ public class Adsorbate {
         this.ionNameNormalized = ionNameNormalized;
     }
 
-    public String getIUPACName() {
-        return IUPACName;
+    public String getNameIUPAC() {
+        return nameIUPAC;
     }
 
-    public void setIUPACName(String IUPACName) {
-        this.IUPACName = IUPACName;
+    public void setNameIUPAC(String nameIUPAC) {
+        this.nameIUPAC = nameIUPAC;
     }
 
-    public String getIUPACNameNormalized() {
-        return IUPACNameNormalized;
+    public String getNameIUPACNormalized() {
+        return nameIUPACNormalized;
     }
 
-    public void setIUPACNameNormalized(String IUPACNameNormalized) {
-        this.IUPACNameNormalized = IUPACNameNormalized;
+    public void setNameIUPACNormalized(String nameIUPACNormalized) {
+        this.nameIUPACNormalized = nameIUPACNormalized;
     }
 
     public Integer getIonCharge() {
@@ -117,6 +117,6 @@ public class Adsorbate {
     @PrePersist
     protected void normalize() {
         ionNameNormalized = (ionName == null)? "" : StringUtils.stripAccents(ionName.toLowerCase());
-        IUPACNameNormalized = (IUPACName == null)? "" : StringUtils.stripAccents(IUPACName.toLowerCase());
+        nameIUPACNormalized = (nameIUPAC == null)? "" : StringUtils.stripAccents(nameIUPAC.toLowerCase());
     }
 }

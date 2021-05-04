@@ -29,7 +29,7 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
 
         if (filter.getName() != null && !filter.getName().isEmpty()) {
             String nombreFilter = StringUtils.stripAccents(filter.getName().toLowerCase());
-            predicates.add(cb.or(cb.like(adsorbate.get("IUPACNameNormalized"), "%"+nombreFilter+"%"),
+            predicates.add(cb.or(cb.like(adsorbate.get("nameIUPACNormalized"), "%"+nombreFilter+"%"),
                                 cb.like(adsorbate.get("ionNameNormalized"), "%"+nombreFilter+"%")));
         }
 

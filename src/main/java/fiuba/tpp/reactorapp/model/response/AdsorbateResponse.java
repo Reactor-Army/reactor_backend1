@@ -18,7 +18,7 @@ public class AdsorbateResponse {
     public AdsorbateResponse(Adsorbate adsorbate) {
         this.id = adsorbate.getId();
         this.cargaIon = adsorbate.getIonCharge();
-        this.nombreIUPAC = adsorbate.getIUPACName();
+        this.nombreIUPAC = adsorbate.getNameIUPAC();
         this.nombreIon = adsorbate.getIonName();
         this.radioIonico = adsorbate.getIonRadius();
         this.limiteVertido = adsorbate.getDischargeLimit();
