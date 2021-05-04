@@ -1,11 +1,11 @@
 package fiuba.tpp.reactorapp.model.filter;
 
-public class AdsorbatoFilter {
+public class AdsorbateFilter {
 
     private String nombre;
     private Integer cargaIon;
 
-    public AdsorbatoFilter(String nombre, Integer cargaIon) {
+    public AdsorbateFilter(String nombre, Integer cargaIon) {
         this.nombre = nombre;
         this.cargaIon = cargaIon;
     }

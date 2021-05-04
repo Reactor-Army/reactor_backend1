@@ -1,6 +1,6 @@
 package fiuba.tpp.reactorapp.model.response;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
+import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 
@@ -8,7 +8,7 @@ public class ReactorResponse {
 
     private Long id;
 
-    private Adsorbato adsorbato;
+    private Adsorbate adsorbate;
 
     private Adsorbente adsorbente;
 
@@ -35,7 +35,7 @@ public class ReactorResponse {
 
     public ReactorResponse(Reactor reactor) {
         this.id = reactor.getId();
-        this.adsorbato = reactor.getAdsorbato();
+        this.adsorbate = reactor.getAdsorbate();
         this.adsorbente = reactor.getAdsorbente();
         this.qmax = reactor.getQmax();
         this.tiempoEquilibrio = reactor.getTiempoEquilibrio();
@@ -56,12 +56,12 @@ public class ReactorResponse {
         this.id = id;
     }
 
-    public Adsorbato getAdsorbato() {
-        return adsorbato;
+    public Adsorbate getAdsorbato() {
+        return adsorbate;
     }
 
-    public void setAdsorbato(Adsorbato adsorbato) {
-        this.adsorbato = adsorbato;
+    public void setAdsorbato(Adsorbate adsorbate) {
+        this.adsorbate = adsorbate;
     }
 
     public Adsorbente getAdsorbente() {

@@ -1,9 +1,9 @@
 package fiuba.tpp.reactorapp.service.load;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
+import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
-import fiuba.tpp.reactorapp.repository.AdsorbatoRepository;
+import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbenteRepository;
 import fiuba.tpp.reactorapp.repository.ReactorRepository;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -32,7 +32,7 @@ public class LoadDataService {
     private AdsorbenteRepository adsorbenteRepository;
 
     @Autowired
-    private AdsorbatoRepository adsorbatoRepository;
+    private AdsorbateRepository adsorbateRepository;
 
     @Autowired
     private ReactorRepository reactorRepository;
@@ -116,28 +116,28 @@ public class LoadDataService {
                 nuevoSorbente = true;
             }
 
-            Optional<Adsorbato> adsorbato = adsorbatoRepository.findByNombreIonAndCargaIonAndRadioIonico(nombreIon, cargaIon, radioIonico);
+            Optional<Adsorbate> adsorbato = adsorbateRepository.findByNombreIonAndCargaIonAndRadioIonico(nombreIon, cargaIon, radioIonico);
 
-            Adsorbato nuevoAdsorbato = new Adsorbato();
+            Adsorbate newAdsorbate = new Adsorbate();
             if (!adsorbato.isPresent()) {
-                nuevoAdsorbato.setNombreIon(nombreIon);
-                nuevoAdsorbato.setCargaIon(cargaIon);
-                nuevoAdsorbato.setRadioIonico(radioIonico);
-                nuevoAdsorbato.setLimiteVertido(limite);
-                adsorbatoRepository.save(nuevoAdsorbato);
+                newAdsorbate.setNombreIon(nombreIon);
+                newAdsorbate.setCargaIon(cargaIon);
+                newAdsorbate.setRadioIonico(radioIonico);
+                newAdsorbate.setLimiteVertido(limite);
+                adsorbateRepository.save(newAdsorbate);
 
                 nuevoSorbato = true;
             }
 
-            Adsorbato sorbato = (nuevoSorbato ? nuevoAdsorbato : adsorbato.get());
+            Adsorbate sorbato = (nuevoSorbato ? newAdsorbate : adsorbato.get());
             Adsorbente sorbente = (nuevoSorbente ? nuevoAdsorbente : adsorbente.get());
 
-            Optional<Reactor> reactor = reactorRepository.findByAdsorbenteAndAdsorbatoAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
+            Optional<Reactor> reactor = reactorRepository.findByAdsorbenteAndAdsorbateAndQmaxAndTiempoEquilibrioAndTemperaturaAndPhinicial(sorbente, sorbato, qMax, tiempoEquilibrio, temperatura, pHInicial);
 
             if (!reactor.isPresent()) {
                 Reactor nuevoReactor = new Reactor();
                 nuevoReactor.setAdsorbente(sorbente);
-                nuevoReactor.setAdsorbato(sorbato);
+                nuevoReactor.setAdsorbate(sorbato);
                 nuevoReactor.setComplejacion(complejacionBool);
                 nuevoReactor.setIntercambioIonico(intercambioBool);
                 nuevoReactor.setReaccionQuimica(reaccionBool);

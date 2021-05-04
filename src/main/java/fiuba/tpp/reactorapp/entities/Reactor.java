@@ -13,7 +13,7 @@ public class Reactor {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Adsorbato adsorbato;
+    private Adsorbate adsorbate;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Adsorbente adsorbente;
@@ -41,17 +41,17 @@ public class Reactor {
     }
 
 
-    public Reactor(Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
-        copyData(adsorbato,adsorbente,request);
+    public Reactor(Adsorbate adsorbate, Adsorbente adsorbente, ReactorRequest request){
+        copyData(adsorbate,adsorbente,request);
     }
 
-    public Reactor update (Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
-        copyData(adsorbato,adsorbente,request);
+    public Reactor update (Adsorbate adsorbate, Adsorbente adsorbente, ReactorRequest request){
+        copyData(adsorbate,adsorbente,request);
         return this;
     }
 
-    private void copyData(Adsorbato adsorbato, Adsorbente adsorbente, ReactorRequest request){
-        this.adsorbato = adsorbato;
+    private void copyData(Adsorbate adsorbate, Adsorbente adsorbente, ReactorRequest request){
+        this.adsorbate = adsorbate;
         this.adsorbente = adsorbente;
         this.qmax = request.getQmax();
         this.tiempoEquilibrio = request.getTiempoEquilibrio();
@@ -72,12 +72,12 @@ public class Reactor {
         this.id = id;
     }
 
-    public Adsorbato getAdsorbato() {
-        return adsorbato;
+    public Adsorbate getAdsorbate() {
+        return adsorbate;
     }
 
-    public void setAdsorbato(Adsorbato adsorbato) {
-        this.adsorbato = adsorbato;
+    public void setAdsorbate(Adsorbate adsorbate) {
+        this.adsorbate = adsorbate;
     }
 
     public Adsorbente getAdsorbente() {
@@ -164,7 +164,7 @@ public class Reactor {
     @Override
     public String toString() {
         return "Reactor{" +
-                "adsorbato=" + adsorbato.getNombreIon() +
+                "adsorbate=" + adsorbate.getNombreIon() +
                 ", adsorbente=" + adsorbente.getNombre() +
                 ", qMax=" + qmax +
                 ", tiempoEquilibrio=" + tiempoEquilibrio +

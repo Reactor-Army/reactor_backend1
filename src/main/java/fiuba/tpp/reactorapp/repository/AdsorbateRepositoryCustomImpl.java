@@ -1,7 +1,7 @@
 package fiuba.tpp.reactorapp.repository;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
-import fiuba.tpp.reactorapp.model.filter.AdsorbatoFilter;
+import fiuba.tpp.reactorapp.entities.Adsorbate;
+import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,18 +13,18 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdsorbatoRepositoryCustomImpl implements AdsorbatoRepositoryCustom{
+public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom {
 
     @Autowired
     EntityManager em;
 
 
     @Override
-    public List<Adsorbato> getAll(AdsorbatoFilter filter) {
+    public List<Adsorbate> getAll(AdsorbateFilter filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Adsorbato> cq = cb.createQuery(Adsorbato.class);
+        CriteriaQuery<Adsorbate> cq = cb.createQuery(Adsorbate.class);
 
-        Root<Adsorbato> adsorbato = cq.from(Adsorbato.class);
+        Root<Adsorbate> adsorbato = cq.from(Adsorbate.class);
         List<Predicate> predicates = new ArrayList<>();
 
         if (filter.getNombre() != null && !filter.getNombre().isEmpty()) {

@@ -1,35 +1,24 @@
-package fiuba.tpp.reactorapp.model.response;
+package fiuba.tpp.reactorapp.model.request;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
-
-public class AdsorbatoResponse {
+public class AdsorbateRequest {
 
     private Long id;
+
     private String nombreIon;
     private String nombreIUPAC;
     private Integer cargaIon;
     private Float radioIonico;
     private Float limiteVertido;
 
-
-    public AdsorbatoResponse() {
+    public AdsorbateRequest() {
     }
 
-    public AdsorbatoResponse(Adsorbato adsorbato) {
-        this.id = adsorbato.getId();
-        this.cargaIon = adsorbato.getCargaIon();
-        this.nombreIUPAC = adsorbato.getNombreIUPAC();
-        this.nombreIon = adsorbato.getNombreIon();
-        this.radioIonico = adsorbato.getRadioIonico();
-        this.limiteVertido = adsorbato.getLimiteVertido();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public AdsorbateRequest(String nombreIon, String nombreIUPAC, Integer cargaIon, Float radioIonico, Float limiteVertido) {
+        this.nombreIon = nombreIon;
+        this.nombreIUPAC = nombreIUPAC;
+        this.cargaIon = cargaIon;
+        this.radioIonico = radioIonico;
+        this.limiteVertido = limiteVertido;
     }
 
     public String getNombreIon() {
@@ -62,6 +51,14 @@ public class AdsorbatoResponse {
 
     public void setLimiteVertido(Float limiteVertido) {
         this.limiteVertido = limiteVertido;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombreIUPAC() {

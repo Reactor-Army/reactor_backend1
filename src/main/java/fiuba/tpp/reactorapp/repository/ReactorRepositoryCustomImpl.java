@@ -26,7 +26,7 @@ public class ReactorRepositoryCustomImpl implements  ReactorRepositoryCustom{
         List<Predicate> predicates = new ArrayList<>();
 
         if (filter.getIdAdsorbato() != null) {
-            predicates.add(cb.equal(reactorRoot.get("adsorbato").get("id"), filter.getIdAdsorbato()));
+            predicates.add(cb.equal(reactorRoot.get("adsorbate").get("id"), filter.getIdAdsorbato()));
         }
 
         if(filter.getIdAdsorbente() != null){

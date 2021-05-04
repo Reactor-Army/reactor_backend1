@@ -1,13 +1,13 @@
 package fiuba.tpp.reactorapp.service;
 
-import fiuba.tpp.reactorapp.entities.Adsorbato;
+import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbente;
 import fiuba.tpp.reactorapp.entities.Reactor;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidReactorException;
 import fiuba.tpp.reactorapp.model.filter.ReactorFilter;
 import fiuba.tpp.reactorapp.model.request.ReactorRequest;
-import fiuba.tpp.reactorapp.repository.AdsorbatoRepository;
+import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbenteRepository;
 import fiuba.tpp.reactorapp.repository.ReactorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +23,14 @@ public class ReactorService {
     private ReactorRepository reactorRepository;
 
     @Autowired
-    private AdsorbatoRepository adsorbatoRepository;
+    private AdsorbateRepository adsorbateRepository;
 
     @Autowired
     private AdsorbenteRepository adsorbenteRepository;
 
     public Reactor createReactor(ReactorRequest request) throws InvalidReactorException {
         Optional<Adsorbente> adsorbente = adsorbenteRepository.findById(request.getIdAdsorbente());
-        Optional<Adsorbato> adsorbato = adsorbatoRepository.findById(request.getIdAdsorbato());
+        Optional<Adsorbate> adsorbato = adsorbateRepository.findById(request.getIdAdsorbato());
         if(adsorbato.isPresent() && adsorbente.isPresent()){
             return reactorRepository.save(new Reactor(adsorbato.get(),adsorbente.get(),request));
         }
@@ -39,7 +39,7 @@ public class ReactorService {
 
     public Reactor updateReactor(ReactorRequest request) throws InvalidReactorException {
         Optional<Adsorbente> adsorbente = adsorbenteRepository.findById(request.getIdAdsorbente());
-        Optional<Adsorbato> adsorbato = adsorbatoRepository.findById(request.getIdAdsorbato());
+        Optional<Adsorbate> adsorbato = adsorbateRepository.findById(request.getIdAdsorbato());
         Optional<Reactor> reactor = reactorRepository.findById(request.getId());
         if(adsorbato.isPresent() && adsorbente.isPresent() && reactor.isPresent()){
             return reactorRepository.save(reactor.get().update(adsorbato.get(),adsorbente.get(),request));

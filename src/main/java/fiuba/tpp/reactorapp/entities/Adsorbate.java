@@ -1,13 +1,13 @@
 package fiuba.tpp.reactorapp.entities;
 
-import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
+import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name ="ADSORBATO")
-public class Adsorbato {
+public class Adsorbate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,10 @@ public class Adsorbato {
     private Float radioIonico;
     private Float limiteVertido;
 
-    public Adsorbato() {
+    public Adsorbate() {
     }
 
-    public Adsorbato(String nombreIon, String nombreIUPAC,Integer cargaIon, Float radioIonico, Float limiteVertido) {
+    public Adsorbate(String nombreIon, String nombreIUPAC, Integer cargaIon, Float radioIonico, Float limiteVertido) {
         this.nombreIon = nombreIon;
         this.nombreIUPAC = nombreIUPAC;
         this.cargaIon = cargaIon;
@@ -32,16 +32,16 @@ public class Adsorbato {
         this.limiteVertido = limiteVertido;
     }
 
-    public Adsorbato(AdsorbatoRequest adsorbato) {
+    public Adsorbate(AdsorbateRequest adsorbato) {
         copyData(adsorbato);
     }
 
-    public Adsorbato update(AdsorbatoRequest adsorbato){
+    public Adsorbate update(AdsorbateRequest adsorbato){
         copyData(adsorbato);
         return this;
     }
 
-    private void copyData(AdsorbatoRequest adsorbato){
+    private void copyData(AdsorbateRequest adsorbato){
         this.nombreIon = adsorbato.getNombreIon();
         this.nombreIUPAC = adsorbato.getNombreIUPAC();
         this.cargaIon = adsorbato.getCargaIon();

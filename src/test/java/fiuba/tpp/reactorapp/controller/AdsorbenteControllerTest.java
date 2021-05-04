@@ -1,6 +1,5 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.model.request.AdsorbatoRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbenteRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbenteResponse;
 import org.junit.Assert;
