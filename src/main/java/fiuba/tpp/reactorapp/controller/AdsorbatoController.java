@@ -72,7 +72,7 @@ public class AdsorbatoController {
         return adsorbatos;
     }
 
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/buscar")
     public List<AdsorbatoResponse> searchAdsorbatos(@RequestParam(required = false) String nombre, @RequestParam(required = false) Integer cargaIon){
         List<AdsorbatoResponse> adsorbatos = new ArrayList<>();
         AdsorbatoFilter filter = new AdsorbatoFilter(nombre,cargaIon);

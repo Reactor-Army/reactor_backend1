@@ -75,7 +75,7 @@ public class ReactorController {
         return reactores;
     }
 
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/buscar")
     public List<ReactorResponse> searchReactores(@RequestParam(required = false) Long idAdsorbato, @RequestParam(required = false) Long idAdsorbente){
         List<ReactorResponse> reactores = new ArrayList<>();
         ReactorFilter filter = new ReactorFilter(idAdsorbato,idAdsorbente);
