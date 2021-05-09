@@ -1,11 +1,8 @@
 package fiuba.tpp.reactorapp.service;
 
-import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
-import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
-import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import org.junit.Assert;
 
