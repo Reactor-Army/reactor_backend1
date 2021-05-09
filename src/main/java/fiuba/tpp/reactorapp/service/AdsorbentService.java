@@ -6,6 +6,8 @@ import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -41,4 +43,9 @@ public class AdsorbentService {
     public List<Adsorbent> getAll(){
         return (List<Adsorbent>) adsorbentRepository.findAll();
     }
+
+     public List<Adsorbent> search(AdsorbentFilter filter){
+         return adsorbentRepository.getAll(filter);
+    }
 }
+
