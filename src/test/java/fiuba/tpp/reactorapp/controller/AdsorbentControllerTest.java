@@ -1,6 +1,8 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -88,5 +90,36 @@ class AdsorbentControllerTest {
         Assertions.assertThrows(ResponseStatusException.class, () -> {
             adsorbentController.deleteAdsorbent(1L);
         });
+    }
+
+
+    @Test
+    void testSearchAdsorbentsNoFilter() {
+        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        adsorbentController.createAdsorbent(request);
+        adsorbentController.createAdsorbent(request2);
+        List<AdsorbentResponse> adsorbentes = adsorbentController.searchAdsorbents(null);
+        Assert.assertEquals(2L,adsorbentes.size());
+    }
+
+    @Test
+    void testSearchAdsorbentsFilterName() {
+        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        adsorbentController.createAdsorbent(request);
+        adsorbentController.createAdsorbent(request2);
+        List<AdsorbentResponse> adsorbents = adsorbentController.searchAdsorbents("Prueba2");
+        Assert.assertEquals(1L,adsorbents.size());
+    }
+
+    @Test
+    void testSearchAdsorbentFilterUpperAndLowerName() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("prueba", "Prueba2", 10f, 10f,10f);
+        adsorbentController.createAdsorbent(request);
+        adsorbentController.createAdsorbent(request2);
+        List<AdsorbentResponse> adsorbatos = adsorbentController.searchAdsorbents("PRUEBA");
+        Assert.assertEquals(2L,adsorbatos.size());
     }
 }
