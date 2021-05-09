@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
+import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
@@ -69,6 +70,17 @@ public class AdsorbentController {
         }
         return adsorbents;
     }
+
+    @GetMapping(value = "/buscar")
+    public List<AdsorbentResponse> searchAdsorbents(@RequestParam(name="nombre",required = false) String name){
+        List<AdsorbentResponse> adsorbents = new ArrayList<>();
+        AdsorbentFilter filter = new AdsorbentFilter(name);
+        for (Adsorbent adsorbent : adsorbentService.search(filter)) {
+            adsorbents.add(new AdsorbentResponse(adsorbent));
+        }
+        return adsorbents;
+    }
+
 
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();

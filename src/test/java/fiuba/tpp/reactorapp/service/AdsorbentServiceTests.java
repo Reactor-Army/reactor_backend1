@@ -1,12 +1,15 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
+import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import org.junit.Assert;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -78,4 +81,39 @@ class AdsorbentServiceTests {
         });
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "1, 'ba2'",
+            "2, ",
+            "2, ''"
+    })
+    void testSearchAdsorbentFilterName(long size, String filter) {
+        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request2);
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter(filter));
+        Assert.assertEquals(size, adsorbents.size());
+    }
+
+
+    @Test
+    void testSearchAdsorbentFilterUpperAndLowerName() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("prueba", "Prueba2", 10f, 10f,10f);
+        adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request2);
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("prueba"));
+        Assert.assertEquals(2L, adsorbents.size());
+    }
+
+    @Test
+    void testSearchAdsorbentFilterAccent1() {
+        AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
+        adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request2);
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos"));
+        Assert.assertEquals(2L, adsorbents.size());
+    }
 }

@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.entities;
 
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 
@@ -13,6 +14,8 @@ public class Adsorbent {
     private Long id;
 
     private String name;
+
+    private String nameNormalized;
 
     private String particleSize;
 
@@ -98,5 +101,20 @@ public class Adsorbent {
     public void setpHZeroCharge(Float pHZeroCharge) {
         this.pHZeroCharge = pHZeroCharge;
     }
+
+    public String getNameNormalized() {
+        return nameNormalized;
+    }
+
+    public void setNameNormalized(String nameNormalized) {
+        this.nameNormalized = nameNormalized;
+    }
+
+    @PreUpdate
+    @PrePersist
+    protected void normalize() {
+        nameNormalized = (name == null)? "" : StringUtils.stripAccents(name.toLowerCase());
+    }
+
 }
 
