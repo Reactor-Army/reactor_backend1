@@ -37,6 +37,7 @@ public class AdsorbentNameResponse {
     }
 
     private String formatName(Adsorbent adsorbent){
-        return StringUtils.capitalize(adsorbent.getName()) + " (" + adsorbent.getParticleSize()+")";
+        String particleSize = (adsorbent.getParticleSize()!=null) ? adsorbent.getParticleSize(): "-";
+        return StringUtils.capitalize(adsorbent.getName()) + " (" + particleSize +")";
     }
 }

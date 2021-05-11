@@ -145,4 +145,13 @@ class AdsorbentControllerTest {
         Assert.assertEquals("PRUEBA (Prueba)", adsorbentsName.get(0).getName());
 
     }
+
+    @Test
+    void testSearchAdsorbentNameSizeNull() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", null, 1f, 1f,1f);
+        adsorbentController.createAdsorbent(request);
+        List<AdsorbentNameResponse> adsorbentsName = adsorbentController.searchAdsorbentsName("PRUEBA");
+        Assert.assertEquals(1L,adsorbentsName.size());
+        Assert.assertEquals("PRUEBA (-)", adsorbentsName.get(0).getName());
+    }
 }
