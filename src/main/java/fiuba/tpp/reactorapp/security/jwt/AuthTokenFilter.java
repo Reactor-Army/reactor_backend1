@@ -27,6 +27,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private static final Logger loggerAuthFilter = LoggerFactory.getLogger(AuthTokenFilter.class);
 
+    private static final int TOKEN_PREFIX_LENGTH = 7;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -53,7 +55,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         String headerAuth = request.getHeader("Authorization");
 
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7, headerAuth.length());
+            return headerAuth.substring(TOKEN_PREFIX_LENGTH, headerAuth.length());
         }
 
         return null;
