@@ -35,7 +35,7 @@ public class AuthController {
                     HttpStatus.BAD_REQUEST, "El email ya existe en el sistema", e);
         } catch (InvalidRegisterException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El email es invalido o no cumplee con un formato correcto", e);
+                    HttpStatus.BAD_REQUEST, "El email es invalido o no cumple con un formato correcto", e);
         }
     }
 

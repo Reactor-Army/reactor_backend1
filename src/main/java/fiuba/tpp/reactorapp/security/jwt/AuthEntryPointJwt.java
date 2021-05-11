@@ -20,7 +20,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         logger.error("Unauthorized error: {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Credenciales invalidas. Verifica tu email y password");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Credenciales inválidas. Verifica tu email y password");
     }
 
 }
