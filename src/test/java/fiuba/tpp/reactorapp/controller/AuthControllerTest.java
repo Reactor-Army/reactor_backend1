@@ -77,5 +77,25 @@ class AuthControllerTest {
         });
     }
 
+    @Test
+    void testInvalidRegisterDuplicateEmail(){
+        RegisterRequest request = new RegisterRequest("matiTest","mati@gmail.com" ,"Prueba123");
+        authController.registerUser(request);
+        RegisterRequest request2 = new RegisterRequest("matiTest2","mati@gmail.com" ,"Prueba123");
+        Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.registerUser(request2);
+        });
+    }
+
+    @Test
+    void testInvalidRegisterDuplicateUsername(){
+        RegisterRequest request = new RegisterRequest("matiTest2","mati2@gmail.com" ,"Prueba123");
+        authController.registerUser(request);
+        RegisterRequest request2 = new RegisterRequest("matiTest2","mati@gmail.com" ,"Prueba123");
+        Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.registerUser(request2);
+        });
+    }
+
 
 }
