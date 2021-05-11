@@ -1,37 +1,29 @@
 package fiuba.tpp.reactorapp.model.auth.response;
 
+import fiuba.tpp.reactorapp.entities.auth.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class LoginResponse {
+public class RegisterResponse {
 
-    private String token;
-    private String type = "Bearer";
     private Long id;
     private String email;
     private List<String> roles;
 
-    public LoginResponse(String accessToken, Long id, String email, List<String> roles) {
-        this.token = accessToken;
+    public RegisterResponse(Long id, String email, List<String> roles) {
         this.id = id;
         this.email = email;
         this.roles = roles;
     }
 
-    public String getAccessToken() {
-        return token;
+    public RegisterResponse(User user) {
+        this.id = user.getId();
+        this.email = user.getEmail();
+        this.roles = new ArrayList<>();
+        roles.add(user.getRole().name());
     }
 
-    public void setAccessToken(String accessToken) {
-        this.token = accessToken;
-    }
-
-    public String getTokenType() {
-        return type;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.type = tokenType;
-    }
 
     public Long getId() {
         return id;
@@ -51,5 +43,9 @@ public class LoginResponse {
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

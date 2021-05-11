@@ -3,10 +3,10 @@ package fiuba.tpp.reactorapp.service.auth;
 import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
-import fiuba.tpp.reactorapp.model.auth.exception.UsernameAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
 import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
+import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
@@ -37,24 +37,23 @@ public class AuthService {
     @Autowired
     JwtUtils jwtUtils;
 
-    public void register(RegisterRequest request) throws UsernameAlreadyExistException, EmailAlreadyExistException {
-        if (Boolean.TRUE.equals(userRepository.existsByUsername(request.getUsername()))) {
-            throw new UsernameAlreadyExistException();
-        }
-
+    public RegisterResponse register(RegisterRequest request) throws EmailAlreadyExistException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
             throw new EmailAlreadyExistException();
         }
 
-        User user = new User(request.getUsername(),request.getEmail(),encoder.encode(request.getPassword()));
+        User user = new User(request.getEmail(),encoder.encode(request.getPassword()));
 
         user.setRole(ERole.ROLE_USER);
         userRepository.save(user);
+
+        return new RegisterResponse(user);
+
     }
 
     public LoginResponse login(LoginRequest request){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -64,7 +63,7 @@ public class AuthService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        return new LoginResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
+        return new LoginResponse(jwt, userDetails.getId(), userDetails.getEmail(), roles);
 
     }
 }
