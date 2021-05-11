@@ -12,7 +12,7 @@
 	<artifactId>reactorapp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>reactorapp</name>
-	<description>App para informacion de reactores Adsorbato Adsorbente</description>
+	<description>App para informacion de procesos Adsorbato Adsorbente</description>
 	<properties>
 		<java.version>8</java.version>
 		<sonar.projectKey>Reactor-Army_reactor_backend1</sonar.projectKey>
@@ -28,12 +28,12 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>[3.17,)</version>
+			<version>3.17</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.15</version>
+			<version>3.17</version>
 		</dependency>
 
 		<dependency>
