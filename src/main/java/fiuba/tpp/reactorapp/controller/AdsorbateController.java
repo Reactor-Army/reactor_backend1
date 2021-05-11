@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,16 @@ public class AdsorbateController {
             adsorbates.add(new AdsorbateResponse(adsorbate));
         }
         return adsorbates;
+    }
+
+    @GetMapping(value = "/buscar/nombre")
+    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name){
+        List<AdsorbateNameResponse> adsorbatesName = new ArrayList<>();
+        AdsorbateFilter filter = new AdsorbateFilter(name);
+        for (Adsorbate adsorbate : adsorbateService.search(filter)) {
+            adsorbatesName.add(new AdsorbateNameResponse(adsorbate));
+        }
+        return adsorbatesName;
     }
 
 
