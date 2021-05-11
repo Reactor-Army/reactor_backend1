@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -154,6 +155,27 @@ class AdsorbateControllerTest {
         adsorbateController.createAdsorbate(request2);
         List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("CARLOS",null);
         Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbateName() {
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        adsorbateController.createAdsorbate(request2);
+        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS");
+        Assert.assertEquals(2L,adsorbatesNames.size());
+        Assert.assertEquals("CARLOS (PRUEBA)", adsorbatesNames.get(0).getName());
+        Assert.assertEquals("Carlos (prueba)", adsorbatesNames.get(1).getName());
+    }
+
+    @Test
+    void testSearchAdsorbateNameIUPACNull() {
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS",null,1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS");
+        Assert.assertEquals(1L,adsorbatesNames.size());
+        Assert.assertEquals("CARLOS", adsorbatesNames.get(0).getName());
     }
 
 

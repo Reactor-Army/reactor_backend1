@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -119,5 +120,38 @@ class AdsorbentControllerTest {
         adsorbentController.createAdsorbent(request2);
         List<AdsorbentResponse> adsorbatos = adsorbentController.searchAdsorbents("PRUEBA");
         Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @Test
+    void testSearchAdsorbentName() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("prueba", "Prueba2", 10f, 10f,10f);
+        adsorbentController.createAdsorbent(request);
+        adsorbentController.createAdsorbent(request2);
+        List<AdsorbentNameResponse> adsorbentsName = adsorbentController.searchAdsorbentsName("PRUEBA");
+        Assert.assertEquals(2L,adsorbentsName.size());
+        Assert.assertEquals("PRUEBA (Prueba)", adsorbentsName.get(0).getName());
+        Assert.assertEquals("Prueba (Prueba2)", adsorbentsName.get(1).getName());
+    }
+
+    @Test
+    void testSearchAdsorbentNameOneMatch() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
+            AdsorbentRequest request2 = new AdsorbentRequest("EsteNoEs", "Prueba2", 10f, 10f,10f);
+        adsorbentController.createAdsorbent(request);
+        adsorbentController.createAdsorbent(request2);
+        List<AdsorbentNameResponse> adsorbentsName = adsorbentController.searchAdsorbentsName("PRUEBA");
+        Assert.assertEquals(1L,adsorbentsName.size());
+        Assert.assertEquals("PRUEBA (Prueba)", adsorbentsName.get(0).getName());
+
+    }
+
+    @Test
+    void testSearchAdsorbentNameSizeNull() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", null, 1f, 1f,1f);
+        adsorbentController.createAdsorbent(request);
+        List<AdsorbentNameResponse> adsorbentsName = adsorbentController.searchAdsorbentsName("PRUEBA");
+        Assert.assertEquals(1L,adsorbentsName.size());
+        Assert.assertEquals("PRUEBA (-)", adsorbentsName.get(0).getName());
     }
 }

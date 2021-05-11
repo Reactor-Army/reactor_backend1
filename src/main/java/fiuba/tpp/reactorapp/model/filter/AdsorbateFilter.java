@@ -10,6 +10,10 @@ public class AdsorbateFilter {
         this.ionCharge = ionCharge;
     }
 
+    public AdsorbateFilter(String name) {
+        this.name = name;
+    }
+
 
     public String getName() {
         return name;
