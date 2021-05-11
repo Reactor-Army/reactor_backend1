@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     private void validateRegisterRequest(RegisterRequest request) throws InvalidRegisterException {
-        if(request.getEmail() == null || request.getEmail().isEmpty()) throw new InvalidRegisterException();
+        if(request.getEmail() == null || request.getEmail().isEmpty() || !request.getEmail().contains("@")) throw new InvalidRegisterException();
         if(request.getUsername() == null || request.getUsername().isEmpty()) throw  new InvalidRegisterException();
     }
 
