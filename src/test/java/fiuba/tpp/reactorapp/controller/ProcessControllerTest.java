@@ -201,6 +201,29 @@ class ProcessControllerTest {
         Assert.assertEquals(1L,processes.size());
     }
 
+    @Test
+    void testGetProcessById(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
 
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        ProcessResponse process = processController.createProcess(request);
+
+        ProcessResponse processResponse = processController.getProcess(process.getId());
+
+        Assertions.assertEquals(processResponse.getId(), process.getId());
+        Assertions.assertEquals(processResponse.getQmax(), process.getQmax());
+    }
+
+    @Test
+    void testGetProcessByIdNotFound(){
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            ProcessResponse processResponse = processController.getProcess(20L);
+        });
+    }
 }

@@ -85,6 +85,15 @@ public class ProcessController {
         return processes;
     }
 
+    @GetMapping(value = "/{id}")
+    public ProcessResponse getProcess(@PathVariable Long id) {
+        try {
+            return new ProcessResponse(processService.getById(id));
+        } catch (ComponentNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "El proceso no existe", e);
+        }
+    }
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
