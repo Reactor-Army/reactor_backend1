@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.security.jwt.AuthEntryPointJwt;
 import fiuba.tpp.reactorapp.security.jwt.AuthTokenFilter;
 import fiuba.tpp.reactorapp.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
+    @Value("${reactor.app.disableAuth}")
+    private boolean disableAuth;
+
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
@@ -55,23 +59,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/adsorbato/**").permitAll()
-                .antMatchers("/adsorbente/**").permitAll()
-                .antMatchers("/proceso/**").permitAll()
-                // Swagger
-                .antMatchers("/swagger-ui/**").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/v2/api-docs").permitAll()
-                .antMatchers("/configuration/ui").permitAll()
-                .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/configuration/security").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .anyRequest().authenticated();
+        if(disableAuth){
+            http.cors().and().csrf().disable()
+                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .authorizeRequests()
+                    .antMatchers("/auth/**").permitAll()
+                    .antMatchers("/adsorbato/**").permitAll()
+                    .antMatchers("/adsorbente/**").permitAll()
+                    .antMatchers("/proceso/**").permitAll()
+                    // Swagger
+                    .antMatchers("/swagger-ui/**").permitAll()
+                    .antMatchers("/swagger-ui.html").permitAll()
+                    .antMatchers("/v2/api-docs").permitAll()
+                    .antMatchers("/configuration/ui").permitAll()
+                    .antMatchers("/swagger-resources/**").permitAll()
+                    .antMatchers("/configuration/security").permitAll()
+                    .antMatchers("/webjars/**").permitAll()
+                    .anyRequest().authenticated();
+        }else{
+            http.cors().and().csrf().disable()
+                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .authorizeRequests()
+                    .antMatchers("/auth/**").permitAll()
+                    // Swagger
+                    .antMatchers("/swagger-ui/**").permitAll()
+                    .antMatchers("/swagger-ui.html").permitAll()
+                    .antMatchers("/v2/api-docs").permitAll()
+                    .antMatchers("/configuration/ui").permitAll()
+                    .antMatchers("/swagger-resources/**").permitAll()
+                    .antMatchers("/configuration/security").permitAll()
+                    .antMatchers("/webjars/**").permitAll()
+                    .anyRequest().authenticated();
+        }
+
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
