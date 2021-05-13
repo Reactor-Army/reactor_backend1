@@ -61,5 +61,13 @@ public class ProcessService {
         return (List<Process>) processRepository.findAll();
     }
 
+    public Process getById(Long id) throws ComponentNotFoundException {
+        Optional<Process> process = processRepository.findById(id);
+        if(process.isPresent()){
+            return process.get();
+        }
+        throw new ComponentNotFoundException();
+    }
+
     public List<Process> search(ProcessFilter filter){ return processRepository.getAll(filter);}
 }

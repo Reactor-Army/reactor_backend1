@@ -198,5 +198,32 @@ class ProcessServiceTests {
 
     }
 
+    @Test
+    void testGetProcessById() throws InvalidProcessException, ComponentNotFoundException {
+        Process process = createProcess();
 
+        Long id = process.getId();
+        Process foundProcess = processService.getById(id);
+        Assertions.assertEquals(process.getQmax(), foundProcess.getQmax());
+    }
+
+    @Test
+    void testGetProcessByIdNotFound() throws InvalidProcessException, ComponentNotFoundException {
+        Assertions.assertThrows(ComponentNotFoundException.class, () -> {
+                processService.getById(20L);
+        });
+    }
+
+    private Process createProcess() throws InvalidProcessException {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        return processService.createProcess(request);
+    }
 }
