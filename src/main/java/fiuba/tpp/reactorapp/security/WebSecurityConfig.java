@@ -59,29 +59,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         if(disableAuth){
-            http.cors().and().csrf().disable()
-                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                    .authorizeRequests()
-                    .antMatchers("/auth/**").permitAll()
-                    .antMatchers("/adsorbato/**").permitAll()
-                    .antMatchers("/adsorbente/**").permitAll()
-                    .antMatchers("/proceso/**").permitAll()
-                    // Swagger
-                    .antMatchers("/swagger-ui/**").permitAll()
-                    .antMatchers("/swagger-ui.html").permitAll()
-                    .antMatchers("/v2/api-docs").permitAll()
-                    .antMatchers("/configuration/ui").permitAll()
-                    .antMatchers("/swagger-resources/**").permitAll()
-                    .antMatchers("/configuration/security").permitAll()
-                    .antMatchers("/webjars/**").permitAll()
+            http.authorizeRequests()
+                    .antMatchers("**").permitAll()
                     .anyRequest().authenticated();
         }else{
-            http.cors().and().csrf().disable()
-                    .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                    .authorizeRequests()
+            http.authorizeRequests()
                     .antMatchers("/auth/**").permitAll()
                     // Swagger
                     .antMatchers("/swagger-ui/**").permitAll()
@@ -93,8 +80,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/webjars/**").permitAll()
                     .anyRequest().authenticated();
         }
-
-
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
