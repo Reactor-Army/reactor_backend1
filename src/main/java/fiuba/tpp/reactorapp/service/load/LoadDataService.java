@@ -55,8 +55,10 @@ public class LoadDataService {
                 worksheet = workbook.getSheetAt(0);
             }
 
+
             for(int i=3;i<worksheet.getPhysicalNumberOfRows() ;i++) {
                loadRowData(worksheet,i);
+
             }
             logger.info("Proceso de carga terminado");
         }
@@ -68,39 +70,46 @@ public class LoadDataService {
 
         XSSFRow row = worksheet.getRow(i);
 
-        if(row.getCell(0) != null) {
+        if(row.getCell(0) != null && !row.getCell(0).getStringCellValue().isEmpty()) {
             String nameAdsorbent = row.getCell(0).getStringCellValue();
             String sizeAdsorbent = row.getCell(1).getStringCellValue();
-            String ionName = row.getCell(2).getStringCellValue();
+            String numberCAS = row.getCell(2).getStringCellValue();
+            String formulaAdsorbate = row.getCell(3).getStringCellValue().trim();
+            String nameIUPAC = row.getCell(4).getStringCellValue();
+            String ionName = row.getCell(5).getStringCellValue();
 
-            String ionChargeText = row.getCell(3).getStringCellValue();
+            Integer ionCharge = 0;
+            String ionChargeText = row.getCell(6).getStringCellValue();
             StringBuilder chargeBuilder = new StringBuilder();
             chargeBuilder.append(ionChargeText);
             chargeBuilder.reverse();
-            Integer ionCharge = Integer.valueOf(chargeBuilder.toString());
+            if(!chargeBuilder.toString().isEmpty()){
+                ionCharge = Integer.valueOf(chargeBuilder.toString());
+            }
 
-            Float ionRadius = (float) row.getCell(4).getNumericCellValue();
-            Float qMax = (float) row.getCell(5).getNumericCellValue();
-            Float equilibriumTime = (float) row.getCell(6).getNumericCellValue();
-            Float temperature = (float) row.getCell(7).getNumericCellValue();
-            Float initialPH = (float) row.getCell(8).getNumericCellValue();
-            Float sBet = (float) row.getCell(9).getNumericCellValue();
-            Float vBet = (float) row.getCell(10).getNumericCellValue();
-            Float pHZeroCharge = (float) row.getCell(11).getNumericCellValue();
 
-            String complexation = row.getCell(12).getStringCellValue();
+            Float ionRadius = (float) row.getCell(7).getNumericCellValue();
+            Float qMax = (float) row.getCell(8).getNumericCellValue();
+            Float equilibriumTime = (float) row.getCell(9).getNumericCellValue();
+            Float temperature = (float) row.getCell(10).getNumericCellValue();
+            Float initialPH = (float) row.getCell(11).getNumericCellValue();
+            Float sBet = (float) row.getCell(12).getNumericCellValue();
+            Float vBet = (float) row.getCell(13).getNumericCellValue();
+            Float pHZeroCharge = (float) row.getCell(14).getNumericCellValue();
+
+            String complexation = row.getCell(15).getStringCellValue();
             boolean complexationBool = stringToBoolean(complexation);
 
-            String interchange = row.getCell(13).getStringCellValue();
+            String interchange = row.getCell(16).getStringCellValue();
             boolean interchangeBool = stringToBoolean(interchange);
 
-            String reaction = row.getCell(14).getStringCellValue();
+            String reaction = row.getCell(17).getStringCellValue();
             boolean reactionBool = stringToBoolean(reaction);
 
-            Float limit = (float) row.getCell(15).getNumericCellValue();
+            Float limit = (float) row.getCell(18).getNumericCellValue();
 
-            String observation = row.getCell(16).getStringCellValue();
-            String source = row.getCell(17).getStringCellValue();
+            String observation = row.getCell(19).getStringCellValue();
+            String source = row.getCell(20).getStringCellValue();
 
             Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndAndParticleSize(nameAdsorbent, sizeAdsorbent);
 
@@ -116,7 +125,8 @@ public class LoadDataService {
                 isNewAdsorbent = true;
             }
 
-            Optional<Adsorbate> adsorbate = adsorbateRepository.findByIonNameAndIonChargeAndIonRadius(ionName, ionCharge, ionRadius);
+            String parsedFormula = Adsorbate.parseFormula(formulaAdsorbate.trim(),ionChargeText.trim());
+            Optional<Adsorbate> adsorbate = adsorbateRepository.findByFormula(parsedFormula);
 
             Adsorbate newAdsorbate = new Adsorbate();
             if (!adsorbate.isPresent()) {
@@ -124,6 +134,9 @@ public class LoadDataService {
                 newAdsorbate.setIonCharge(ionCharge);
                 newAdsorbate.setIonRadius(ionRadius);
                 newAdsorbate.setDischargeLimit(limit);
+                newAdsorbate.setNameIUPAC(nameIUPAC);
+                newAdsorbate.setNumberCAS(numberCAS);
+                newAdsorbate.setFormula(parsedFormula);
                 adsorbateRepository.save(newAdsorbate);
 
                 isNewAdsorbate = true;
@@ -156,6 +169,5 @@ public class LoadDataService {
     private boolean stringToBoolean(String string){
         return string.equals("si");
     }
-
 
 }

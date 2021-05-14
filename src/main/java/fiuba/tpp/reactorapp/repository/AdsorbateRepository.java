@@ -9,5 +9,7 @@ public interface AdsorbateRepository extends CrudRepository<Adsorbate,Long> , Ad
 
     Optional<Adsorbate> findByIonNameAndIonChargeAndIonRadius(String ionName, Integer ionCharge, Float ionRadius);
 
+    Optional<Adsorbate> findByFormula(String formula);
+
 
 }
