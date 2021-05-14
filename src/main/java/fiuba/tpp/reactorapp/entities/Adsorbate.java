@@ -24,8 +24,6 @@ public class Adsorbate {
     private String numberCAS;
     private String formula;
 
-    private static final String SINGLE_CHARGE = "1";
-
     public Adsorbate() {
     }
 
@@ -149,33 +147,6 @@ public class Adsorbate {
     protected void normalize() {
         ionNameNormalized = (ionName == null)? "" : StringUtils.stripAccents(ionName.toLowerCase());
         nameIUPACNormalized = (nameIUPAC == null)? "" : StringUtils.stripAccents(nameIUPAC.toLowerCase());
-        ionChargeText = parseIonChargeText(ionCharge);
-        if(formula != null && !formula.isEmpty()){
-            formula = (formula.contains("+") || formula.contains("-"))?parseFormula(formula,ionChargeText): formula;
-        }
     }
 
-    private String parseIonChargeText(Integer ionCharge){
-        String text = String.valueOf(ionCharge);
-        if(text.length()>1){
-            StringBuilder chargeBuilder = new StringBuilder();
-            chargeBuilder.append(text);
-            chargeBuilder.reverse();
-            return chargeBuilder.toString();
-        }else{
-            return text.concat("+");
-        }
-    }
-
-    public static String parseFormula(String textFormula, String ionChargeText){
-        if(textFormula.contains(ionChargeText)){
-            return textFormula.replace(ionChargeText,"");
-        }else{
-            if(ionChargeText.contains(SINGLE_CHARGE)){
-                String singleCharge = ionChargeText.replace(SINGLE_CHARGE,"");
-                return textFormula.replace(singleCharge,"");
-            }
-            return textFormula;
-        }
-    }
 }

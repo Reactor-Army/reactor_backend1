@@ -6,6 +6,7 @@ import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.repository.ProcessRepository;
+import fiuba.tpp.reactorapp.service.utils.FormulaParserService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -36,6 +37,9 @@ public class LoadDataService {
 
     @Autowired
     private ProcessRepository processRepository;
+
+    @Autowired
+    private FormulaParserService formulaParserService;
 
     @Value("${reactorapp.loadata}")
     private boolean loadData;
@@ -125,13 +129,14 @@ public class LoadDataService {
                 isNewAdsorbent = true;
             }
 
-            String parsedFormula = Adsorbate.parseFormula(formulaAdsorbate.trim(),ionChargeText.trim());
+            String parsedFormula = formulaParserService.parseFormula(formulaAdsorbate.trim(),ionChargeText.trim());
             Optional<Adsorbate> adsorbate = adsorbateRepository.findByFormulaAndIonChargeText(parsedFormula, ionChargeText);
 
             Adsorbate newAdsorbate = new Adsorbate();
             if (!adsorbate.isPresent()) {
                 newAdsorbate.setIonName(ionName);
                 newAdsorbate.setIonCharge(ionCharge);
+                newAdsorbate.setIonChargeText(ionChargeText.trim());
                 newAdsorbate.setIonRadius(ionRadius);
                 newAdsorbate.setDischargeLimit(limit);
                 newAdsorbate.setNameIUPAC(nameIUPAC);
