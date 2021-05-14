@@ -11,5 +11,6 @@ public interface AdsorbateRepository extends CrudRepository<Adsorbate,Long> , Ad
 
     Optional<Adsorbate> findByFormula(String formula);
 
+    Optional<Adsorbate> findByFormulaAndIonChargeText(String formula, String ionChargeText);
 
 }

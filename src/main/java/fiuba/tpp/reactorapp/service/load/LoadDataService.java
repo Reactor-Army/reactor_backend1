@@ -126,7 +126,7 @@ public class LoadDataService {
             }
 
             String parsedFormula = Adsorbate.parseFormula(formulaAdsorbate.trim(),ionChargeText.trim());
-            Optional<Adsorbate> adsorbate = adsorbateRepository.findByFormula(parsedFormula);
+            Optional<Adsorbate> adsorbate = adsorbateRepository.findByFormulaAndIonChargeText(parsedFormula, ionChargeText);
 
             Adsorbate newAdsorbate = new Adsorbate();
             if (!adsorbate.isPresent()) {
