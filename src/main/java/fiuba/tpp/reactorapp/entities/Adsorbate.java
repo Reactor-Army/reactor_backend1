@@ -24,7 +24,7 @@ public class Adsorbate {
     private String numberCAS;
     private String formula;
 
-    private static String single_charge = "1";
+    private static final String SINGLE_CHARGE = "1";
 
     public Adsorbate() {
     }
@@ -171,8 +171,8 @@ public class Adsorbate {
         if(textFormula.contains(ionChargeText)){
             return textFormula.replace(ionChargeText,"");
         }else{
-            if(ionChargeText.contains(single_charge)){
-                String singleCharge = ionChargeText.replace(single_charge,"");
+            if(ionChargeText.contains(SINGLE_CHARGE)){
+                String singleCharge = ionChargeText.replace(SINGLE_CHARGE,"");
                 return textFormula.replace(singleCharge,"");
             }
             return textFormula;
