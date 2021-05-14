@@ -18,8 +18,11 @@ public class Adsorbate {
     private String nameIUPAC;
     private String nameIUPACNormalized;
     private Integer ionCharge;
+    private String ionChargeText;
     private Float ionRadius;
     private Float dischargeLimit;
+    private String numberCAS;
+    private String formula;
 
     public Adsorbate() {
     }
@@ -47,6 +50,8 @@ public class Adsorbate {
         this.ionCharge = adsorbate.getIonCharge();
         this.ionRadius = adsorbate.getIonRadius();
         this.dischargeLimit = adsorbate.getDischargeLimit();
+        this.formula = adsorbate.getFormula();
+        this.numberCAS = adsorbate.getNumberCAS();
     }
 
     public Long getId() {
@@ -113,10 +118,35 @@ public class Adsorbate {
         this.dischargeLimit = dischargeLimit;
     }
 
+    public String getNumberCAS() {
+        return numberCAS;
+    }
+
+    public void setNumberCAS(String numberCAS) {
+        this.numberCAS = numberCAS;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public String getIonChargeText() {
+        return ionChargeText;
+    }
+
+    public void setIonChargeText(String ionChargeText) {
+        this.ionChargeText = ionChargeText;
+    }
+
     @PreUpdate
     @PrePersist
     protected void normalize() {
         ionNameNormalized = (ionName == null)? "" : StringUtils.stripAccents(ionName.toLowerCase());
         nameIUPACNormalized = (nameIUPAC == null)? "" : StringUtils.stripAccents(nameIUPAC.toLowerCase());
     }
+
 }

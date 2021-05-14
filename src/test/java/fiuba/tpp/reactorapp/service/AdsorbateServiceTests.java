@@ -32,6 +32,26 @@ class AdsorbateServiceTests {
         Assert.assertEquals(adsorbate.getIonRadius(), request.getIonRadius());
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            "1, 'H2O+','H2O'",
+            "1, 'H2O1+','H2O'",
+            "-1, 'H2O1-','H2O'",
+            "-1, 'H2O-','H2O'",
+            "-2, 'H2O2-','H2O'",
+            "2, '', ''",
+            "2, ,",
+            "2, 'H2O42+', 'H2O4'",
+
+    })
+    void testCreateAdsorbateFormula(Integer charge, String formula, String formulaResult){
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",charge,1f,10f);
+        request.setFormula(formula);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
+        Assert.assertEquals( formulaResult,adsorbate.getFormula());
+
+    }
+
     @Test
     void testCreateAdsorbateNameIUPACNull(){
         AdsorbateRequest request = new AdsorbateRequest("Prueba",null,1,1f,10f);

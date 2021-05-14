@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
+import fiuba.tpp.reactorapp.service.utils.FormulaParserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,17 @@ public class AdsorbateService {
     @Autowired
     private AdsorbateRepository adsorbateRepository;
 
+    @Autowired
+    private FormulaParserService formulaParserService;
+
     public Adsorbate createAdsorbate(AdsorbateRequest request){
-        return adsorbateRepository.save(new Adsorbate(request));
+        return saveAdsorbate(new Adsorbate(request));
     }
 
     public Adsorbate updateAdsorbate(AdsorbateRequest request) throws ComponentNotFoundException {
         Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getId());
         if(adsorbate.isPresent()){
-            return adsorbateRepository.save(adsorbate.get().update(request));
+            return saveAdsorbate(adsorbate.get().update(request));
         }
         throw new ComponentNotFoundException();
     }
@@ -45,6 +49,23 @@ public class AdsorbateService {
 
     public List<Adsorbate> search(AdsorbateFilter filter){
         return adsorbateRepository.getAll(filter);
+    }
+
+
+    private Adsorbate saveAdsorbate(Adsorbate adsorbate){
+        return adsorbateRepository.save(parseFormula(adsorbate));
+    }
+
+    private Adsorbate parseFormula(Adsorbate adsorbate){
+        adsorbate.setIonChargeText(formulaParserService.parseIonChargeText(adsorbate.getIonCharge()));
+        if(adsorbate.getFormula() != null && !adsorbate.getFormula().isEmpty() && containsSign(adsorbate.getFormula())){
+            adsorbate.setFormula(formulaParserService.parseFormula(adsorbate.getFormula(),adsorbate.getIonChargeText()));
+        }
+        return adsorbate;
+    }
+
+    private boolean containsSign(String formula){
+        return (formula.contains("+") || formula.contains("-"));
     }
 
 

@@ -22,6 +22,15 @@ public class AdsorbateResponse {
     @JsonProperty("limiteVertido")
     private Float dischargeLimit;
 
+    @JsonProperty("numeroCAS")
+    private String numberCAS;
+
+    @JsonProperty("formula")
+    private String formula;
+
+    @JsonProperty("cargaIonFormula")
+    private String ionChargeFormula;
+
 
     public AdsorbateResponse() {
     }
@@ -33,6 +42,9 @@ public class AdsorbateResponse {
         this.ionName= adsorbate.getIonName();
         this.ionRadius = adsorbate.getIonRadius();
         this.dischargeLimit = adsorbate.getDischargeLimit();
+        this.numberCAS = adsorbate.getNumberCAS();
+        this.formula = adsorbate.getFormula();
+        this.ionChargeFormula = adsorbate.getIonChargeText();
     }
 
     public Long getId() {
@@ -81,5 +93,29 @@ public class AdsorbateResponse {
 
     public void setDischargeLimit(Float dischargeLimit) {
         this.dischargeLimit = dischargeLimit;
+    }
+
+    public String getNumberCAS() {
+        return numberCAS;
+    }
+
+    public void setNumberCAS(String numberCAS) {
+        this.numberCAS = numberCAS;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public String getIonChargeFormula() {
+        return ionChargeFormula;
+    }
+
+    public void setIonChargeFormula(String ionChargeFormula) {
+        this.ionChargeFormula = ionChargeFormula;
     }
 }

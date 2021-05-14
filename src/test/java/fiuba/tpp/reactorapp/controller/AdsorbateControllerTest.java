@@ -98,6 +98,14 @@ class AdsorbateControllerTest {
     }
 
     @Test
+    void testGetAllAdsorbatesCharge() {
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates();
+        Assert.assertEquals("1-",adsorbates.get(0).getIonChargeFormula());
+    }
+
+    @Test
     void testSearchAdsorbatesNoFilter() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
