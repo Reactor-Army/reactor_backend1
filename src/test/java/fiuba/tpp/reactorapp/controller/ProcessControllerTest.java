@@ -3,9 +3,11 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -218,6 +221,86 @@ class ProcessControllerTest {
 
         Assertions.assertEquals(processResponse.getId(), process.getId());
         Assertions.assertEquals(processResponse.getQmax(), process.getQmax());
+    }
+
+    @Test
+    void testSearchByAdsorbate(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        ProcessResponse process = processController.createProcess(request);
+
+        List<Long> ids = new ArrayList<>();
+        ids.add(adsorbate.getId());
+
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+
+        Assertions.assertEquals(1, searchResult.size());
+        Assertions.assertTrue(searchResult.get(0).isRemovesAllAdsorbates());
+        Assertions.assertEquals(1, searchResult.get(0).getProcesses().size());
+        Assertions.assertEquals(0.65f, searchResult.get(0).getMaxQmax());
+
+    }
+
+    @Test
+    void testSearchByAdsorbateRemoveOnlyOne(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+        adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        ProcessResponse process = processController.createProcess(request);
+
+        List<Long> ids = new ArrayList<>();
+        ids.add(adsorbate.getId());
+        ids.add(2L);
+
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+
+        Assertions.assertEquals(1, searchResult.size());
+        Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
+        Assertions.assertEquals(1, searchResult.get(0).getProcesses().size());
+        Assertions.assertEquals(0.65f, searchResult.get(0).getMaxQmax());
+
+    }
+
+    @Test
+    void testSearchByAdsorbateVariusProcess(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+        adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+        processController.createProcess(request);
+
+        List<Long> ids = new ArrayList<>();
+        ids.add(adsorbate.getId());
+        ids.add(2L);
+
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+
+        Assertions.assertEquals(1, searchResult.size());
+        Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
+        Assertions.assertEquals(2, searchResult.get(0).getProcesses().size());
+        Assertions.assertEquals(0.65f, searchResult.get(0).getMaxQmax());
+
     }
 
     @Test

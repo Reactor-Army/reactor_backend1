@@ -3,18 +3,19 @@ package fiuba.tpp.reactorapp.service;
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Process;
+import fiuba.tpp.reactorapp.model.dto.SearchByAdsorbateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProcessService {
@@ -54,6 +55,29 @@ public class ProcessService {
             return;
         }
         throw new ComponentNotFoundException();
+    }
+
+    public List<SearchByAdsorbateDTO> searchByAdsorbate(SearchByAdsorbateRequest request){
+        List<Process> processes = processRepository.getByAdsorbates(request.getAdsorbatesIds());
+        HashMap<Long, SearchByAdsorbateDTO> result = new HashMap<>();
+        for (Process process: processes) {
+            Long idAdsorbent = process.getAdsorbent().getId();
+            if(result.containsKey(idAdsorbent)){
+                addProcessToResult(result.get(idAdsorbent),process);
+            }else{
+                result.put(idAdsorbent,new SearchByAdsorbateDTO(process));
+            }
+        }
+        List<SearchByAdsorbateDTO> orderResult= new ArrayList<>(result.values());
+        orderResult.sort(Comparator.comparing(SearchByAdsorbateDTO::getMaxQmax).reversed());
+        return orderResult;
+    }
+
+    private void addProcessToResult(SearchByAdsorbateDTO result, Process process){
+        result.getProcesses().add(process);
+        if(!result.getRemoveAdsorbates().contains(process.getAdsorbate())){
+            result.getRemoveAdsorbates().add(process.getAdsorbate());
+        }
     }
 
 
