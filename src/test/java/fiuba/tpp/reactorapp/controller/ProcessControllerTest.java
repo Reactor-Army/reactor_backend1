@@ -272,6 +272,7 @@ class ProcessControllerTest {
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
         Assertions.assertEquals(1, searchResult.get(0).getProcesses().size());
         Assertions.assertEquals(0.65f, searchResult.get(0).getMaxQmax());
+        Assertions.assertEquals(1, searchResult.get(0).getAdsorbent().getId());
 
     }
 
@@ -300,6 +301,7 @@ class ProcessControllerTest {
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
         Assertions.assertEquals(2, searchResult.get(0).getProcesses().size());
         Assertions.assertEquals(0.65f, searchResult.get(0).getMaxQmax());
+        Assertions.assertEquals("Prueba", searchResult.get(0).getAdsorbent().getName());
 
     }
 

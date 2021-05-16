@@ -17,9 +17,9 @@ public class SearchByAdsorbateDTO {
     public SearchByAdsorbateDTO(Process process) {
         this.processes = new ArrayList<>();
         this.removeAdsorbates = new ArrayList<>();
-        processes.add(process);
+        this.processes.add(process);
         this.removeAdsorbates.add(process.getAdsorbate());
-        maxQmax = process.getQmax();
+        this.maxQmax = process.getQmax();
     }
 
     public boolean hasAllAdsorbates(Integer numberOfAdsorbates){
