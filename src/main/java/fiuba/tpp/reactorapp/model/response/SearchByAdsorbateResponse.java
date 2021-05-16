@@ -9,14 +9,17 @@ import java.util.List;
 
 public class SearchByAdsorbateResponse {
 
-    @JsonProperty("procesos")
-    private List<ProcessResponse> processes;
+    @JsonProperty("adsorbente")
+    private AdsorbentResponse adsorbent;
 
     @JsonProperty("maxQmax")
     private Float maxQmax;
 
     @JsonProperty("remueveTodosLosAdsorbatos")
     private boolean removesAllAdsorbates;
+
+    @JsonProperty("procesos")
+    private List<ProcessResponse> processes;
 
     public SearchByAdsorbateResponse() {
     }
@@ -26,10 +29,9 @@ public class SearchByAdsorbateResponse {
         for (Process process: result.getProcesses()) {
             processes.add(new ProcessResponse(process));
         }
+        this.adsorbent = new AdsorbentResponse(result.getProcesses().get(0).getAdsorbent());
         this.maxQmax = result.getMaxQmax();
         this.removesAllAdsorbates = result.hasAllAdsorbates(numberOfAdsorbates);
-
-
     }
 
     public List<ProcessResponse> getProcesses() {
@@ -54,5 +56,13 @@ public class SearchByAdsorbateResponse {
 
     public void setRemovesAllAdsorbates(boolean removesAllAdsorbates) {
         this.removesAllAdsorbates = removesAllAdsorbates;
+    }
+
+    public AdsorbentResponse getAdsorbent() {
+        return adsorbent;
+    }
+
+    public void setAdsorbent(AdsorbentResponse adsorbent) {
+        this.adsorbent = adsorbent;
     }
 }
