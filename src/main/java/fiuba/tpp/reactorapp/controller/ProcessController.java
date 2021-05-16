@@ -1,12 +1,15 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.entities.Process;
+import fiuba.tpp.reactorapp.model.dto.SearchByAdsorbateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,6 +86,15 @@ public class ProcessController {
             processes.add(new ProcessResponse(process));
         }
         return processes;
+    }
+
+    @PostMapping(value = "/adsorbato")
+    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request){
+        List<SearchByAdsorbateResponse> searchResults = new ArrayList<>();
+        for (SearchByAdsorbateDTO result: processService.searchByAdsorbate(request)) {
+            searchResults.add(new SearchByAdsorbateResponse(result,request.getAdsorbatesIds().size()));
+        }
+        return searchResults;
     }
 
     @GetMapping(value = "/{id}")
