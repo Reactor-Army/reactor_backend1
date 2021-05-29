@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
+import fiuba.tpp.reactorapp.model.response.ProcessResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -184,6 +185,22 @@ class AdsorbateControllerTest {
         List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS");
         Assert.assertEquals(1L,adsorbatesNames.size());
         Assert.assertEquals("CARLOS", adsorbatesNames.get(0).getName());
+    }
+
+    @Test
+    void testFindById(){
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","carlos IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        AdsorbateResponse adsorbate = adsorbateController.getAdsorbate(1L);
+        Assert.assertEquals("CARLOS", adsorbate.getIonName());
+        Assert.assertEquals("carlos IUPAC", adsorbate.getNameIUPAC());
+    }
+
+    @Test
+    void testGetAdsorbateByIdNotFound(){
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+           adsorbateController.getAdsorbate(20L);
+        });
     }
 
 
