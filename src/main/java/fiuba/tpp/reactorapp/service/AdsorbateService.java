@@ -51,6 +51,14 @@ public class AdsorbateService {
         return adsorbateRepository.getAll(filter);
     }
 
+    public Adsorbate getById(Long id) throws ComponentNotFoundException {
+        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(id);
+        if(adsorbate.isPresent()){
+            return adsorbate.get();
+        }
+        throw new ComponentNotFoundException();
+    }
+
 
     private Adsorbate saveAdsorbate(Adsorbate adsorbate){
         return adsorbateRepository.save(parseFormula(adsorbate));

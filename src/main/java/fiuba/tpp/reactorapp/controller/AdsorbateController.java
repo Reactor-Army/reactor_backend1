@@ -93,6 +93,16 @@ public class AdsorbateController {
         return adsorbatesName;
     }
 
+    @GetMapping(value = "/{id}")
+    public AdsorbateResponse getAdsorbate(@PathVariable Long id) {
+        try {
+            return new AdsorbateResponse((adsorbateService.getById(id)));
+        } catch (ComponentNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "El Adsorbato no existe", e);
+        }
+    }
+
 
 
     private void validateAdsorbate(AdsorbateRequest request) throws InvalidRequestException {
