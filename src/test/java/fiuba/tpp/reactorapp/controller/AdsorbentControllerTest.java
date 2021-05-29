@@ -154,4 +154,20 @@ class AdsorbentControllerTest {
         Assert.assertEquals(1L,adsorbentsName.size());
         Assert.assertEquals("PRUEBA (-)", adsorbentsName.get(0).getName());
     }
+
+    @Test
+    void testFindById(){
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "60", 1f, 1f,1f);
+        adsorbentController.createAdsorbent(request);
+        AdsorbentResponse adsorbent = adsorbentController.getAdsorbent(1L);
+        Assert.assertEquals("PRUEBA", adsorbent.getName());
+        Assert.assertEquals("60", adsorbent.getParticleSize());
+    }
+
+    @Test
+    void testGetAdsorbentByIdNotFound(){
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbentController.getAdsorbent(20L);
+        });
+    }
 }

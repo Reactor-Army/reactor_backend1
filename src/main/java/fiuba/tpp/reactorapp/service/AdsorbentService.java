@@ -44,8 +44,17 @@ public class AdsorbentService {
         return (List<Adsorbent>) adsorbentRepository.findAll();
     }
 
-     public List<Adsorbent> search(AdsorbentFilter filter){
+    public List<Adsorbent> search(AdsorbentFilter filter){
          return adsorbentRepository.getAll(filter);
     }
+
+    public Adsorbent getById(Long id) throws ComponentNotFoundException{
+        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(id);
+        if(adsorbent.isPresent()){
+            return adsorbent.get();
+        }
+        throw new ComponentNotFoundException();
+    }
+
 }
 
