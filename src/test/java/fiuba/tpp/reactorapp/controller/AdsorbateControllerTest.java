@@ -56,6 +56,18 @@ class AdsorbateControllerTest {
     }
 
     @Test
+    void testUpdateAdsorbateMolarMass(){
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
+        requestUpdate.setMolarMass(2f);
+        requestUpdate.setId(1L);
+        adsorbateController.createAdsorbate(request);
+        AdsorbateResponse updated = adsorbateController.updateAdsorbate(requestUpdate);
+
+        Assert.assertEquals(updated.getMolarMass(), requestUpdate.getMolarMass());
+    }
+
+    @Test
     void testUpdateAdsorbateThatNotExist() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
