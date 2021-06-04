@@ -5,6 +5,9 @@ public class ProcessFilter {
     private Long idAdsorbate;
     private Long idAdsorbent;
 
+    public ProcessFilter() {
+    }
+
     public ProcessFilter(Long idAdsorbate, Long idAdsorbente) {
         this.idAdsorbate = idAdsorbate;
         this.idAdsorbent = idAdsorbente;

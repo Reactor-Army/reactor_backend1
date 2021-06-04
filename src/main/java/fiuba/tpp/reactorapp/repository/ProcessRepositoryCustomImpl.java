@@ -34,6 +34,7 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
+        cq.orderBy(cb.desc(processRoot.get("qmax")));
 
         return em.createQuery(cq).getResultList();
     }

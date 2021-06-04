@@ -79,6 +79,29 @@ class ProcessServiceTests {
     }
 
     @Test
+    void testFindAllOrderedByQMax() throws InvalidProcessException {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processService.createProcess(request);
+
+        ProcessRequest request2 = new ProcessRequest(2.30f,1f,1f,1f,true,true,true);
+        request2.setIdAdsorbate(adsorbate.getId());
+        request2.setIdAdsorbent(adsorbent.getId());
+        processService.createProcess(request2);
+
+        List<Process> processes = processService.getAll();
+        Process firstProcess = processes.get(0);
+        Assert.assertEquals(2.30f, firstProcess.getQmax(), 0.1);
+    }
+
+    @Test
     void testUpdateProcess() throws InvalidProcessException {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
@@ -171,6 +194,34 @@ class ProcessServiceTests {
 
         List<Process> reactores = processService.search(new ProcessFilter(null, 1L));
         Assert.assertEquals(2L, reactores.size());
+
+    }
+
+    @Test
+    void testSearchProcessOrderByQmax() throws InvalidProcessException {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
+
+        AdsorbateRequest requestAdsorbate2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
+        Adsorbate adsorbate2 = adsorbateService.createAdsorbate(requestAdsorbate2);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processService.createProcess(request);
+
+        ProcessRequest request2 = new ProcessRequest(2.65f,1f,1f,1f,true,true,true);
+        request2.setIdAdsorbent(adsorbent.getId());
+        request2.setIdAdsorbate(adsorbate2.getId());
+        processService.createProcess(request2);
+
+
+        List<Process> reactores = processService.search(new ProcessFilter(null, 1L));
+        Assert.assertEquals(2L, reactores.size());
+        Assert.assertEquals(2.65f, reactores.get(0).getQmax(), 0.0);
 
     }
 
