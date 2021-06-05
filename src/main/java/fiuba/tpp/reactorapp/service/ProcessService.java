@@ -82,7 +82,7 @@ public class ProcessService {
 
 
     public List<Process> getAll(){
-        return (List<Process>) processRepository.findAll();
+        return processRepository.getAll(new ProcessFilter());
     }
 
     public Process getById(Long id) throws ComponentNotFoundException {
