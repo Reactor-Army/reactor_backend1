@@ -254,8 +254,9 @@ class ProcessControllerTest {
         AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
         AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateRequest requestAdsorbate2 = new AdsorbateRequest("Prueba","PruebaIUPAC2",1,1f,10f);
         AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
-        adsorbateController.createAdsorbate(requestAdsorbate);
+        adsorbateController.createAdsorbate(requestAdsorbate2);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
         request.setIdAdsorbate(adsorbate.getId());
@@ -282,8 +283,9 @@ class ProcessControllerTest {
         AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
 
         AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateRequest requestAdsorbate2 = new AdsorbateRequest("Prueba","PruebaIUPAC2",1,1f,10f);
         AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
-        adsorbateController.createAdsorbate(requestAdsorbate);
+        adsorbateController.createAdsorbate(requestAdsorbate2);
 
         ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
         request.setIdAdsorbate(adsorbate.getId());
