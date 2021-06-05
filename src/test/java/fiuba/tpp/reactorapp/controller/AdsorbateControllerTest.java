@@ -215,5 +215,28 @@ class AdsorbateControllerTest {
         });
     }
 
+    @Test
+    void testCreateAdsorbateNameIUPACDuplicate() {
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.createAdsorbate(request);
+        });
+    }
+
+    @Test
+    void testUpdateAdsorbateNameIUPACDuplicate() {
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        AdsorbateRequest request2 = new AdsorbateRequest("CARLOS","IUPAC2",1,1f,10f);
+        adsorbateController.createAdsorbate(request2);
+
+        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
+        request.setId(1L);
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.updateAdsorbate(requestUpdate);
+        });
+    }
+
 
 }

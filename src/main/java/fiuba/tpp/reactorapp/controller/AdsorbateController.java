@@ -35,7 +35,8 @@ public class AdsorbateController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Los adsorbatos deben tener un nombre y un nombre IUPAC", e);
         } catch (DuplicateIUPACNameException e) {
-            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Ya existe otro adsorbato con ese nombre IUPAC", e);
         }
         return response;
     }
@@ -53,7 +54,8 @@ public class AdsorbateController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "El adsorbato no existe", e);
         } catch (DuplicateIUPACNameException e) {
-            e.printStackTrace();
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Ya existe otro adsorbato con ese nombre IUPAC", e);
         }
         return response;
     }
