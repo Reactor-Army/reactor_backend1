@@ -21,6 +21,18 @@ public class AdsorbentRequest {
     @JsonProperty("pHCargaCero")
     private Float pHZeroCharge;
 
+    @JsonProperty("impurezas")
+    private String impurities;
+
+    @JsonProperty("origenMuestra")
+    private String sampleOrigin;
+
+    @JsonProperty("formula")
+    private String formula;
+
+    @JsonProperty("nombreEspecie")
+    private String speciesName;
+
     public AdsorbentRequest() {
     }
 
@@ -78,5 +90,37 @@ public class AdsorbentRequest {
 
     public void setpHZeroCharge(Float pHZeroCharge) {
         this.pHZeroCharge = pHZeroCharge;
+    }
+
+    public String getImpurities() {
+        return impurities;
+    }
+
+    public void setImpurities(String impurities) {
+        this.impurities = impurities;
+    }
+
+    public String getSampleOrigin() {
+        return sampleOrigin;
+    }
+
+    public void setSampleOrigin(String sampleOrigin) {
+        this.sampleOrigin = sampleOrigin;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public String getSpeciesName() {
+        return speciesName;
+    }
+
+    public void setSpeciesName(String speciesName) {
+        this.speciesName = speciesName;
     }
 }

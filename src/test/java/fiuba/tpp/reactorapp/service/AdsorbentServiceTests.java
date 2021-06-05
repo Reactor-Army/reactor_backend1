@@ -57,6 +57,24 @@ class AdsorbentServiceTests {
     }
 
     @Test
+    void testUpdateAdsorbentExtraData() throws ComponentNotFoundException {
+        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        requestUpdate.setFormula("H2O");
+        requestUpdate.setImpurities("Pedazos de algo");
+        request.setSampleOrigin("Timbuctu");
+        request.setSpeciesName("FloraCarbono");
+        requestUpdate.setId(1L);
+        adsorbentService.createAdsorbent(request);
+        Adsorbent updated = adsorbentService.updateAdsorbent(requestUpdate);
+
+        Assert.assertEquals(updated.getSampleOrigin(), requestUpdate.getSampleOrigin());
+        Assert.assertEquals(updated.getFormula(), requestUpdate.getFormula());
+        Assert.assertEquals(updated.getImpurities(), requestUpdate.getImpurities());
+        Assert.assertEquals(updated.getSpeciesName(), requestUpdate.getSpeciesName());
+    }
+
+    @Test
     void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
