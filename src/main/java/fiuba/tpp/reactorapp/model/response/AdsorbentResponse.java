@@ -22,6 +22,18 @@ public class AdsorbentResponse {
     @JsonProperty("pHCargaCero")
     private Float pHZeroCharge;
 
+    @JsonProperty("impurezas")
+    private String impurities;
+
+    @JsonProperty("origenMuestra")
+    private String sampleOrigin;
+
+    @JsonProperty("formula")
+    private String formula;
+
+    @JsonProperty("nombreEspecie")
+    private String speciesName;
+
     public AdsorbentResponse() {
     }
 
@@ -32,6 +44,10 @@ public class AdsorbentResponse {
         this.sBet = adsorbent.getsBet();
         this.vBet = adsorbent.getvBet();
         this.pHZeroCharge = adsorbent.getpHZeroCharge();
+        this.sampleOrigin = adsorbent.getSampleOrigin();
+        this.impurities = adsorbent.getImpurities();
+        this.formula = adsorbent.getFormula();
+        this.speciesName = adsorbent.getSpeciesName();
     }
 
     public Long getId() {
@@ -80,5 +96,37 @@ public class AdsorbentResponse {
 
     public void setpHZeroCharge(Float pHZeroCharge) {
         this.pHZeroCharge = pHZeroCharge;
+    }
+
+    public String getImpurities() {
+        return impurities;
+    }
+
+    public void setImpurities(String impurities) {
+        this.impurities = impurities;
+    }
+
+    public String getSampleOrigin() {
+        return sampleOrigin;
+    }
+
+    public void setSampleOrigin(String sampleOrigin) {
+        this.sampleOrigin = sampleOrigin;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public String getSpeciesName() {
+        return speciesName;
+    }
+
+    public void setSpeciesName(String speciesName) {
+        this.speciesName = speciesName;
     }
 }

@@ -25,6 +25,14 @@ public class Adsorbent {
 
     private Float pHZeroCharge;
 
+    private String impurities;
+
+    private String sampleOrigin;
+
+    private String formula;
+
+    private String speciesName;
+
 
     public Adsorbent() {
     }
@@ -52,6 +60,10 @@ public class Adsorbent {
         this.sBet = request.getsBet();
         this.vBet = request.getvBet();
         this.pHZeroCharge = request.getpHZeroCharge();
+        this.impurities = request.getImpurities();
+        this.formula = request.getFormula();
+        this.sampleOrigin = request.getSampleOrigin();
+        this.speciesName = request.getSpeciesName();
     }
 
     public Long getId() {
@@ -108,6 +120,38 @@ public class Adsorbent {
 
     public void setNameNormalized(String nameNormalized) {
         this.nameNormalized = nameNormalized;
+    }
+
+    public String getImpurities() {
+        return impurities;
+    }
+
+    public void setImpurities(String impurities) {
+        this.impurities = impurities;
+    }
+
+    public String getSampleOrigin() {
+        return sampleOrigin;
+    }
+
+    public void setSampleOrigin(String sampleOrigin) {
+        this.sampleOrigin = sampleOrigin;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
+    }
+
+    public String getSpeciesName() {
+        return speciesName;
+    }
+
+    public void setSpeciesName(String speciesName) {
+        this.speciesName = speciesName;
     }
 
     @PreUpdate
