@@ -2,10 +2,12 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.service.utils.FormulaParserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,21 @@ public class AdsorbateService {
     @Autowired
     private FormulaParserService formulaParserService;
 
-    public Adsorbate createAdsorbate(AdsorbateRequest request){
+    public Adsorbate createAdsorbate(AdsorbateRequest request) throws DuplicateIUPACNameException {
+        Optional<Adsorbate> adsorbate = adsorbateRepository.findByNameIUPACNormalized(normalizeText(request.getNameIUPAC()));
+        if(adsorbate.isPresent()){
+            throw new DuplicateIUPACNameException();
+        }
         return saveAdsorbate(new Adsorbate(request));
     }
 
-    public Adsorbate updateAdsorbate(AdsorbateRequest request) throws ComponentNotFoundException {
+    public Adsorbate updateAdsorbate(AdsorbateRequest request) throws ComponentNotFoundException, DuplicateIUPACNameException {
         Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getId());
         if(adsorbate.isPresent()){
+            Optional<Adsorbate> duplicateAdsorbate = adsorbateRepository.findByNameIUPACNormalizedAndIdNot(normalizeText(request.getNameIUPAC()),request.getId());
+            if(duplicateAdsorbate.isPresent()){
+                throw new DuplicateIUPACNameException();
+            }
             return saveAdsorbate(adsorbate.get().update(request));
         }
         throw new ComponentNotFoundException();
@@ -74,6 +84,10 @@ public class AdsorbateService {
 
     private boolean containsSign(String formula){
         return (formula.contains("+") || formula.contains("-"));
+    }
+
+    private String normalizeText(String text){
+        return StringUtils.stripAccents(text.toLowerCase());
     }
 
 
