@@ -23,6 +23,7 @@ public class Adsorbate {
     private Float dischargeLimit;
     private String numberCAS;
     private String formula;
+    private Float molarMass;
 
     public Adsorbate() {
     }
@@ -52,6 +53,7 @@ public class Adsorbate {
         this.dischargeLimit = adsorbate.getDischargeLimit();
         this.formula = adsorbate.getFormula();
         this.numberCAS = adsorbate.getNumberCAS();
+        this.molarMass = adsorbate.getMolarMass();
     }
 
     public Long getId() {
@@ -140,6 +142,14 @@ public class Adsorbate {
 
     public void setIonChargeText(String ionChargeText) {
         this.ionChargeText = ionChargeText;
+    }
+
+    public Float getMolarMass() {
+        return molarMass;
+    }
+
+    public void setMolarMass(Float molarMass) {
+        this.molarMass = molarMass;
     }
 
     @PreUpdate

@@ -27,6 +27,10 @@ public class AdsorbateRequest {
     @JsonProperty("formula")
     private String formula;
 
+    @JsonProperty("masaMolar")
+    private Float molarMass;
+
+
     public AdsorbateRequest() {
     }
 
@@ -38,14 +42,14 @@ public class AdsorbateRequest {
         this.dischargeLimit = dischargeLimit;
     }
 
-    public AdsorbateRequest(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit, String numberCAS, String formula) {
+    public AdsorbateRequest(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit, String formula, Float molarMass) {
         this.ionName = ionName;
         this.nameIUPAC = nameIUPAC;
         this.ionCharge = ionCharge;
         this.ionRadius = ionRadius;
         this.dischargeLimit = dischargeLimit;
-        this.numberCAS = numberCAS;
         this.formula = formula;
+        this.molarMass = molarMass;
     }
 
     public Long getId() {
@@ -110,5 +114,13 @@ public class AdsorbateRequest {
 
     public void setFormula(String formula) {
         this.formula = formula;
+    }
+
+    public Float getMolarMass() {
+        return molarMass;
+    }
+
+    public void setMolarMass(Float molarMass) {
+        this.molarMass = molarMass;
     }
 }

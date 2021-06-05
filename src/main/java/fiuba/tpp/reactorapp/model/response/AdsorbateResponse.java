@@ -31,6 +31,9 @@ public class AdsorbateResponse {
     @JsonProperty("cargaIonFormula")
     private String ionChargeFormula;
 
+    @JsonProperty("masaMolar")
+    private Float molarMass;
+
 
     public AdsorbateResponse() {
     }
@@ -45,6 +48,7 @@ public class AdsorbateResponse {
         this.numberCAS = adsorbate.getNumberCAS();
         this.formula = adsorbate.getFormula();
         this.ionChargeFormula = adsorbate.getIonChargeText();
+        this.molarMass = adsorbate.getMolarMass();
     }
 
     public Long getId() {
@@ -117,5 +121,13 @@ public class AdsorbateResponse {
 
     public void setIonChargeFormula(String ionChargeFormula) {
         this.ionChargeFormula = ionChargeFormula;
+    }
+
+    public Float getMolarMass() {
+        return molarMass;
+    }
+
+    public void setMolarMass(Float molarMass) {
+        this.molarMass = molarMass;
     }
 }
