@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
@@ -32,7 +33,10 @@ public class AdsorbateController {
             response = new AdsorbateResponse(adsorbateService.createAdsorbate(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Los adsorbatos deben tener un nombre", e);
+                    HttpStatus.BAD_REQUEST, "Los adsorbatos deben tener un nombre y un nombre IUPAC", e);
+        } catch (DuplicateIUPACNameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Ya existe otro adsorbato con ese nombre IUPAC", e);
         }
         return response;
     }
@@ -45,10 +49,13 @@ public class AdsorbateController {
             response = new AdsorbateResponse(adsorbateService.updateAdsorbate(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbato", e);
+                    HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbato y el nombre IUPAC no puede ser nulo", e);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "El adsorbato no existe", e);
+        } catch (DuplicateIUPACNameException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Ya existe otro adsorbato con ese nombre IUPAC", e);
         }
         return response;
     }
@@ -107,9 +114,11 @@ public class AdsorbateController {
 
     private void validateAdsorbate(AdsorbateRequest request) throws InvalidRequestException {
         if(request.getIonName() == null || request.getIonName().isEmpty()) throw new InvalidRequestException();
+        if(request.getNameIUPAC() == null || request.getNameIUPAC().isEmpty()) throw new InvalidRequestException();
     }
 
     private void validateAdsorbateUpdate(AdsorbateRequest request) throws InvalidRequestException {
+        if(request.getNameIUPAC() == null || request.getNameIUPAC().isEmpty()) throw new InvalidRequestException();
         if(request.getId() == null) throw new InvalidRequestException();
     }
 }

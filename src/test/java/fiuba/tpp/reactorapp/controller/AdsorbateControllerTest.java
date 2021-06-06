@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
@@ -161,7 +162,7 @@ class AdsorbateControllerTest {
     @Test
     void testSearchAdsorbateFilterUpperAndLowerIUPAC() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
         List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("PRUEBA",null);
@@ -171,7 +172,7 @@ class AdsorbateControllerTest {
     @Test
     void testSearchAdsorbateFilterUpperAndLower() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
         List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("CARLOS",null);
@@ -181,22 +182,21 @@ class AdsorbateControllerTest {
     @Test
     void testSearchAdsorbateName() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
         List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS");
         Assert.assertEquals(2L,adsorbatesNames.size());
         Assert.assertEquals("CARLOS (PRUEBA)", adsorbatesNames.get(0).getName());
-        Assert.assertEquals("Carlos (prueba)", adsorbatesNames.get(1).getName());
+        Assert.assertEquals("Carlos (prueba2)", adsorbatesNames.get(1).getName());
     }
 
     @Test
-    void testSearchAdsorbateNameIUPACNull() {
+    void testCreateAdsorbateNameIUPACNull() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS",null,1,1f,10f);
-        adsorbateController.createAdsorbate(request);
-        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS");
-        Assert.assertEquals(1L,adsorbatesNames.size());
-        Assert.assertEquals("CARLOS", adsorbatesNames.get(0).getName());
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.createAdsorbate(request);
+        });
     }
 
     @Test
@@ -212,6 +212,29 @@ class AdsorbateControllerTest {
     void testGetAdsorbateByIdNotFound(){
         Assertions.assertThrows(ResponseStatusException.class, () -> {
            adsorbateController.getAdsorbate(20L);
+        });
+    }
+
+    @Test
+    void testCreateAdsorbateNameIUPACDuplicate() {
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.createAdsorbate(request);
+        });
+    }
+
+    @Test
+    void testUpdateAdsorbateNameIUPACDuplicate() {
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        AdsorbateRequest request2 = new AdsorbateRequest("CARLOS","IUPAC2",1,1f,10f);
+        adsorbateController.createAdsorbate(request2);
+
+        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
+        request.setId(1L);
+        Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.updateAdsorbate(requestUpdate);
         });
     }
 

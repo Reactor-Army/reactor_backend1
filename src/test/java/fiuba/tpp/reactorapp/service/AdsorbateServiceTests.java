@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,7 @@ class AdsorbateServiceTests {
 
 
     @Test
-    void testCreateAdsorbate(){
+    void testCreateAdsorbate() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
 
@@ -44,7 +45,7 @@ class AdsorbateServiceTests {
             "2, 'H2O42+', 'H2O4'",
 
     })
-    void testCreateAdsorbateFormula(Integer charge, String formula, String formulaResult){
+    void testCreateAdsorbateFormula(Integer charge, String formula, String formulaResult) throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",charge,1f,10f);
         request.setFormula(formula);
         Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
@@ -53,18 +54,16 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testCreateAdsorbateNameIUPACNull(){
+    void testCreateAdsorbateNameIUPACNull() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba",null,1,1f,10f);
-        Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
-
-        Assert.assertEquals(adsorbate.getIonName(), request.getIonName());
-        Assert.assertEquals(adsorbate.getIonCharge(), request.getIonCharge());
-        Assert.assertEquals(adsorbate.getIonRadius(), request.getIonRadius());
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            adsorbateService.createAdsorbate(request);
+        });
     }
 
 
     @Test
-    void testFindAll() {
+    void testFindAll() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbateService.createAdsorbate(request);
         List<Adsorbate> adsorbates = adsorbateService.getAll();
@@ -72,7 +71,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testUpdateAdsorbate() throws ComponentNotFoundException {
+    void testUpdateAdsorbate() throws ComponentNotFoundException, DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
         requestUpdate.setId(1L);
@@ -97,7 +96,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testDeleteAdsorbato() throws ComponentNotFoundException {
+    void testDeleteAdsorbato() throws ComponentNotFoundException, DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.deleteAdsorbate(1l);
@@ -115,7 +114,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbatoNoFilter() {
+    void testSearchAdsorbatoNoFilter() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -125,7 +124,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbatoFilterIUPAC() {
+    void testSearchAdsorbatoFilterIUPAC() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -141,7 +140,7 @@ class AdsorbateServiceTests {
             "2, ",
             "2, ''"
     })
-    void testSearchAdsorbateFilterIUPACAndCharge(long size, String filter) {
+    void testSearchAdsorbateFilterIUPACAndCharge(long size, String filter) throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -152,9 +151,9 @@ class AdsorbateServiceTests {
 
 
     @Test
-    void testSearchAdsorbateFilterUpperAndLowerIUPAC() {
+    void testSearchAdsorbateFilterUpperAndLowerIUPAC() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
         List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("prueba",null));
@@ -162,9 +161,9 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbateFilterUpperAndLower() {
+    void testSearchAdsorbateFilterUpperAndLower() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
         List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos",null));
@@ -172,9 +171,9 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbateFilterAccent1() {
+    void testSearchAdsorbateFilterAccent1() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","PRUEBA",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
         List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("cárlos",null));
@@ -182,7 +181,7 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testSearchAdsorbateFilterAccent2() {
+    void testSearchAdsorbateFilterAccent2() throws DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("prueba","cárlos",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("cárlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
@@ -192,13 +191,37 @@ class AdsorbateServiceTests {
     }
 
     @Test
-    void testDylan() {
-        AdsorbateRequest request = new AdsorbateRequest("Anália","",1,1f,10f);
-        AdsorbateRequest request2 = new AdsorbateRequest("Analía","",1,1f,10f);
+    void testDylan() throws DuplicateIUPACNameException {
+        AdsorbateRequest request = new AdsorbateRequest("Anália","IUPAC2",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("Analía","IUPAC",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
         List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("ANALIA",null));
         Assert.assertEquals(2L, adsorbates.size());
+    }
+
+    @Test
+    void testCreateAdsorbateDuplicateIUPACName() throws DuplicateIUPACNameException {
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        adsorbateService.createAdsorbate(request);
+
+        Assertions.assertThrows(DuplicateIUPACNameException.class, () -> {
+            adsorbateService.createAdsorbate(request);
+        });
+    }
+
+    @Test
+    void testUpdateAdsorbateDuplicateIUPACName() throws DuplicateIUPACNameException {
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("Prueba","PruebaIUPAC2",1,1f,10f);
+        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC2",12,10f,100f);
+        requestUpdate.setId(1L);
+        adsorbateService.createAdsorbate(request);
+        adsorbateService.createAdsorbate(request2);
+
+        Assertions.assertThrows(DuplicateIUPACNameException.class, () -> {
+            adsorbateService.updateAdsorbate(requestUpdate);
+        });
     }
 
 }

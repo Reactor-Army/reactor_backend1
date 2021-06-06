@@ -7,7 +7,6 @@ import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
-import fiuba.tpp.reactorapp.model.response.ProcessResponse;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

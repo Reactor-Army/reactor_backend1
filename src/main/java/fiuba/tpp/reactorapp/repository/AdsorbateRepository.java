@@ -13,4 +13,8 @@ public interface AdsorbateRepository extends CrudRepository<Adsorbate,Long> , Ad
 
     Optional<Adsorbate> findByFormulaAndIonChargeText(String formula, String ionChargeText);
 
+    Optional<Adsorbate> findByNameIUPACNormalized(String nameIUPACNormalized);
+
+    Optional<Adsorbate> findByNameIUPACNormalizedAndIdNot(String nameIUPACNormalized, long id);
+
 }
