@@ -118,9 +118,8 @@ class ProcessServiceTests {
         ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
         requestUpdate.setIdAdsorbate(adsorbate.getId());
         requestUpdate.setIdAdsorbent(adsorbent.getId());
-        requestUpdate.setId(1L);
 
-        Process process = processService.updateProcess(requestUpdate);
+        Process process = processService.updateProcess(1L, requestUpdate);
 
         Assert.assertEquals(process.getAdsorbate().getId(), adsorbate.getId());
         Assert.assertEquals(process.getAdsorbent().getId(), adsorbent.getId());
@@ -145,8 +144,7 @@ class ProcessServiceTests {
             ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
             requestUpdate.setIdAdsorbate(adsorbate.getId());
             requestUpdate.setIdAdsorbent(adsorbent.getId());
-            requestUpdate.setId(2L);
-            processService.updateProcess(requestUpdate);
+            processService.updateProcess(2L, requestUpdate);
         });
     }
 
