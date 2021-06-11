@@ -31,10 +31,10 @@ public class AdsorbateService {
         return saveAdsorbate(new Adsorbate(request));
     }
 
-    public Adsorbate updateAdsorbate(AdsorbateRequest request) throws ComponentNotFoundException, DuplicateIUPACNameException {
-        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getId());
+    public Adsorbate updateAdsorbate(Long adsorbateId, AdsorbateRequest request) throws ComponentNotFoundException, DuplicateIUPACNameException {
+        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(adsorbateId);
         if(adsorbate.isPresent()){
-            Optional<Adsorbate> duplicateAdsorbate = adsorbateRepository.findByNameIUPACNormalizedAndIdNot(normalizeText(request.getNameIUPAC()),request.getId());
+            Optional<Adsorbate> duplicateAdsorbate = adsorbateRepository.findByNameIUPACNormalizedAndIdNot(normalizeText(request.getNameIUPAC()), adsorbateId);
             if(duplicateAdsorbate.isPresent()){
                 throw new DuplicateIUPACNameException();
             }

@@ -41,12 +41,12 @@ public class AdsorbateController {
         return response;
     }
 
-    @PutMapping(value= "")
-    public AdsorbateResponse updateAdsorbate(@RequestBody AdsorbateRequest request) {
+    @PutMapping(value= "/{id}")
+    public AdsorbateResponse updateAdsorbate(@PathVariable Long id, @RequestBody AdsorbateRequest request) {
         AdsorbateResponse response = null;
         try{
             validateAdsorbateUpdate(request);
-            response = new AdsorbateResponse(adsorbateService.updateAdsorbate(request));
+            response = new AdsorbateResponse(adsorbateService.updateAdsorbate(id, request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbato y el nombre IUPAC no puede ser nulo", e);

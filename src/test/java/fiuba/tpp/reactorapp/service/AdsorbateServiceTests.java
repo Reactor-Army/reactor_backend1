@@ -74,9 +74,8 @@ class AdsorbateServiceTests {
     void testUpdateAdsorbate() throws ComponentNotFoundException, DuplicateIUPACNameException {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
-        requestUpdate.setId(1L);
         adsorbateService.createAdsorbate(request);
-        Adsorbate updated = adsorbateService.updateAdsorbate(requestUpdate);
+        Adsorbate updated = adsorbateService.updateAdsorbate(1l, requestUpdate);
 
 
         Assert.assertEquals(updated.getIonName(), requestUpdate.getIonName());
@@ -89,9 +88,8 @@ class AdsorbateServiceTests {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
             AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
-            requestUpdate.setId(2L);
             adsorbateService.createAdsorbate(request);
-            Adsorbate updated = adsorbateService.updateAdsorbate(requestUpdate);
+            Adsorbate updated = adsorbateService.updateAdsorbate(2L, requestUpdate);
         });
     }
 
@@ -215,12 +213,11 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba","PruebaIUPAC2",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC2",12,10f,100f);
-        requestUpdate.setId(1L);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
 
         Assertions.assertThrows(DuplicateIUPACNameException.class, () -> {
-            adsorbateService.updateAdsorbate(requestUpdate);
+            adsorbateService.updateAdsorbate(1L, requestUpdate);
         });
     }
 
