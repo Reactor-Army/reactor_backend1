@@ -81,14 +81,6 @@ class AdsorbateControllerTest {
     }
 
     @Test
-    void testUpdateAdsorbateWithoutID() {
-        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbateController.updateAdsorbate(null, requestUpdate);
-        });
-    }
-
-    @Test
     void testDeleteAdsorbate() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         adsorbateController.createAdsorbate(request);

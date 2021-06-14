@@ -47,11 +47,7 @@ public class ProcessController {
     public ProcessResponse updateProcess(@PathVariable Long id, @RequestBody ProcessRequest request) {
         ProcessResponse response = null;
         try{
-            validateProcessUpdate(id, request);
             response = new ProcessResponse(processService.updateProcess(id, request));
-        } catch (InvalidRequestException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Es necesario el ID del proceso", e);
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Adsorbato,Adsorbente o reactor invalido", e);
@@ -111,10 +107,9 @@ public class ProcessController {
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
     }
 
-    private void validateProcessUpdate(Long id, ProcessRequest request) throws InvalidRequestException {
+    private void validateProcessUpdate(ProcessRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
-        if(id == null) throw new InvalidRequestException();
     }
 
 }

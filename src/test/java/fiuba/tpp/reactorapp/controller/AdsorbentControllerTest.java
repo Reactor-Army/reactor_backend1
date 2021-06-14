@@ -67,14 +67,6 @@ class AdsorbentControllerTest {
     }
 
     @Test
-    void testUpdateAdsorbentWithoutID() {
-        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbentController.updateAdsorbent(null, requestUpdate);
-        });
-    }
-
-    @Test
     void testDeleteAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentController.createAdsorbent(request);

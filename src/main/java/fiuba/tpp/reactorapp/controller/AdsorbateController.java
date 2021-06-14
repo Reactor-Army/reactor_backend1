@@ -119,6 +119,5 @@ public class AdsorbateController {
 
     private void validateAdsorbateUpdate(AdsorbateRequest request) throws InvalidRequestException {
         if(request.getNameIUPAC() == null || request.getNameIUPAC().isEmpty()) throw new InvalidRequestException();
-        if(request.getId() == null) throw new InvalidRequestException();
     }
 }
