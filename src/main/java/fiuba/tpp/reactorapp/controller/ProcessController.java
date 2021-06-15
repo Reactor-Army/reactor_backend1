@@ -106,10 +106,4 @@ public class ProcessController {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
     }
-
-    private void validateProcessUpdate(ProcessRequest request) throws InvalidRequestException {
-        if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
-        if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
-    }
-
 }
