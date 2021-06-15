@@ -27,7 +27,7 @@ class AdsorbentServiceTests {
 
 
     @Test
-    void testCreateAdsorbent() throws DuplicateAdsorbentException {
+    void testCreateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
 
@@ -37,7 +37,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testFindAll() throws DuplicateAdsorbentException {
+    void testFindAll() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
         List<Adsorbent> adsorbents = adsorbentService.getAll();
@@ -45,7 +45,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testUpdateAdsorbent() throws ComponentNotFoundException, DuplicateAdsorbentException {
+    void testUpdateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -57,7 +57,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testUpdateAdsorbentExtraData() throws ComponentNotFoundException, DuplicateAdsorbentException {
+    void testUpdateAdsorbentExtraData() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setFormula("H2O");
@@ -82,7 +82,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testDeleteAdsorbent() throws ComponentNotFoundException, DuplicateAdsorbentException {
+    void testDeleteAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.deleteAdsorbent(1L);
@@ -101,7 +101,7 @@ class AdsorbentServiceTests {
             "2, ",
             "2, ''"
     })
-    void testSearchAdsorbentFilterName(long size, String filter) throws DuplicateAdsorbentException {
+    void testSearchAdsorbentFilterName(long size, String filter) {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -112,7 +112,7 @@ class AdsorbentServiceTests {
 
 
     @Test
-    void testSearchAdsorbentFilterUpperAndLowerName() throws DuplicateAdsorbentException {
+    void testSearchAdsorbentFilterUpperAndLowerName() {
         AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("prueba", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -122,7 +122,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testSearchAdsorbentFilterAccent1() throws DuplicateAdsorbentException {
+    void testSearchAdsorbentFilterAccent1() {
         AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -132,7 +132,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testCreateAdsorbentDuplicateNameAndParticleSize() throws DuplicateAdsorbentException {
+    void testCreateAdsorbentDuplicateNameAndParticleSize() {
         AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
 
@@ -140,7 +140,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testUpdateDuplicateAdsorbent() throws DuplicateAdsorbentException {
+    void testUpdateDuplicateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
