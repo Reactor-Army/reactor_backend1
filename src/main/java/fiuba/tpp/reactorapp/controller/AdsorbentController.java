@@ -36,7 +36,7 @@ public class AdsorbentController {
                     HttpStatus.BAD_REQUEST, "Los adsorbentes deben tener un nombre", e);
         } catch (DuplicateAdsorbentException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombree y ese tamaño de particula", e);
+                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombre y ese tamaño de particula", e);
         }
         return response;
     }
@@ -55,7 +55,7 @@ public class AdsorbentController {
                     HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
         }catch (DuplicateAdsorbentException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombree y ese tamaño de particula", e);
+                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombre y ese tamaño de particula", e);
         }
         return response;
     }
