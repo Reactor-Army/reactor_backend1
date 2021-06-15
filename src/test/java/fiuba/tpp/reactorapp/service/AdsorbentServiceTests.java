@@ -75,8 +75,8 @@ class AdsorbentServiceTests {
 
     @Test
     void testComponentNotFoundExceptionUpdate() {
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
             adsorbentService.updateAdsorbent(2L, requestUpdate);
         });
     }
