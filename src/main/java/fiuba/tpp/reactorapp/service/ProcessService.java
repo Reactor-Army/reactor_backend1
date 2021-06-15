@@ -38,10 +38,10 @@ public class ProcessService {
         throw new InvalidProcessException();
     }
 
-    public Process updateProcess(ProcessRequest request) throws InvalidProcessException {
+    public Process updateProcess(Long id, ProcessRequest request) throws InvalidProcessException {
         Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbent());
         Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getIdAdsorbate());
-        Optional<Process> process = processRepository.findById(request.getId());
+        Optional<Process> process = processRepository.findById(id);
         if(adsorbate.isPresent() && adsorbent.isPresent() && process.isPresent()){
             return processRepository.save(process.get().update(adsorbate.get(),adsorbent.get(),request));
         }

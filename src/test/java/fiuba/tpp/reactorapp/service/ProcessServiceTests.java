@@ -119,9 +119,8 @@ class ProcessServiceTests {
         ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
         requestUpdate.setIdAdsorbate(adsorbate.getId());
         requestUpdate.setIdAdsorbent(adsorbent.getId());
-        requestUpdate.setId(1L);
 
-        Process process = processService.updateProcess(requestUpdate);
+        Process process = processService.updateProcess(1L, requestUpdate);
 
         Assert.assertEquals(process.getAdsorbate().getId(), adsorbate.getId());
         Assert.assertEquals(process.getAdsorbent().getId(), adsorbent.getId());
@@ -146,8 +145,7 @@ class ProcessServiceTests {
             ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
             requestUpdate.setIdAdsorbate(adsorbate.getId());
             requestUpdate.setIdAdsorbent(adsorbent.getId());
-            requestUpdate.setId(2L);
-            processService.updateProcess(requestUpdate);
+            processService.updateProcess(2L, requestUpdate);
         });
     }
 
@@ -265,6 +263,24 @@ class ProcessServiceTests {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
                 processService.getById(20L);
         });
+    }
+
+
+    @Test
+    void testDeleteAdsorbateWithProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException, DuplicateAdsorbentException {
+        createProcess();
+        adsorbateService.deleteAdsorbate(1L);
+        List<Process> processes = processService.getAll();
+
+        Assertions.assertTrue(processes.isEmpty());
+    }
+
+    @Test
+    void testDeleteAdsorbentWithProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException, DuplicateAdsorbentException {
+        createProcess();
+        adsorbentService.deleteAdsorbent(1L);
+        List<Process> processes = processService.getAll();
+        Assertions.assertTrue(processes.isEmpty());
     }
 
     private Process createProcess() throws InvalidProcessException, DuplicateIUPACNameException, DuplicateAdsorbentException {

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -27,10 +26,10 @@ public class AdsorbentService {
         return adsorbentRepository.save(new Adsorbent(request));
     }
 
-    public Adsorbent updateAdsorbent(AdsorbentRequest request) throws ComponentNotFoundException, DuplicateAdsorbentException {
-        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getId());
+    public Adsorbent updateAdsorbent(Long id, AdsorbentRequest request) throws ComponentNotFoundException, DuplicateAdsorbentException {
+        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(id);
         if(adsorbent.isPresent()){
-            Optional<Adsorbent> duplicateAdsorbent = adsorbentRepository.findByNameAndParticleSizeAndIdNot(request.getName(), request.getParticleSize(), request.getId());
+            Optional<Adsorbent> duplicateAdsorbent = adsorbentRepository.findByNameAndParticleSizeAndIdNot(request.getName(), request.getParticleSize(), id);
             if(duplicateAdsorbent.isPresent()){
                 throw new DuplicateAdsorbentException();
             }

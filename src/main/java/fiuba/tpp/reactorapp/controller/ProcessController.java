@@ -43,15 +43,11 @@ public class ProcessController {
         return response;
     }
 
-    @PutMapping(value= "")
-    public ProcessResponse updateProcess(@RequestBody ProcessRequest request) {
+    @PutMapping(value= "/{id}")
+    public ProcessResponse updateProcess(@PathVariable Long id, @RequestBody ProcessRequest request) {
         ProcessResponse response = null;
         try{
-            validateProcessUpdate(request);
-            response = new ProcessResponse(processService.updateProcess(request));
-        } catch (InvalidRequestException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Es necesario el ID del proceso", e);
+            response = new ProcessResponse(processService.updateProcess(id, request));
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Adsorbato,Adsorbente o reactor invalido", e);
@@ -110,11 +106,4 @@ public class ProcessController {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
     }
-
-    private void validateProcessUpdate(ProcessRequest request) throws InvalidRequestException {
-        if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
-        if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
-        if(request.getId()== null ) throw new InvalidRequestException();
-    }
-
 }

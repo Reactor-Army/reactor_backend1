@@ -41,12 +41,12 @@ public class AdsorbentController {
         return response;
     }
 
-    @PutMapping(value= "")
-    public AdsorbentResponse updateAdsorbent(@RequestBody AdsorbentRequest request) {
+    @PutMapping(value= "/{id}")
+    public AdsorbentResponse updateAdsorbent(@PathVariable Long id, @RequestBody AdsorbentRequest request) {
         AdsorbentResponse response = null;
         try{
-            validateAdsorbentUpdate(request);
-            response = new AdsorbentResponse(adsorbentService.updateAdsorbent(request));
+            validateAdsorbentUpdate(id);
+            response = new AdsorbentResponse(adsorbentService.updateAdsorbent(id, request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbente", e);
@@ -113,7 +113,7 @@ public class AdsorbentController {
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
     }
-    private void validateAdsorbentUpdate(AdsorbentRequest request) throws InvalidRequestException {
-        if(request.getId() == null) throw new InvalidRequestException();
+    private void validateAdsorbentUpdate(Long id) throws InvalidRequestException {
+        if(id == null) throw new InvalidRequestException();
     }
 }

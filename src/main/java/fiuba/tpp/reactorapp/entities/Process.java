@@ -1,6 +1,8 @@
 package fiuba.tpp.reactorapp.entities;
 
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -13,9 +15,11 @@ public class Process {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Adsorbate adsorbate;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Adsorbent adsorbent;
 
     private Float qmax;

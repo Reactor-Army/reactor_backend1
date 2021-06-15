@@ -48,9 +48,8 @@ class AdsorbentControllerTest {
     void testUpdateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        requestUpdate.setId(1L);
-        adsorbentController.createAdsorbent(request);
-        AdsorbentResponse updated = adsorbentController.updateAdsorbent(requestUpdate);
+        AdsorbentResponse r = adsorbentController.createAdsorbent(request);
+        AdsorbentResponse updated = adsorbentController.updateAdsorbent(r.getId(), requestUpdate);
 
         Assert.assertEquals(updated.getName(), requestUpdate.getName());
         Assert.assertEquals(updated.getParticleSize(), requestUpdate.getParticleSize());
@@ -61,13 +60,7 @@ class AdsorbentControllerTest {
     void testComponentNotFoundExceptionUpdate(){
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setId(2L);
-        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.updateAdsorbent(requestUpdate));
-    }
-
-    @Test
-    void testUpdateAdsorbentWithoutID() {
-        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.updateAdsorbent(requestUpdate));
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.updateAdsorbent(2L,requestUpdate));
     }
 
     @Test
