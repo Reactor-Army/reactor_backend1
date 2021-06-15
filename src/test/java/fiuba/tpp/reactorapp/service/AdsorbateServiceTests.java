@@ -84,11 +84,11 @@ class AdsorbateServiceTests {
 
     @Test
     void testComponentNotFoundExceptionUpdate() {
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
+        adsorbateService.createAdsorbate(request);
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-            AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
-            adsorbateService.createAdsorbate(request);
-            Adsorbate updated = adsorbateService.updateAdsorbate(2L, requestUpdate);
+            adsorbateService.updateAdsorbate(2L, requestUpdate);
         });
     }
 
@@ -104,8 +104,6 @@ class AdsorbateServiceTests {
     @Test
     void testComponentNotFoundExceptionDelete() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-            adsorbateService.createAdsorbate(request);
             adsorbateService.deleteAdsorbate(2L);
         });
     }

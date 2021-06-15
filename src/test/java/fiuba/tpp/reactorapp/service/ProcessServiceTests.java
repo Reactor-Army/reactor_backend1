@@ -54,10 +54,10 @@ class ProcessServiceTests {
 
     @Test
     void testInvalidProcessExceptionCreate(){
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(1L);
+        request.setIdAdsorbent(1L);
         Assertions.assertThrows(InvalidProcessException.class, () -> {
-            ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-            request.setIdAdsorbate(1L);
-            request.setIdAdsorbent(1L);
             processService.createProcess(request);
         });
     }
@@ -140,11 +140,11 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
-        Assertions.assertThrows(InvalidProcessException.class, () -> {
+        ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        requestUpdate.setIdAdsorbate(adsorbate.getId());
+        requestUpdate.setIdAdsorbent(adsorbent.getId());
 
-            ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-            requestUpdate.setIdAdsorbate(adsorbate.getId());
-            requestUpdate.setIdAdsorbent(adsorbent.getId());
+        Assertions.assertThrows(InvalidProcessException.class, () -> {
             processService.updateProcess(2L, requestUpdate);
         });
     }
