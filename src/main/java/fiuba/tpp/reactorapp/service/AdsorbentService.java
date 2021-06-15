@@ -22,8 +22,8 @@ public class AdsorbentService {
         return adsorbentRepository.save(new Adsorbent(request));
     }
 
-    public Adsorbent updateAdsorbent(AdsorbentRequest request) throws ComponentNotFoundException {
-        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getId());
+    public Adsorbent updateAdsorbent(Long id, AdsorbentRequest request) throws ComponentNotFoundException {
+        Optional<Adsorbent> adsorbent = adsorbentRepository.findById(id);
         if(adsorbent.isPresent()){
             return adsorbentRepository.save(adsorbent.get().update(request));
         }

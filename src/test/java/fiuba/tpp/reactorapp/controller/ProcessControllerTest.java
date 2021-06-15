@@ -95,9 +95,8 @@ class ProcessControllerTest {
         ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
         requestUpdate.setIdAdsorbate(adsorbate.getId());
         requestUpdate.setIdAdsorbent(adsorbent.getId());
-        requestUpdate.setId(1L);
 
-        ProcessResponse process = processController.updateProcess(requestUpdate);
+        ProcessResponse process = processController.updateProcess(1L, requestUpdate);
 
         Assert.assertEquals(process.getAdsorbate().getId(), adsorbate.getId());
         Assert.assertEquals(process.getAdsorbent().getId(), adsorbent.getId());
@@ -120,10 +119,9 @@ class ProcessControllerTest {
         ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
         requestUpdate.setIdAdsorbate(adsorbate.getId());
         requestUpdate.setIdAdsorbent(adsorbent.getId());
-        requestUpdate.setId(2L);
 
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            processController.updateProcess(requestUpdate);
+            processController.updateProcess(2L, requestUpdate);
         });
     }
 

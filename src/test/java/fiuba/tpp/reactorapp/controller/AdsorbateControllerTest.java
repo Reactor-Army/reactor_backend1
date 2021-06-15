@@ -49,7 +49,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
         requestUpdate.setId(1L);
         adsorbateController.createAdsorbate(request);
-        AdsorbateResponse updated = adsorbateController.updateAdsorbate(requestUpdate);
+        AdsorbateResponse updated = adsorbateController.updateAdsorbate(1L, requestUpdate);
 
         Assert.assertEquals(updated.getIonName(), requestUpdate.getIonName());
         Assert.assertEquals(updated.getIonCharge(), requestUpdate.getIonCharge());
@@ -63,7 +63,7 @@ class AdsorbateControllerTest {
         requestUpdate.setMolarMass(2f);
         requestUpdate.setId(1L);
         adsorbateController.createAdsorbate(request);
-        AdsorbateResponse updated = adsorbateController.updateAdsorbate(requestUpdate);
+        AdsorbateResponse updated = adsorbateController.updateAdsorbate(1L, requestUpdate);
 
         Assert.assertEquals(updated.getMolarMass(), requestUpdate.getMolarMass());
     }
@@ -76,15 +76,7 @@ class AdsorbateControllerTest {
         adsorbateController.createAdsorbate(request);
 
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbateController.updateAdsorbate(requestUpdate);
-        });
-    }
-
-    @Test
-    void testUpdateAdsorbateWithoutID() {
-        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbateController.updateAdsorbate(requestUpdate);
+            adsorbateController.updateAdsorbate(2L, requestUpdate);
         });
     }
 
@@ -232,9 +224,8 @@ class AdsorbateControllerTest {
         adsorbateController.createAdsorbate(request2);
 
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
-        request.setId(1L);
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbateController.updateAdsorbate(requestUpdate);
+            adsorbateController.updateAdsorbate(1L, requestUpdate);
         });
     }
 

@@ -47,9 +47,8 @@ class AdsorbentServiceTests {
     void testUpdateAdsorbent() throws ComponentNotFoundException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        requestUpdate.setId(1L);
         adsorbentService.createAdsorbent(request);
-        Adsorbent updated = adsorbentService.updateAdsorbent(requestUpdate);
+        Adsorbent updated = adsorbentService.updateAdsorbent(1L, requestUpdate);
 
         Assert.assertEquals(updated.getName(), requestUpdate.getName());
         Assert.assertEquals(updated.getParticleSize(), requestUpdate.getParticleSize());
@@ -64,9 +63,8 @@ class AdsorbentServiceTests {
         requestUpdate.setImpurities("Pedazos de algo");
         request.setSampleOrigin("Timbuctu");
         request.setSpeciesName("FloraCarbono");
-        requestUpdate.setId(1L);
         adsorbentService.createAdsorbent(request);
-        Adsorbent updated = adsorbentService.updateAdsorbent(requestUpdate);
+        Adsorbent updated = adsorbentService.updateAdsorbent(1L, requestUpdate);
 
         Assert.assertEquals(updated.getSampleOrigin(), requestUpdate.getSampleOrigin());
         Assert.assertEquals(updated.getFormula(), requestUpdate.getFormula());
@@ -78,8 +76,7 @@ class AdsorbentServiceTests {
     void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-            requestUpdate.setId(2L);
-            Adsorbent updated = adsorbentService.updateAdsorbent(requestUpdate);
+            adsorbentService.updateAdsorbent(2L, requestUpdate);
         });
     }
 
