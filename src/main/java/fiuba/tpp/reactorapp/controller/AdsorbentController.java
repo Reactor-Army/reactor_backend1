@@ -45,7 +45,6 @@ public class AdsorbentController {
     public AdsorbentResponse updateAdsorbent(@PathVariable Long id, @RequestBody AdsorbentRequest request) {
         AdsorbentResponse response = null;
         try{
-            validateAdsorbentUpdate(id);
             response = new AdsorbentResponse(adsorbentService.updateAdsorbent(id, request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
@@ -112,8 +111,5 @@ public class AdsorbentController {
 
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
-    }
-    private void validateAdsorbentUpdate(Long id) throws InvalidRequestException {
-        if(id == null) throw new InvalidRequestException();
     }
 }
