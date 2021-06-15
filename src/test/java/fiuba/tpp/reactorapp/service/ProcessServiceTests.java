@@ -264,6 +264,23 @@ class ProcessServiceTests {
         });
     }
 
+    @Test
+    void testDeleteAdsorbateWithProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException {
+        createProcess();
+        adsorbateService.deleteAdsorbate(1L);
+        List<Process> processes = processService.getAll();
+
+        Assertions.assertTrue(processes.isEmpty());
+    }
+
+    @Test
+    void testDeleteAdsorbentWithProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException {
+        createProcess();
+        adsorbentService.deleteAdsorbent(1L);
+        List<Process> processes = processService.getAll();
+        Assertions.assertTrue(processes.isEmpty());
+    }
+
     private Process createProcess() throws InvalidProcessException, DuplicateIUPACNameException {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
