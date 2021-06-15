@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
@@ -34,7 +35,7 @@ class ProcessServiceTests {
 
 
     @Test
-    void testCreateProcess() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testCreateProcess() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -53,17 +54,17 @@ class ProcessServiceTests {
 
     @Test
     void testInvalidProcessExceptionCreate(){
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(1L);
+        request.setIdAdsorbent(1L);
         Assertions.assertThrows(InvalidProcessException.class, () -> {
-            ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-            request.setIdAdsorbate(1L);
-            request.setIdAdsorbent(1L);
             processService.createProcess(request);
         });
     }
 
 
     @Test
-    void testFindAll() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testFindAll() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -80,7 +81,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testFindAllOrderedByQMax() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testFindAllOrderedByQMax() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -103,7 +104,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testUpdateProcess() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testUpdateProcess() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -127,7 +128,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testInvalidProcessExceptionUpdate() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testInvalidProcessExceptionUpdate() {
         AdsorbentRequest requestAdsorbente = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbente);
 
@@ -139,17 +140,17 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
-        Assertions.assertThrows(InvalidProcessException.class, () -> {
+        ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        requestUpdate.setIdAdsorbate(adsorbate.getId());
+        requestUpdate.setIdAdsorbent(adsorbent.getId());
 
-            ProcessRequest requestUpdate = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
-            requestUpdate.setIdAdsorbate(adsorbate.getId());
-            requestUpdate.setIdAdsorbent(adsorbent.getId());
+        Assertions.assertThrows(InvalidProcessException.class, () -> {
             processService.updateProcess(2L, requestUpdate);
         });
     }
 
     @Test
-    void testDeleteProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException {
+    void testDeleteProcess() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -165,14 +166,14 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testProcessNotFoundExceptionDelete() throws InvalidProcessException, ComponentNotFoundException {
+    void testProcessNotFoundExceptionDelete() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             processService.deleteProcess(1L);
         });
     }
 
     @Test
-    void testSearchProcess() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testSearchProcess() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -197,7 +198,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testSearchProcessOrderByQmax() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testSearchProcessOrderByQmax() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -225,7 +226,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testSearchProcessAdsorbateAdsorbent() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testSearchProcessAdsorbateAdsorbent() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 
@@ -249,7 +250,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testGetProcessById() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException {
+    void testGetProcessById() {
         Process process = createProcess();
 
         Long id = process.getId();
@@ -258,14 +259,15 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testGetProcessByIdNotFound() throws InvalidProcessException, ComponentNotFoundException {
+    void testGetProcessByIdNotFound() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
                 processService.getById(20L);
         });
     }
 
+
     @Test
-    void testDeleteAdsorbateWithProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException {
+    void testDeleteAdsorbateWithProcess() {
         createProcess();
         adsorbateService.deleteAdsorbate(1L);
         List<Process> processes = processService.getAll();
@@ -274,14 +276,14 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testDeleteAdsorbentWithProcess() throws InvalidProcessException, ComponentNotFoundException, DuplicateIUPACNameException {
+    void testDeleteAdsorbentWithProcess() {
         createProcess();
         adsorbentService.deleteAdsorbent(1L);
         List<Process> processes = processService.getAll();
         Assertions.assertTrue(processes.isEmpty());
     }
 
-    private Process createProcess() throws InvalidProcessException, DuplicateIUPACNameException {
+    private Process createProcess() {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
 

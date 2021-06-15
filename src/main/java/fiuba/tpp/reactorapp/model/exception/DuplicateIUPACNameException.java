@@ -1,4 +1,4 @@
 package fiuba.tpp.reactorapp.model.exception;
 
-public class DuplicateIUPACNameException extends Exception {
+public class DuplicateIUPACNameException extends RuntimeException {
 }
