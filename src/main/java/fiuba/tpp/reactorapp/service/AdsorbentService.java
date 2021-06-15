@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,21 @@ public class AdsorbentService {
     @Autowired
     private AdsorbentRepository adsorbentRepository;
 
-    public Adsorbent createAdsorbent(AdsorbentRequest request){
+    public Adsorbent createAdsorbent(AdsorbentRequest request) throws DuplicateAdsorbentException {
+        Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndParticleSize(request.getName(),request.getParticleSize());
+        if(adsorbent.isPresent()){
+            throw new DuplicateAdsorbentException();
+        }
         return adsorbentRepository.save(new Adsorbent(request));
     }
 
-    public Adsorbent updateAdsorbent(AdsorbentRequest request) throws ComponentNotFoundException {
+    public Adsorbent updateAdsorbent(AdsorbentRequest request) throws ComponentNotFoundException, DuplicateAdsorbentException {
         Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getId());
         if(adsorbent.isPresent()){
+            Optional<Adsorbent> duplicateAdsorbent = adsorbentRepository.findByNameAndParticleSizeAndIdNot(request.getName(), request.getParticleSize(), request.getId());
+            if(duplicateAdsorbent.isPresent()){
+                throw new DuplicateAdsorbentException();
+            }
             return adsorbentRepository.save(adsorbent.get().update(request));
         }
         throw new ComponentNotFoundException();

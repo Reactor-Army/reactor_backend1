@@ -33,9 +33,7 @@ class AdsorbentControllerTest {
     @Test
     void testCreateAdsorbentWithoutName(){
         AdsorbentRequest request = new AdsorbentRequest(null, "Prueba", 1f, 1f,1f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbentController.createAdsorbent(request);
-        });
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.createAdsorbent(request));
     }
 
     @Test
@@ -63,17 +61,13 @@ class AdsorbentControllerTest {
     void testComponentNotFoundExceptionUpdate(){
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setId(2L);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbentController.updateAdsorbent(requestUpdate);
-        });
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.updateAdsorbent(requestUpdate));
     }
 
     @Test
     void testUpdateAdsorbentWithoutID() {
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbentController.updateAdsorbent(requestUpdate);
-        });
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.updateAdsorbent(requestUpdate));
     }
 
     @Test
@@ -86,9 +80,7 @@ class AdsorbentControllerTest {
 
     @Test
     void testDeleteAdsorbentWithoutID() {
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbentController.deleteAdsorbent(1L);
-        });
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.deleteAdsorbent(1L));
     }
 
 
@@ -137,7 +129,7 @@ class AdsorbentControllerTest {
     @Test
     void testSearchAdsorbentNameOneMatch() {
         AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
-            AdsorbentRequest request2 = new AdsorbentRequest("EsteNoEs", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest request2 = new AdsorbentRequest("EsteNoEs", "Prueba2", 10f, 10f,10f);
         adsorbentController.createAdsorbent(request);
         adsorbentController.createAdsorbent(request2);
         List<AdsorbentNameResponse> adsorbentsName = adsorbentController.searchAdsorbentsName("PRUEBA");
@@ -166,8 +158,26 @@ class AdsorbentControllerTest {
 
     @Test
     void testGetAdsorbentByIdNotFound(){
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbentController.getAdsorbent(20L);
-        });
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.getAdsorbent(20L));
+    }
+
+    @Test
+    void testCreateDuplicateAdsorbent() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "60", 1f, 1f,1f);
+        adsorbentController.createAdsorbent(request);
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.createAdsorbent(request));
+    }
+
+    @Test
+    void testUpdateDuplicateAdsorbent() {
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        adsorbentController.createAdsorbent(request);
+        adsorbentController.createAdsorbent(request2);
+
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        requestUpdate.setId(1L);
+
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.createAdsorbent(request));
     }
 }

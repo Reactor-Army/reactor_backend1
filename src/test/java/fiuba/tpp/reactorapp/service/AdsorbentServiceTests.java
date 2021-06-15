@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
+import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
@@ -26,7 +27,7 @@ class AdsorbentServiceTests {
 
 
     @Test
-    void testCreateAdsorbent(){
+    void testCreateAdsorbent() throws DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
 
@@ -36,15 +37,15 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testFindAll() {
+    void testFindAll() throws DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request);
         List<Adsorbent> adsorbents = adsorbentService.getAll();
         Assert.assertEquals(1L, adsorbents.size());
     }
 
     @Test
-    void testUpdateAdsorbent() throws ComponentNotFoundException {
+    void testUpdateAdsorbent() throws ComponentNotFoundException, DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setId(1L);
@@ -57,7 +58,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testUpdateAdsorbentExtraData() throws ComponentNotFoundException {
+    void testUpdateAdsorbentExtraData() throws ComponentNotFoundException, DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setFormula("H2O");
@@ -75,16 +76,16 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
+    void testComponentNotFoundExceptionUpdate() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
             AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
             requestUpdate.setId(2L);
-            Adsorbent updated = adsorbentService.updateAdsorbent(requestUpdate);
+            adsorbentService.updateAdsorbent(requestUpdate);
         });
     }
 
     @Test
-    void testDeleteAdsorbent() throws ComponentNotFoundException {
+    void testDeleteAdsorbent() throws ComponentNotFoundException, DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.deleteAdsorbent(1L);
@@ -93,10 +94,8 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testComponentNotFoundExceptionDelete() throws ComponentNotFoundException {
-        Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            adsorbentService.deleteAdsorbent(2L);
-        });
+    void testComponentNotFoundExceptionDelete() {
+        Assertions.assertThrows(ComponentNotFoundException.class, () -> adsorbentService.deleteAdsorbent(2L));
     }
 
     @ParameterizedTest
@@ -105,7 +104,7 @@ class AdsorbentServiceTests {
             "2, ",
             "2, ''"
     })
-    void testSearchAdsorbentFilterName(long size, String filter) {
+    void testSearchAdsorbentFilterName(long size, String filter) throws DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -116,7 +115,7 @@ class AdsorbentServiceTests {
 
 
     @Test
-    void testSearchAdsorbentFilterUpperAndLowerName() {
+    void testSearchAdsorbentFilterUpperAndLowerName() throws DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("prueba", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -126,12 +125,32 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testSearchAdsorbentFilterAccent1() {
+    void testSearchAdsorbentFilterAccent1() throws DuplicateAdsorbentException {
         AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.createAdsorbent(request2);
         List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos"));
         Assert.assertEquals(2L, adsorbents.size());
+    }
+
+    @Test
+    void testCreateAdsorbentDuplicateNameAndParticleSize() throws DuplicateAdsorbentException {
+        AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        adsorbentService.createAdsorbent(request);
+
+        Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.createAdsorbent(request));
+    }
+
+    @Test
+    void testUpdateDuplicateAdsorbent() throws DuplicateAdsorbentException {
+        AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        requestUpdate.setId(2L);
+        adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request2);
+
+        Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.updateAdsorbent(requestUpdate));
     }
 }
