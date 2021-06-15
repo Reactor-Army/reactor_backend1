@@ -10,6 +10,4 @@ public interface ProcessRepositoryCustom {
     List<Process> getAll(ProcessFilter filter);
 
     List<Process> getByAdsorbates(List<Long> adsorbatesIds);
-
-    List<Process> getByAdsorbents(List<Long> adsorbentsIds);
 }
