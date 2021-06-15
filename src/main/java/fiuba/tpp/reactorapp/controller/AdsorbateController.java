@@ -8,6 +8,7 @@ import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
+import fiuba.tpp.reactorapp.model.response.ProcessCountResponse;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -108,6 +109,11 @@ public class AdsorbateController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "El Adsorbato no existe", e);
         }
+    }
+
+    @GetMapping(value = "/{id}/cantidad-procesos")
+    public ProcessCountResponse getAdsorbateProcessCount(@PathVariable Long id) {
+        return new ProcessCountResponse(adsorbateService.getAdsorbateProcessCount(id));
     }
 
 

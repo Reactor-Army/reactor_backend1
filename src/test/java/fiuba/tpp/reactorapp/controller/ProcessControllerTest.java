@@ -4,10 +4,7 @@ import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
-import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
-import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
-import fiuba.tpp.reactorapp.model.response.ProcessResponse;
-import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
+import fiuba.tpp.reactorapp.model.response.*;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -310,5 +307,23 @@ class ProcessControllerTest {
         Assertions.assertThrows(ResponseStatusException.class, () -> {
             ProcessResponse processResponse = processController.getProcess(20L);
         });
+    }
+
+    @Test
+    void testProcessCountAdsorbate(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+
+        ProcessCountResponse count = adsorbateController.getAdsorbateProcessCount(adsorbate.getId());
+
+        Assertions.assertEquals(1, count.getProcessCount());
     }
 }
