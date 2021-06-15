@@ -1,14 +1,17 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
+import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
+import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,9 @@ public class AdsorbentService {
 
     @Autowired
     private AdsorbentRepository adsorbentRepository;
+
+    @Autowired
+    private ProcessRepository processRepository;
 
     public Adsorbent createAdsorbent(AdsorbentRequest request){
         return adsorbentRepository.save(new Adsorbent(request));
@@ -33,6 +39,10 @@ public class AdsorbentService {
     public void deleteAdsorbent(Long id) throws ComponentNotFoundException {
         Optional<Adsorbent> adsorbent = adsorbentRepository.findById(id);
         if(adsorbent.isPresent()){
+            List<Process> processesWithAdsorbent = processRepository.getByAdsorbents(Collections.singletonList(id));
+            for (Process p: processesWithAdsorbent) {
+                processRepository.delete(p);
+            }
             adsorbentRepository.delete(adsorbent.get());
             return;
         }
