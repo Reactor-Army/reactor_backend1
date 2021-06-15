@@ -326,4 +326,22 @@ class ProcessControllerTest {
 
         Assertions.assertEquals(1, count.getProcessCount());
     }
+
+    @Test
+    void testProcessCountAdsorbent(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+
+        ProcessCountResponse count = adsorbentController.getAdsorbentProcessCount(adsorbent.getId());
+
+        Assertions.assertEquals(1, count.getProcessCount());
+    }
 }

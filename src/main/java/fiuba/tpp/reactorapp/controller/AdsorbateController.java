@@ -116,8 +116,6 @@ public class AdsorbateController {
         return new ProcessCountResponse(adsorbateService.getAdsorbateProcessCount(id));
     }
 
-
-
     private void validateAdsorbate(AdsorbateRequest request) throws InvalidRequestException {
         if(request.getIonName() == null || request.getIonName().isEmpty()) throw new InvalidRequestException();
         if(request.getNameIUPAC() == null || request.getNameIUPAC().isEmpty()) throw new InvalidRequestException();

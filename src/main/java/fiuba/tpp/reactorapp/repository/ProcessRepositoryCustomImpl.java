@@ -57,4 +57,22 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
         return em.createQuery(cq).getResultList();
 
     }
+
+    @Override
+    public List<Process> getByAdsorbents(List<Long> adsorbentsIds) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Process> cq = cb.createQuery(Process.class);
+
+        Root<Process> processRoot = cq.from(Process.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if(adsorbentsIds != null && !adsorbentsIds.isEmpty()){
+            predicates.add(processRoot.get("adsorbent").get("id").in(adsorbentsIds));
+        }
+
+        cq.where(predicates.toArray(new Predicate[0]));
+        cq.orderBy(cb.desc(processRoot.get("qmax")));
+
+        return em.createQuery(cq).getResultList();
+    }
 }
