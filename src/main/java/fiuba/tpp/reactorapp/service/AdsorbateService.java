@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,8 +73,8 @@ public class AdsorbateService {
         throw new ComponentNotFoundException();
     }
 
-    public Integer getAdsorbateProcessCount(Long id){
-        return processRepository.getByAdsorbates(Collections.singletonList(id)).size();
+    public Long getAdsorbateProcessCount(Long id){
+        return processRepository.getAdsorbateProcessCount(id);
     }
 
 

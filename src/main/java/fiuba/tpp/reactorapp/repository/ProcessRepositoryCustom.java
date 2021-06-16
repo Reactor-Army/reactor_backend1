@@ -11,5 +11,7 @@ public interface ProcessRepositoryCustom {
 
     List<Process> getByAdsorbates(List<Long> adsorbatesIds);
 
-    List<Process> getByAdsorbents(List<Long> adsorbentsIds);
+    Long getAdsorbateProcessCount(Long adsorbateId);
+
+    Long getAdsorbentProcessCount(Long adsorbentId);
 }

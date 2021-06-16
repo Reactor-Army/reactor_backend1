@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,8 +69,8 @@ public class AdsorbentService {
         throw new ComponentNotFoundException();
     }
 
-    public Integer getAdsorbentProcessCount(Long id){
-        return processRepository.getByAdsorbents(Collections.singletonList(id)).size();
+    public Long getAdsorbentProcessCount(Long id){
+        return processRepository.getAdsorbentProcessCount(id);
     }
 
 }

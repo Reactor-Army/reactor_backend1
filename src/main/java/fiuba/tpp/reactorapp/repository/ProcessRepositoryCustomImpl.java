@@ -17,6 +17,9 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
     @Autowired
     EntityManager em;
 
+    private static final String ADSORBATE = "adsorbate";
+    private static final String ADSORBENT = "adsorbent";
+
     @Override
     public List<Process> getAll(ProcessFilter filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -26,11 +29,11 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
         List<Predicate> predicates = new ArrayList<>();
 
         if (filter.getIdAdsorbate() != null) {
-            predicates.add(cb.equal(processRoot.get("adsorbate").get("id"), filter.getIdAdsorbate()));
+            predicates.add(cb.equal(processRoot.get(ADSORBATE).get("id"), filter.getIdAdsorbate()));
         }
 
         if(filter.getIdAdsorbent() != null){
-            predicates.add(cb.equal(processRoot.get("adsorbent").get("id"),filter.getIdAdsorbent()));
+            predicates.add(cb.equal(processRoot.get(ADSORBENT).get("id"),filter.getIdAdsorbent()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
@@ -48,7 +51,7 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
         List<Predicate> predicates = new ArrayList<>();
 
         if(adsorbatesIds != null && !adsorbatesIds.isEmpty()){
-            predicates.add(processRoot.get("adsorbate").get("id").in(adsorbatesIds));
+            predicates.add(processRoot.get(ADSORBATE).get("id").in(adsorbatesIds));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
@@ -59,20 +62,38 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
     }
 
     @Override
-    public List<Process> getByAdsorbents(List<Long> adsorbentsIds) {
+    public Long getAdsorbateProcessCount(Long adsorbateId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Process> cq = cb.createQuery(Process.class);
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+        cq.select(cb.count(cq.from(Process.class)));
 
         Root<Process> processRoot = cq.from(Process.class);
         List<Predicate> predicates = new ArrayList<>();
 
-        if(adsorbentsIds != null && !adsorbentsIds.isEmpty()){
-            predicates.add(processRoot.get("adsorbent").get("id").in(adsorbentsIds));
+        if(adsorbateId != null){
+            predicates.add(cb.equal(processRoot.get(ADSORBATE).get("id"), adsorbateId));
         }
-
         cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(cb.desc(processRoot.get("qmax")));
 
-        return em.createQuery(cq).getResultList();
+        return em.createQuery(cq).getSingleResult();
+    }
+
+    @Override
+    public Long getAdsorbentProcessCount(Long adsorbentId) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+
+        cq.select(cb.count(cq.from(Process.class)));
+
+        Root<Process> processRoot = cq.from(Process.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        if(adsorbentId != null){
+            predicates.add(cb.equal(processRoot.get(ADSORBENT).get("id"), adsorbentId));
+        }
+        cq.where(predicates.toArray(new Predicate[0]));
+
+        return em.createQuery(cq).getSingleResult();
     }
 }
