@@ -297,7 +297,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testGetProcessCountAdsorbate() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testGetProcessCountAdsorbate() {
         createProcess();
         Assertions.assertEquals(1, adsorbateService.getAdsorbateProcessCount(1L));
     }
@@ -313,7 +313,7 @@ class ProcessServiceTests {
     }
 
     @Test
-    void testGetProcessCountAdsorbent() throws InvalidProcessException, DuplicateIUPACNameException {
+    void testGetProcessCountAdsorbent() {
         createProcess();
         Assertions.assertEquals(1, adsorbentService.getAdsorbentProcessCount(1L));
     }
