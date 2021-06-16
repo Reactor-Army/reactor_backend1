@@ -115,7 +115,7 @@ public class LoadDataService {
             String observation = row.getCell(19).getStringCellValue();
             String source = row.getCell(20).getStringCellValue();
 
-            Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndAndParticleSize(nameAdsorbent, sizeAdsorbent);
+            Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndParticleSize(nameAdsorbent, sizeAdsorbent);
 
             Adsorbent newAdsorbent = new Adsorbent();
             if (!adsorbent.isPresent()) {

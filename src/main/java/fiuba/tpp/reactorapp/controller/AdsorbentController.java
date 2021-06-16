@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
@@ -34,6 +35,9 @@ public class AdsorbentController {
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Los adsorbentes deben tener un nombre", e);
+        } catch (DuplicateAdsorbentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombre y ese tamaño de particula", e);
         }
         return response;
     }
@@ -42,7 +46,6 @@ public class AdsorbentController {
     public AdsorbentResponse updateAdsorbent(@PathVariable Long id, @RequestBody AdsorbentRequest request) {
         AdsorbentResponse response = null;
         try{
-            validateAdsorbentUpdate(id);
             response = new AdsorbentResponse(adsorbentService.updateAdsorbent(id, request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
@@ -50,6 +53,9 @@ public class AdsorbentController {
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
+        }catch (DuplicateAdsorbentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombre y ese tamaño de particula", e);
         }
         return response;
     }
@@ -110,8 +116,5 @@ public class AdsorbentController {
 
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
-    }
-    private void validateAdsorbentUpdate(Long id) throws InvalidRequestException {
-        if(id == null) throw new InvalidRequestException();
     }
 }

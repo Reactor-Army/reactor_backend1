@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface AdsorbentRepository extends CrudRepository<Adsorbent,Long>, AdsorbentRepositoryCustom  {
 
-    Optional<Adsorbent> findByNameAndAndParticleSize(String name, String particleSize);
+    Optional<Adsorbent> findByNameAndParticleSize(String name, String particleSize);
+
+    Optional<Adsorbent> findByNameAndParticleSizeAndIdNot(String name, String particleSize, long id);
 
 }

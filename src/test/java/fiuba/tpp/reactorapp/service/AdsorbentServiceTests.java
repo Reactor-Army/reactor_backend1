@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
+import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
@@ -26,7 +27,7 @@ class AdsorbentServiceTests {
 
 
     @Test
-    void testCreateAdsorbent(){
+    void testCreateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
 
@@ -38,13 +39,13 @@ class AdsorbentServiceTests {
     @Test
     void testFindAll() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request);
         List<Adsorbent> adsorbents = adsorbentService.getAll();
         Assert.assertEquals(1L, adsorbents.size());
     }
 
     @Test
-    void testUpdateAdsorbent() throws ComponentNotFoundException {
+    void testUpdateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
@@ -56,7 +57,7 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testUpdateAdsorbentExtraData() throws ComponentNotFoundException {
+    void testUpdateAdsorbentExtraData() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         requestUpdate.setFormula("H2O");
@@ -73,15 +74,15 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testComponentNotFoundExceptionUpdate() throws ComponentNotFoundException {
+    void testComponentNotFoundExceptionUpdate() {
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
             adsorbentService.updateAdsorbent(2L, requestUpdate);
         });
     }
 
     @Test
-    void testDeleteAdsorbent() throws ComponentNotFoundException {
+    void testDeleteAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.deleteAdsorbent(1L);
@@ -90,10 +91,8 @@ class AdsorbentServiceTests {
     }
 
     @Test
-    void testComponentNotFoundExceptionDelete() throws ComponentNotFoundException {
-        Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            adsorbentService.deleteAdsorbent(2L);
-        });
+    void testComponentNotFoundExceptionDelete() {
+        Assertions.assertThrows(ComponentNotFoundException.class, () -> adsorbentService.deleteAdsorbent(2L));
     }
 
     @ParameterizedTest
@@ -130,5 +129,24 @@ class AdsorbentServiceTests {
         adsorbentService.createAdsorbent(request2);
         List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos"));
         Assert.assertEquals(2L, adsorbents.size());
+    }
+
+    @Test
+    void testCreateAdsorbentDuplicateNameAndParticleSize() {
+        AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        adsorbentService.createAdsorbent(request);
+
+        Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.createAdsorbent(request));
+    }
+
+    @Test
+    void testUpdateDuplicateAdsorbent() {
+        AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request2);
+
+        Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.updateAdsorbent(2L,requestUpdate));
     }
 }
