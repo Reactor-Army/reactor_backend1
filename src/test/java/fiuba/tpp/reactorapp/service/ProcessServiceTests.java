@@ -295,4 +295,36 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         return processService.createProcess(request);
     }
+
+    @Test
+    void testGetProcessCountAdsorbate() {
+        createProcess();
+        Assertions.assertEquals(1, adsorbateService.getAdsorbateProcessCount(1L));
+    }
+
+    @Test
+    void testGetProcessCountAdsorbateNoProcess(){
+        Assertions.assertEquals(0, adsorbateService.getAdsorbateProcessCount(1L));
+    }
+
+    @Test
+    void testGetProcessCountNoAdsorbate(){
+        Assertions.assertEquals(0, adsorbateService.getAdsorbateProcessCount(null));
+    }
+
+    @Test
+    void testGetProcessCountAdsorbent() {
+        createProcess();
+        Assertions.assertEquals(1, adsorbentService.getAdsorbentProcessCount(1L));
+    }
+
+    @Test
+    void testGetProcessCountAdsorbentNoProcess(){
+        Assertions.assertEquals(0, adsorbentService.getAdsorbentProcessCount(1L));
+    }
+
+    @Test
+    void testGetProcessCountNoAdsorbent(){
+        Assertions.assertEquals(0, adsorbentService.getAdsorbentProcessCount(null));
+    }
 }

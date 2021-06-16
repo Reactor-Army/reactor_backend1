@@ -6,6 +6,7 @@ import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
+import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import fiuba.tpp.reactorapp.service.utils.FormulaParserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class AdsorbateService {
 
     @Autowired
     private AdsorbateRepository adsorbateRepository;
+
+    @Autowired
+    private ProcessRepository processRepository;
 
     @Autowired
     private FormulaParserService formulaParserService;
@@ -68,6 +72,12 @@ public class AdsorbateService {
         }
         throw new ComponentNotFoundException();
     }
+
+    public Long getAdsorbateProcessCount(Long id){
+        return processRepository.getAdsorbateProcessCount(id);
+    }
+
+
 
 
     private Adsorbate saveAdsorbate(Adsorbate adsorbate){

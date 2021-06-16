@@ -8,6 +8,7 @@ import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
+import fiuba.tpp.reactorapp.model.response.ProcessCountResponse;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -108,6 +109,10 @@ public class AdsorbentController {
         }
     }
 
+    @GetMapping(value = "/{id}/cantidad-procesos")
+    public ProcessCountResponse getAdsorbentProcessCount(@PathVariable Long id) {
+        return new ProcessCountResponse(adsorbentService.getAdsorbentProcessCount(id));
+    }
 
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();

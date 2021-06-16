@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
+import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
@@ -18,11 +19,15 @@ public class AdsorbentService {
     @Autowired
     private AdsorbentRepository adsorbentRepository;
 
+    @Autowired
+    private ProcessRepository processRepository;
+
     public Adsorbent createAdsorbent(AdsorbentRequest request) throws DuplicateAdsorbentException {
         Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndParticleSize(request.getName(),request.getParticleSize());
         if(adsorbent.isPresent()){
             throw new DuplicateAdsorbentException();
         }
+
         return adsorbentRepository.save(new Adsorbent(request));
     }
 
@@ -62,6 +67,10 @@ public class AdsorbentService {
             return adsorbent.get();
         }
         throw new ComponentNotFoundException();
+    }
+
+    public Long getAdsorbentProcessCount(Long id){
+        return processRepository.getAdsorbentProcessCount(id);
     }
 
 }
