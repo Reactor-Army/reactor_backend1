@@ -77,9 +77,6 @@ public class AdsorbateService {
         return processRepository.getAdsorbateProcessCount(id);
     }
 
-
-
-
     private Adsorbate saveAdsorbate(Adsorbate adsorbate){
         return adsorbateRepository.save(parseFormula(adsorbate));
     }
