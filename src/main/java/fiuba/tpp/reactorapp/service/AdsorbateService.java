@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +59,9 @@ public class AdsorbateService {
     }
 
     public List<Adsorbate> getAll(){
-        return (List<Adsorbate>) adsorbateRepository.findAll();
+        List<Adsorbate> adsorbates = (List<Adsorbate>) adsorbateRepository.findAll();
+        adsorbates.sort(Comparator.comparing(Adsorbate::getIonName));
+        return adsorbates;
     }
 
     public List<Adsorbate> search(AdsorbateFilter filter){

@@ -9,6 +9,7 @@ import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,13 @@ public class ProcessController {
             response = new ProcessResponse(processService.createProcess(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El proceso debe estar conformado de un adsorbato o un adsorbente", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.PROCESS_INVALID_REQUEST.getMessage(), e);
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Adsorbente o Adsorbato invalidos", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_PROCESS_CREATE.getMessage(), e);
+        } catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return response;
     }
@@ -50,7 +54,10 @@ public class ProcessController {
             response = new ProcessResponse(processService.updateProcess(id, request));
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Adsorbato,Adsorbente o reactor invalido", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_PROCESS.getMessage(), e);
+        } catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return response;
     }
@@ -61,7 +68,10 @@ public class ProcessController {
             processService.deleteProcess(id);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El proceso no existe", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
     }
 
@@ -99,7 +109,7 @@ public class ProcessController {
             return new ProcessResponse(processService.getById(id));
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "El proceso no existe", e);
+                    HttpStatus.NOT_FOUND, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
         }
     }
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {

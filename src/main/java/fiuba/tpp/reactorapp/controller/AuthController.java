@@ -6,6 +6,7 @@ import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
 import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,10 +33,13 @@ public class AuthController {
             return authService.register(registerRequest);
         } catch (EmailAlreadyExistException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El email ya existe en el sistema", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_EMAIL.getMessage(), e);
         } catch (InvalidRegisterException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El email es invalido o no cumple con un formato correcto", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REGISTER.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
     }
 
