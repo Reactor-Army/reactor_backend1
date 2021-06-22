@@ -9,6 +9,7 @@ import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ProcessCountResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,10 +35,13 @@ public class AdsorbentController {
             response = new AdsorbentResponse(adsorbentService.createAdsorbent(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Los adsorbentes deben tener un nombre", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_ADSORBENT.getMessage(), e);
         } catch (DuplicateAdsorbentException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombre y ese tamaño de particula", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_ADSORBENT.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return response;
     }
@@ -47,15 +51,15 @@ public class AdsorbentController {
         AdsorbentResponse response = null;
         try{
             response = new AdsorbentResponse(adsorbentService.updateAdsorbent(id, request));
-        } catch (InvalidRequestException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbente", e);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.ADSORBENT_NOT_FOUND.getMessage(), e);
         }catch (DuplicateAdsorbentException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Ya existe un adsorbente con ese nombre y ese tamaño de particula", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_ADSORBENT.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return response;
     }
@@ -66,7 +70,10 @@ public class AdsorbentController {
             adsorbentService.deleteAdsorbent(id);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El adsorbente no existe", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.ADSORBENT_NOT_FOUND.getMessage(), e);
+        } catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
     }
 
@@ -105,7 +112,7 @@ public class AdsorbentController {
             return new AdsorbentResponse(adsorbentService.getById(id));
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "El Adsorbente no existe", e);
+                    HttpStatus.NOT_FOUND, ResponseMessage.ADSORBENT_NOT_FOUND.getMessage(), e);
         }
     }
 

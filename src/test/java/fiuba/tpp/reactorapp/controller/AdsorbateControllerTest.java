@@ -1,13 +1,16 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
-import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -21,6 +24,12 @@ class AdsorbateControllerTest {
 
     @Autowired
     private AdsorbateController adsorbateController;
+
+    @Mock
+    private AdsorbateService adsorbateService;
+
+    @InjectMocks
+    private AdsorbateController adsorbateMockController = new AdsorbateController();
 
     @Test
     void testCreateAdsorbate(){
@@ -38,9 +47,10 @@ class AdsorbateControllerTest {
     void testCreateAdsorbateWithoutName(){
         AdsorbateRequest request = new AdsorbateRequest(null,"PruebaIUPAC",1,1f,10f);
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
-            AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(request);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.createAdsorbate(request);
         });
+        Assert.assertEquals(ResponseMessage.INVALID_ADSORBATE.getMessage(),e.getReason());
     }
 
     @Test
@@ -75,9 +85,10 @@ class AdsorbateControllerTest {
         requestUpdate.setId(2L);
         adsorbateController.createAdsorbate(request);
 
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
             adsorbateController.updateAdsorbate(2L, requestUpdate);
         });
+        Assert.assertEquals(ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(),e.getReason());
     }
 
     @Test
@@ -202,18 +213,20 @@ class AdsorbateControllerTest {
 
     @Test
     void testGetAdsorbateByIdNotFound(){
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
            adsorbateController.getAdsorbate(20L);
         });
+        Assert.assertEquals(ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(),e.getReason());
     }
 
     @Test
     void testCreateAdsorbateNameIUPACDuplicate() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","IUPAC",1,1f,10f);
         adsorbateController.createAdsorbate(request);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
             adsorbateController.createAdsorbate(request);
         });
+        Assert.assertEquals(ResponseMessage.DUPLICATE_ADSORBATE.getMessage(),e.getReason());
     }
 
     @Test
@@ -224,10 +237,45 @@ class AdsorbateControllerTest {
         adsorbateController.createAdsorbate(request2);
 
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
-        Assertions.assertThrows(ResponseStatusException.class, () -> {
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
             adsorbateController.updateAdsorbate(1L, requestUpdate);
         });
+        Assert.assertEquals(ResponseMessage.DUPLICATE_ADSORBATE.getMessage(),e.getReason());
+
     }
 
+    @Test
+    void testUpdateAdsorbateInternalError() {
+        AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
+        Mockito.when(adsorbateService.updateAdsorbate(1L,requestUpdate)).thenThrow(RuntimeException.class);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateMockController.updateAdsorbate(1L, requestUpdate);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
+    @Test
+    void testCreateAdsorbateInternalError() {
+        AdsorbateRequest request = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
+        Mockito.when(adsorbateService.createAdsorbate(request)).thenThrow(RuntimeException.class);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateMockController.createAdsorbate(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
+    @Test
+    void testDeleteAdsorbateInternalError() {
+        Mockito.doThrow(RuntimeException.class).when(adsorbateService).deleteAdsorbate(1L);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateMockController.deleteAdsorbate(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+    }
 
 }

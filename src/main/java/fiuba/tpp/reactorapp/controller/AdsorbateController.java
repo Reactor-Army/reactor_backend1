@@ -9,6 +9,7 @@ import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.ProcessCountResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,10 +35,13 @@ public class AdsorbateController {
             response = new AdsorbateResponse(adsorbateService.createAdsorbate(request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Los adsorbatos deben tener un nombre y un nombre IUPAC", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_ADSORBATE.getMessage(), e);
         } catch (DuplicateIUPACNameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Ya existe otro adsorbato con ese nombre IUPAC", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_ADSORBATE.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return response;
     }
@@ -50,13 +54,16 @@ public class AdsorbateController {
             response = new AdsorbateResponse(adsorbateService.updateAdsorbate(id, request));
         } catch (InvalidRequestException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Es necesario el ID del adsorbato y el nombre IUPAC no puede ser nulo", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.ADSORBATE_INVALID_REQUEST.getMessage(), e);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El adsorbato no existe", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(), e);
         } catch (DuplicateIUPACNameException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Ya existe otro adsorbato con ese nombre IUPAC", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_ADSORBATE.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return response;
     }
@@ -67,7 +74,10 @@ public class AdsorbateController {
             adsorbateService.deleteAdsorbate(id);
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "El adsorbato no existe", e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(), e);
+        } catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
 
     }
@@ -107,7 +117,7 @@ public class AdsorbateController {
             return new AdsorbateResponse((adsorbateService.getById(id)));
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, "El Adsorbato no existe", e);
+                    HttpStatus.NOT_FOUND, ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(), e);
         }
     }
 
