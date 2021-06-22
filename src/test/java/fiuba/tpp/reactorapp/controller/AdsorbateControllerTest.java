@@ -276,9 +276,6 @@ class AdsorbateControllerTest {
             adsorbateMockController.deleteAdsorbate(1L);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-
     }
-    
-
 
 }

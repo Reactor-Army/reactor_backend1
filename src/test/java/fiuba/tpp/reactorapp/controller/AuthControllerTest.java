@@ -1,11 +1,19 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
 import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.service.AdsorbentService;
+import fiuba.tpp.reactorapp.service.auth.AuthService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,6 +28,13 @@ class AuthControllerTest {
 
     @Autowired
     private AuthController authController;
+
+    @Mock
+    private AuthService authService;
+
+    @InjectMocks
+    private AuthController authMockController = new AuthController();
+
 
     @Test
     void testRegisterUserAndLogin(){
@@ -66,5 +81,15 @@ class AuthControllerTest {
         Assert.assertThrows(ResponseStatusException.class, () ->{
             authController.registerUser(request2);
         });
+    }
+
+    @Test
+    void testRegisterUserInternalErrror() {
+        RegisterRequest request = new RegisterRequest("mati@gmail.com","Prueba123");
+        Mockito.when(authService.register(request)).thenThrow(RuntimeException.class);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authMockController.registerUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
     }
 }

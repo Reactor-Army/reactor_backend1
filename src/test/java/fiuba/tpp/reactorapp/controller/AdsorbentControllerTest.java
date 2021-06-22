@@ -3,9 +3,14 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -19,6 +24,12 @@ class AdsorbentControllerTest {
 
     @Autowired
     private AdsorbentController adsorbentController;
+
+    @Mock
+    private AdsorbentService adsorbentService;
+
+    @InjectMocks
+    private AdsorbentController adsorbentMockController = new AdsorbentController();
 
     @Test
     void testCreateAdsorbent(){
@@ -172,5 +183,40 @@ class AdsorbentControllerTest {
         requestUpdate.setId(1L);
 
         Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.createAdsorbent(request));
+    }
+
+    @Test
+    void testUpdateAdsorbentInternalError() {
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        Mockito.when(adsorbentService.updateAdsorbent(1L,requestUpdate)).thenThrow(RuntimeException.class);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbentMockController.updateAdsorbent(1L, requestUpdate);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
+    @Test
+    void testCreateAdsorbentInternalError() {
+        AdsorbentRequest request = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        Mockito.when(adsorbentService.createAdsorbent(request)).thenThrow(RuntimeException.class);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbentMockController.createAdsorbent(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
+    @Test
+    void testDeleteAdsorbentInternalError() {
+        Mockito.doThrow(RuntimeException.class).when(adsorbentService).deleteAdsorbent(1L);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbentMockController.deleteAdsorbent(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
     }
 }

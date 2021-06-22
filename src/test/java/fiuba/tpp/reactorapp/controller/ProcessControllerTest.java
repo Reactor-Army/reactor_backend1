@@ -5,9 +5,13 @@ import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.*;
+import fiuba.tpp.reactorapp.service.ProcessService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -28,6 +32,12 @@ class ProcessControllerTest {
 
     @Autowired
     private AdsorbateController adsorbateController;
+
+    @Mock
+    ProcessService processService;
+
+    @InjectMocks
+    ProcessController processMockController = new ProcessController();
 
 
     @Test
@@ -305,7 +315,7 @@ class ProcessControllerTest {
     @Test
     void testGetProcessByIdNotFound(){
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            ProcessResponse processResponse = processController.getProcess(20L);
+            processController.getProcess(20L);
         });
     }
 
@@ -344,4 +354,42 @@ class ProcessControllerTest {
 
         Assertions.assertEquals(1, count.getProcessCount());
     }
+
+    @Test
+    void testUpdateProcessInternalError() {
+        ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
+        Mockito.when(processService.updateProcess(1L,requestUpdate)).thenThrow(RuntimeException.class);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processMockController.updateProcess(1L, requestUpdate);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
+    @Test
+    void testCreateProcessInternalError() {
+        ProcessRequest request = new ProcessRequest(65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(1L);
+        request.setIdAdsorbent(1L);
+        Mockito.when(processService.createProcess(request)).thenThrow(RuntimeException.class);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processMockController.createProcess(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
+    @Test
+    void testDeleteAdsorbentInternalError() {
+        Mockito.doThrow(RuntimeException.class).when(processService).deleteProcess(1L);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processMockController.deleteProcess(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+
+    }
+
 }
