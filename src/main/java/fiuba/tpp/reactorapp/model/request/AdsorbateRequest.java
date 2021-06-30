@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AdsorbateRequest {
 
-    private Long id;
-
     @JsonProperty("nombreIon")
     private String ionName;
 
@@ -30,6 +28,8 @@ public class AdsorbateRequest {
     @JsonProperty("masaMolar")
     private Float molarMass;
 
+    @JsonProperty("regulado")
+    private Boolean regulated;
 
     public AdsorbateRequest() {
     }
@@ -50,14 +50,6 @@ public class AdsorbateRequest {
         this.dischargeLimit = dischargeLimit;
         this.formula = formula;
         this.molarMass = molarMass;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getIonName() {
@@ -122,5 +114,9 @@ public class AdsorbateRequest {
 
     public void setMolarMass(Float molarMass) {
         this.molarMass = molarMass;
+    }
+
+    public Boolean getRegulated() {
+        return regulated;
     }
 }

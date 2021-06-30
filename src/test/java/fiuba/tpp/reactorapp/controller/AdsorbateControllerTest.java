@@ -57,7 +57,6 @@ class AdsorbateControllerTest {
     void testUpdateAdsorbate(){
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
-        requestUpdate.setId(1L);
         adsorbateController.createAdsorbate(request);
         AdsorbateResponse updated = adsorbateController.updateAdsorbate(1L, requestUpdate);
 
@@ -71,7 +70,6 @@ class AdsorbateControllerTest {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
         requestUpdate.setMolarMass(2f);
-        requestUpdate.setId(1L);
         adsorbateController.createAdsorbate(request);
         AdsorbateResponse updated = adsorbateController.updateAdsorbate(1L, requestUpdate);
 
@@ -82,7 +80,6 @@ class AdsorbateControllerTest {
     void testUpdateAdsorbateThatNotExist() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",1,10f,100f);
-        requestUpdate.setId(2L);
         adsorbateController.createAdsorbate(request);
 
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {

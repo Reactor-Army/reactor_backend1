@@ -24,6 +24,7 @@ public class Adsorbate {
     private String numberCAS;
     private String formula;
     private Float molarMass;
+    private Boolean regulated;
 
     public Adsorbate() {
     }
@@ -54,6 +55,7 @@ public class Adsorbate {
         this.formula = adsorbate.getFormula();
         this.numberCAS = adsorbate.getNumberCAS();
         this.molarMass = adsorbate.getMolarMass();
+        this.regulated = adsorbate.getRegulated();
     }
 
     public Long getId() {
@@ -159,4 +161,7 @@ public class Adsorbate {
         nameIUPACNormalized = (nameIUPAC == null)? "" : StringUtils.stripAccents(nameIUPAC.toLowerCase());
     }
 
+    public Boolean getRegulated() {
+        return regulated != null ? regulated : false;
+    }
 }

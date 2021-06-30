@@ -34,6 +34,9 @@ public class AdsorbateResponse {
     @JsonProperty("masaMolar")
     private Float molarMass;
 
+    @JsonProperty("regulado")
+    private Boolean regulated;
+
 
     public AdsorbateResponse() {
     }
@@ -49,6 +52,7 @@ public class AdsorbateResponse {
         this.formula = adsorbate.getFormula();
         this.ionChargeFormula = adsorbate.getIonChargeText();
         this.molarMass = adsorbate.getMolarMass();
+        this.regulated = adsorbate.getRegulated();
     }
 
     public Long getId() {
