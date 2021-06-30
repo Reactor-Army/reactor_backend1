@@ -55,7 +55,8 @@ public class Adsorbate {
         this.formula = adsorbate.getFormula();
         this.numberCAS = adsorbate.getNumberCAS();
         this.molarMass = adsorbate.getMolarMass();
-        this.regulated = adsorbate.getRegulated();
+        Boolean regulated = adsorbate.getRegulated();
+        this.regulated = regulated != null ? regulated : true;
     }
 
     public Long getId() {
@@ -162,6 +163,6 @@ public class Adsorbate {
     }
 
     public Boolean getRegulated() {
-        return regulated != null ? regulated : false;
+        return regulated;
     }
 }

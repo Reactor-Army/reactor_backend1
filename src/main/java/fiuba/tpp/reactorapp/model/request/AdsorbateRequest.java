@@ -42,14 +42,13 @@ public class AdsorbateRequest {
         this.dischargeLimit = dischargeLimit;
     }
 
-    public AdsorbateRequest(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit, String formula, Float molarMass) {
+    public AdsorbateRequest(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit, Boolean regulated) {
         this.ionName = ionName;
         this.nameIUPAC = nameIUPAC;
         this.ionCharge = ionCharge;
         this.ionRadius = ionRadius;
         this.dischargeLimit = dischargeLimit;
-        this.formula = formula;
-        this.molarMass = molarMass;
+        this.regulated = regulated;
     }
 
     public String getIonName() {

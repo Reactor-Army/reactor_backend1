@@ -134,4 +134,8 @@ public class AdsorbateResponse {
     public void setMolarMass(Float molarMass) {
         this.molarMass = molarMass;
     }
+
+    public Boolean getRegulated() {
+        return regulated;
+    }
 }
