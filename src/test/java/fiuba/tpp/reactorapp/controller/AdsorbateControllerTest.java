@@ -276,10 +276,10 @@ class AdsorbateControllerTest {
     }
 
     @Test
-    void testAddAdsorbateWithoutRegulationIsTrue() {
+    void testAddAdsorbateWithoutRegulationIsFalse() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","IUPAC2",1,10f,100f);
         AdsorbateResponse response = adsorbateController.createAdsorbate(request);
-        Assertions.assertTrue(response.getRegulated());
+        Assertions.assertFalse(response.getRegulated());
     }
 
 }
