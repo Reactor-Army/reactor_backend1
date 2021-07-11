@@ -34,6 +34,9 @@ public class AdsorbentResponse {
     @JsonProperty("nombreEspecie")
     private String speciesName;
 
+    @JsonProperty("observaciones")
+    private String observations;
+
     public AdsorbentResponse() {
     }
 
@@ -48,6 +51,7 @@ public class AdsorbentResponse {
         this.impurities = adsorbent.getImpurities();
         this.formula = adsorbent.getFormula();
         this.speciesName = adsorbent.getSpeciesName();
+        this.observations = adsorbent.getObservations();
     }
 
     public Long getId() {
@@ -128,5 +132,13 @@ public class AdsorbentResponse {
 
     public void setSpeciesName(String speciesName) {
         this.speciesName = speciesName;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 }
