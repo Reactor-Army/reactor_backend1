@@ -33,6 +33,9 @@ public class AdsorbentRequest {
     @JsonProperty("nombreEspecie")
     private String speciesName;
 
+    @JsonProperty("observaciones")
+    private String observations;
+
     public AdsorbentRequest() {
     }
 
@@ -122,5 +125,13 @@ public class AdsorbentRequest {
 
     public void setSpeciesName(String speciesName) {
         this.speciesName = speciesName;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 }

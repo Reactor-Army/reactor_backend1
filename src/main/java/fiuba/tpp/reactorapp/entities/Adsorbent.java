@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name ="ADSORBENT")
@@ -32,6 +33,10 @@ public class Adsorbent {
     private String formula;
 
     private String speciesName;
+
+    @Column(length = 2000)
+    @Size(max = 2000)
+    private String observations;
 
 
     public Adsorbent() {
@@ -64,6 +69,7 @@ public class Adsorbent {
         this.formula = request.getFormula();
         this.sampleOrigin = request.getSampleOrigin();
         this.speciesName = request.getSpeciesName();
+        this.observations = request.getObservations();
     }
 
     public Long getId() {
@@ -152,6 +158,14 @@ public class Adsorbent {
 
     public void setSpeciesName(String speciesName) {
         this.speciesName = speciesName;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 
     @PreUpdate
