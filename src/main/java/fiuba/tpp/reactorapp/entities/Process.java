@@ -40,6 +40,10 @@ public class Process {
 
     private String source;
 
+    private Float kineticConstant;
+
+    private Float reactionOrder;
+
 
     public Process() {
     }
@@ -66,6 +70,8 @@ public class Process {
         this.chemicalReaction = request.isChemicalReaction();
         this.observation = request.getObservation();
         this.source = request.getSource();
+        this.kineticConstant = request.getKineticConstant();
+        this.reactionOrder = request.getReactionOrder();
     }
 
     public Long getId() {
@@ -162,6 +168,22 @@ public class Process {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Float getKineticConstant() {
+        return kineticConstant;
+    }
+
+    public void setKineticConstant(Float kineticConstant) {
+        this.kineticConstant = kineticConstant;
+    }
+
+    public Float getReactionOrder() {
+        return reactionOrder;
+    }
+
+    public void setReactionOrder(Float reactionOrder) {
+        this.reactionOrder = reactionOrder;
     }
 
     @Override

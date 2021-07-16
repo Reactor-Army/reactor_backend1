@@ -40,6 +40,12 @@ public class ProcessRequest {
     @JsonProperty("fuente")
     private String source;
 
+    @JsonProperty("constanteCinetica")
+    private Float kineticConstant;
+
+    @JsonProperty("ordenReaccion")
+    private Float reactionOrder;
+
     public ProcessRequest(Float qmax, Float equilibriumTime, Float temperature, Float initialPH, boolean complexation, boolean ionicInterchange, boolean chemicalReaction) {
         this.qmax = qmax;
         this.equilibriumTime = equilibriumTime;
@@ -144,5 +150,21 @@ public class ProcessRequest {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Float getKineticConstant() {
+        return kineticConstant;
+    }
+
+    public void setKineticConstant(Float kineticConstant) {
+        this.kineticConstant = kineticConstant;
+    }
+
+    public Float getReactionOrder() {
+        return reactionOrder;
+    }
+
+    public void setReactionOrder(Float reactionOrder) {
+        this.reactionOrder = reactionOrder;
     }
 }

@@ -40,6 +40,12 @@ public class ProcessResponse {
     @JsonProperty("fuente")
     private String source;
 
+    @JsonProperty("constanteCinetica")
+    private Float kineticConstant;
+
+    @JsonProperty("ordenReaccion")
+    private Float reactionOrder;
+
     public ProcessResponse() {
     }
 
@@ -56,6 +62,8 @@ public class ProcessResponse {
         this.chemicalReaction = process.isChemicalReaction();
         this.observation = process.getObservation();
         this.source = process.getSource();
+        this.kineticConstant = process.getKineticConstant();
+        this.reactionOrder = process.getReactionOrder();
     }
 
     public Long getId() {
@@ -152,5 +160,21 @@ public class ProcessResponse {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Float getKineticConstant() {
+        return kineticConstant;
+    }
+
+    public void setKineticConstant(Float kineticConstant) {
+        this.kineticConstant = kineticConstant;
+    }
+
+    public Float getReactionOrder() {
+        return reactionOrder;
+    }
+
+    public void setReactionOrder(Float reactionOrder) {
+        this.reactionOrder = reactionOrder;
     }
 }
