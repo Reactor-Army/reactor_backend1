@@ -8,9 +8,9 @@ public class ReactorVolumeResponse {
     private ProcessResponse process;
 
     @JsonProperty("volumen")
-    private Float volume;
+    private double volume;
 
-    public ReactorVolumeResponse(ProcessResponse process, Float volume) {
+    public ReactorVolumeResponse(ProcessResponse process, double volume) {
         this.process = process;
         this.volume = volume;
     }
@@ -23,11 +23,11 @@ public class ReactorVolumeResponse {
         this.process = process;
     }
 
-    public Float getVolume() {
+    public double getVolume() {
         return volume;
     }
 
-    public void setVolume(Float volume) {
+    public void setVolume(double volume) {
         this.volume = volume;
     }
 }

@@ -435,7 +435,7 @@ class ProcessControllerTest {
 
     @Test
     void testProcessNotFoundExceptionVolume(){
-        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5F, 1F,20F);
+        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5, 1.0,20.0);
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
             processController.calculateReactorVolume(1L,request);
         });
@@ -444,12 +444,12 @@ class ProcessControllerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "1F, ,",
-            ", 2F,",
-            ", ,20F",
-            "1F, 2F,",
+            "1.0, ,",
+            ", 2.0,",
+            ", ,20.0",
+            "1.0, 2.0,",
     })
-    void testInvalidVolumeRequest(Float ci, Float cf, Float flow){
+    void testInvalidVolumeRequest(Double ci, Double cf, Double flow){
         ReactorVolumeRequest request = new ReactorVolumeRequest(ci, cf,flow);
         createProcess();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
@@ -460,7 +460,7 @@ class ProcessControllerTest {
 
     @Test
     void testProcessWithNoKinecticInfo(){
-        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5F, 1F,20F);
+        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5, 1.0,20.0);
         createProcess();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
             processController.calculateReactorVolume(1L,request);

@@ -102,22 +102,44 @@ public class ProcessService {
         Process process = getById(id);
         validateProcessKineticInformation(process);
 
-        Float reactorVolume;
+        double reactorVolume;
 
         if(process.getReactionOrder() == 1){
-            /**
-             * Calculo de volumen 1
-             */
-            reactorVolume = request.getFinalConcentration();
+
+            reactorVolume = resolveFirstOrder(process,request);
         }else{
-            /**
-             * Calculo de volumen 2
-             */
-            reactorVolume = request.getInitialConcentration();
+            reactorVolume = resolveSecondOrder(process,request);
         }
         return new ReactorVolumeResponse(new ProcessResponse(process),reactorVolume);
 
     }
+    /**
+     * La integral de 1/x dx es ln(x) en un intervalo definido entonces la formula queda
+     * -Caudal * 1/k * (Ln(cf) - ln(co))
+     */
+    private Double resolveFirstOrder(Process process, ReactorVolumeRequest request ){
+        double a = Math.log(request.getFinalConcentration()) - Math.log(request.getInitialConcentration());
+        double b = 1/process.getKineticConstant();
+        double c = - request.getFlow();
+
+        return a * b * c;
+
+    }
+
+    /**
+     * La integral de 1/x^2 dx es -1/x en un intervalo definido entonces la formula queda
+     * -Caudal * 1/k * (1/co - 1/cf)
+     */
+    private Double resolveSecondOrder(Process process, ReactorVolumeRequest request){
+        double a = 1/request.getInitialConcentration() - 1/request.getFinalConcentration();
+        double b = 1/process.getKineticConstant();
+        double c = - request.getFlow();
+
+        return a * b * c;
+
+
+    }
+
     private void validateProcessKineticInformation(Process process){
         if(process.getKineticConstant() == null) throw new InvalidProcessException();
         if(process.getReactionOrder() == null ) throw new InvalidProcessException();

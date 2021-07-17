@@ -5,41 +5,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ReactorVolumeRequest {
 
     @JsonProperty("concentracionInicial")
-    private Float initialConcentration;
+    private Double initialConcentration;
 
     @JsonProperty("concentracionFinal")
-    private Float finalConcentration;
+    private Double finalConcentration;
 
     @JsonProperty("caudal")
-    private Float flow;
+    private Double flow;
 
-    public ReactorVolumeRequest(Float initialConcentration, Float finalConcentration, Float flow) {
+    public ReactorVolumeRequest(Double initialConcentration, Double finalConcentration, Double flow) {
         this.initialConcentration = initialConcentration;
         this.finalConcentration = finalConcentration;
         this.flow = flow;
     }
 
-    public Float getInitialConcentration() {
+    public Double getInitialConcentration() {
         return initialConcentration;
     }
 
-    public void setInitialConcentration(Float initialConcentration) {
+    public void setInitialConcentration(Double initialConcentration) {
         this.initialConcentration = initialConcentration;
     }
 
-    public Float getFinalConcentration() {
+    public Double getFinalConcentration() {
         return finalConcentration;
     }
 
-    public void setFinalConcentration(Float finalConcentration) {
+    public void setFinalConcentration(Double finalConcentration) {
         this.finalConcentration = finalConcentration;
     }
 
-    public Float getFlow() {
+    public Double getFlow() {
         return flow;
     }
 
-    public void setFlow(Float flow) {
+    public void setFlow(Double flow) {
         this.flow = flow;
     }
 }

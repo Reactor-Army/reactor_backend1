@@ -11,6 +11,8 @@ import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
+import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -296,6 +298,21 @@ class ProcessServiceTests {
         return processService.createProcess(request);
     }
 
+    private Process createProcessKinetic(Integer reactionOrder, Float kineticConstant) {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        request.setReactionOrder(reactionOrder);
+        request.setKineticConstant(kineticConstant);
+        return processService.createProcess(request);
+    }
+
     @Test
     void testGetProcessCountAdsorbate() {
         createProcess();
@@ -327,4 +344,43 @@ class ProcessServiceTests {
     void testGetProcessCountNoAdsorbent(){
         Assertions.assertEquals(0, adsorbentService.getAdsorbentProcessCount(null));
     }
+
+    @Test
+    void testCalculateVolumeFirstOrder() {
+        createProcessKinetic(1,10F);
+        ReactorVolumeRequest request = new ReactorVolumeRequest(2.0,1.0,10.0);
+        ReactorVolumeResponse response = processService.calculateVolume(1L,request);
+
+        Assertions.assertEquals(1L, response.getProcess().getId());
+        Assertions.assertEquals(0.69, response.getVolume(),0.01);
+    }
+
+    @Test
+    void testCalculateVolumeSecondOrder() {
+        createProcessKinetic(2,10F);
+        ReactorVolumeRequest request = new ReactorVolumeRequest(2.0,1.0,10.0);
+        ReactorVolumeResponse response = processService.calculateVolume(1L,request);
+
+        Assertions.assertEquals(1L, response.getProcess().getId());
+        Assertions.assertEquals(0.5, response.getVolume(),0.01);
+
+    }
+
+    @Test
+    void testProcessNotFoundExceptionVolume() {
+        Assertions.assertThrows(ComponentNotFoundException.class, () -> {
+            ReactorVolumeRequest request = new ReactorVolumeRequest(2.0,1.0,10.0);
+            processService.calculateVolume(1L,request);
+        });
+    }
+
+    @Test
+    void testProcessNotKinecticInfoVolume() {
+        ReactorVolumeRequest request = new ReactorVolumeRequest(2.0,1.0,10.0);
+        createProcess();
+        Assertions.assertThrows(InvalidProcessException.class, () -> {
+            processService.calculateVolume(1L,request);
+        });
+    }
+
 }
