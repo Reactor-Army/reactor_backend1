@@ -105,13 +105,11 @@ public class ProcessService {
         double reactorVolume;
 
         if(process.getReactionOrder() == 1){
-
             reactorVolume = resolveFirstOrder(process,request);
         }else{
             reactorVolume = resolveSecondOrder(process,request);
         }
         return new ReactorVolumeResponse(new ProcessResponse(process),reactorVolume);
-
     }
     /**
      * La integral de 1/x dx es ln(x) en un intervalo definido entonces la formula queda
@@ -123,7 +121,6 @@ public class ProcessService {
         double c = - request.getFlow();
 
         return a * b * c;
-
     }
 
     /**
@@ -136,13 +133,10 @@ public class ProcessService {
         double c = - request.getFlow();
 
         return a * b * c;
-
-
     }
 
     private void validateProcessKineticInformation(Process process){
         if(process.getKineticConstant() == null) throw new InvalidProcessException();
         if(process.getReactionOrder() == null ) throw new InvalidProcessException();
-
     }
 }
