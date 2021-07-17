@@ -389,6 +389,51 @@ class ProcessControllerTest {
             processMockController.deleteProcess(1L);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testCreateProcessInvalidReactionOrder() {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        request.setReactionOrder(3);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.createProcess(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_REACTION_ORDER.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testUpdateProcessInvalidReactionOrder(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+
+        ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
+        requestUpdate.setIdAdsorbate(adsorbate.getId());
+        requestUpdate.setIdAdsorbent(adsorbent.getId());
+        requestUpdate.setReactionOrder(3);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.updateProcess(1L, requestUpdate);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_REACTION_ORDER.getMessage(),e.getReason());
+
+
 
     }
 

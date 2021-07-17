@@ -44,7 +44,7 @@ public class ProcessRequest {
     private Float kineticConstant;
 
     @JsonProperty("ordenReaccion")
-    private Float reactionOrder;
+    private Integer reactionOrder;
 
     public ProcessRequest(Float qmax, Float equilibriumTime, Float temperature, Float initialPH, boolean complexation, boolean ionicInterchange, boolean chemicalReaction) {
         this.qmax = qmax;
@@ -160,11 +160,11 @@ public class ProcessRequest {
         this.kineticConstant = kineticConstant;
     }
 
-    public Float getReactionOrder() {
+    public Integer getReactionOrder() {
         return reactionOrder;
     }
 
-    public void setReactionOrder(Float reactionOrder) {
+    public void setReactionOrder(Integer reactionOrder) {
         this.reactionOrder = reactionOrder;
     }
 }

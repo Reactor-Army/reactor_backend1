@@ -96,7 +96,7 @@ public class LoadDataService {
             Float qMax = (float) row.getCell(8).getNumericCellValue();
             Float equilibriumTime = (float) row.getCell(9).getNumericCellValue();
             Float kineticConstant = (float) row.getCell(10).getNumericCellValue();
-            Float reactionOrder = (float) row.getCell(11).getNumericCellValue();
+            Integer reactionOrder = (int) row.getCell(11).getNumericCellValue();
             Float temperature = (float) row.getCell(12).getNumericCellValue();
             Float initialPH = (float) row.getCell(13).getNumericCellValue();
             Float sBet = (float) row.getCell(14).getNumericCellValue();

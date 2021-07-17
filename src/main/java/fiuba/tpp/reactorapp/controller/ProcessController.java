@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.dto.SearchByAdsorbateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
+import fiuba.tpp.reactorapp.model.exception.InvalidReactionOrderException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
@@ -40,7 +41,10 @@ public class ProcessController {
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_PROCESS_CREATE.getMessage(), e);
-        } catch(Exception e){
+        }catch (InvalidReactionOrderException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REACTION_ORDER.getMessage(), e);
+        }catch (Exception e){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -51,11 +55,15 @@ public class ProcessController {
     public ProcessResponse updateProcess(@PathVariable Long id, @RequestBody ProcessRequest request) {
         ProcessResponse response = null;
         try{
+            validateReactionOrder(request.getReactionOrder());
             response = new ProcessResponse(processService.updateProcess(id, request));
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_PROCESS.getMessage(), e);
-        } catch(Exception e){
+        }catch (InvalidReactionOrderException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REACTION_ORDER.getMessage(), e);
+        }catch (Exception e){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -115,5 +123,10 @@ public class ProcessController {
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
+        validateReactionOrder(request.getReactionOrder());
+    }
+
+    private void validateReactionOrder(Integer reactionOrder){
+        if(reactionOrder != null && reactionOrder != 1 && reactionOrder != 2) throw new InvalidReactionOrderException();
     }
 }

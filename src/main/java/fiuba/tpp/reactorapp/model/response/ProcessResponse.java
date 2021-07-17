@@ -44,7 +44,7 @@ public class ProcessResponse {
     private Float kineticConstant;
 
     @JsonProperty("ordenReaccion")
-    private Float reactionOrder;
+    private Integer reactionOrder;
 
     public ProcessResponse() {
     }
@@ -170,11 +170,11 @@ public class ProcessResponse {
         this.kineticConstant = kineticConstant;
     }
 
-    public Float getReactionOrder() {
+    public Integer getReactionOrder() {
         return reactionOrder;
     }
 
-    public void setReactionOrder(Float reactionOrder) {
+    public void setReactionOrder(Integer reactionOrder) {
         this.reactionOrder = reactionOrder;
     }
 }

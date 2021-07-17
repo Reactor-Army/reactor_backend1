@@ -12,6 +12,7 @@ public enum ResponseMessage {
     INVALID_PROCESS("Adsorbato,Adsorbente o siistema invalido"),
     PROCESS_INVALID_REQUEST("El sistema debe estar conformado de un adsorbato o un adsorbente"),
     INVALID_PROCESS_CREATE("Adsorbente o Adsorbato invalidos"),
+    INVALID_REACTION_ORDER("El orden de la reacción debe ser 1 o 2"),
     DUPLICATE_EMAIL("El email ya existe en el sistema"),
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
     INTERNAL_ERROR("Ocurrio un error inesperado");
