@@ -368,8 +368,8 @@ class ProcessServiceTests {
 
     @Test
     void testProcessNotFoundExceptionVolume() {
+        ReactorVolumeRequest request = new ReactorVolumeRequest(2.0,1.0,10.0);
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            ReactorVolumeRequest request = new ReactorVolumeRequest(2.0,1.0,10.0);
             processService.calculateVolume(1L,request);
         });
     }
