@@ -8,8 +8,10 @@ import fiuba.tpp.reactorapp.model.exception.InvalidReactionOrderException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
 import fiuba.tpp.reactorapp.service.ProcessService;
@@ -120,6 +122,26 @@ public class ProcessController {
                     HttpStatus.NOT_FOUND, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
         }
     }
+
+    @PostMapping(value = "/{id}/reactor/volumen")
+    public ReactorVolumeResponse calculateReactorVolume(@PathVariable Long id, @RequestBody ReactorVolumeRequest request) {
+        try {
+            validateVolumeRequest(request);
+            return processService.calculateVolume(id,request);
+
+        }catch (InvalidRequestException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_VOLUME_REQUEST.getMessage(), e);
+        }catch (ComponentNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
+        }catch (InvalidProcessException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_KINECT_INFORMATION.getMessage(), e);
+        }
+    }
+
+
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
@@ -128,5 +150,10 @@ public class ProcessController {
 
     private void validateReactionOrder(Integer reactionOrder){
         if(reactionOrder != null && reactionOrder != 1 && reactionOrder != 2) throw new InvalidReactionOrderException();
+    }
+
+    private void validateVolumeRequest(ReactorVolumeRequest request){
+        if(request.getInitialConcentration() == null || request.getFinalConcentration() == null || request.getFlow() == null) throw new InvalidRequestException();
+
     }
 }

@@ -8,7 +8,10 @@ import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
+import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.repository.ProcessRepository;
@@ -94,4 +97,30 @@ public class ProcessService {
     }
 
     public List<Process> search(ProcessFilter filter){ return processRepository.getAll(filter);}
+
+    public ReactorVolumeResponse calculateVolume(Long id, ReactorVolumeRequest request) throws ComponentNotFoundException , InvalidProcessException{
+        Process process = getById(id);
+        validateProcessKineticInformation(process);
+
+        Float reactorVolume;
+
+        if(process.getReactionOrder() == 1){
+            /**
+             * Calculo de volumen 1
+             */
+            reactorVolume = request.getFinalConcentration();
+        }else{
+            /**
+             * Calculo de volumen 2
+             */
+            reactorVolume = request.getInitialConcentration();
+        }
+        return new ReactorVolumeResponse(new ProcessResponse(process),reactorVolume);
+
+    }
+    private void validateProcessKineticInformation(Process process){
+        if(process.getKineticConstant() == null) throw new InvalidProcessException();
+        if(process.getReactionOrder() == null ) throw new InvalidProcessException();
+
+    }
 }

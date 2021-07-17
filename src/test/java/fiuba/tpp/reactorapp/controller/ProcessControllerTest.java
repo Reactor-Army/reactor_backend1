@@ -1,14 +1,13 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
-import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
-import fiuba.tpp.reactorapp.model.request.ProcessRequest;
-import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
+import fiuba.tpp.reactorapp.model.request.*;
 import fiuba.tpp.reactorapp.model.response.*;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -432,9 +431,54 @@ class ProcessControllerTest {
             processController.updateProcess(1L, requestUpdate);
         });
         Assert.assertEquals(ResponseMessage.INVALID_REACTION_ORDER.getMessage(),e.getReason());
+    }
 
+    @Test
+    void testProcessNotFoundExceptionVolume(){
+        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5F, 1F,20F);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.calculateReactorVolume(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.PROCESS_NOT_FOUND.getMessage(),e.getReason());
+    }
 
+    @ParameterizedTest
+    @CsvSource({
+            "1F, ,",
+            ", 2F,",
+            ", ,20F",
+            "1F, 2F,",
+    })
+    void testInvalidVolumeRequest(Float ci, Float cf, Float flow){
+        ReactorVolumeRequest request = new ReactorVolumeRequest(ci, cf,flow);
+        createProcess();
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.calculateReactorVolume(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_VOLUME_REQUEST.getMessage(),e.getReason());
+    }
 
+    @Test
+    void testProcessWithNoKinecticInfo(){
+        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5F, 1F,20F);
+        createProcess();
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.calculateReactorVolume(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_KINECT_INFORMATION.getMessage(),e.getReason());
+    }
+
+    private void createProcess(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
     }
 
 }
