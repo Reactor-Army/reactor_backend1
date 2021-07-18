@@ -32,6 +32,9 @@ public class ProcessService {
     @Autowired
     private AdsorbentRepository adsorbentRepository;
 
+    @Autowired
+    private MathService mathService;
+
     public Process createProcess(ProcessRequest request) throws InvalidProcessException {
         Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbent());
         Optional<Adsorbate> adsorbate = adsorbateRepository.findById(request.getIdAdsorbate());
@@ -105,34 +108,11 @@ public class ProcessService {
         double reactorVolume;
 
         if(process.getReactionOrder() == 1){
-            reactorVolume = resolveFirstOrder(process,request);
+            reactorVolume = mathService.resolveFirstOrder(process,request.getInitialConcentration(), request.getFinalConcentration(), request.getFlow());
         }else{
-            reactorVolume = resolveSecondOrder(process,request);
+            reactorVolume = mathService.resolveSecondOrder(process,request.getInitialConcentration(), request.getFinalConcentration(), request.getFlow());
         }
         return new ReactorVolumeResponse(new ProcessResponse(process),reactorVolume);
-    }
-    /**
-     * La integral de 1/x dx es ln(x) en un intervalo definido entonces la formula queda
-     * -Caudal * 1/k * (Ln(cf) - ln(co))
-     */
-    private Double resolveFirstOrder(Process process, ReactorVolumeRequest request ){
-        double a = Math.log(request.getFinalConcentration()) - Math.log(request.getInitialConcentration());
-        double b = 1/process.getKineticConstant();
-        double c = - request.getFlow();
-
-        return a * b * c;
-    }
-
-    /**
-     * La integral de 1/x^2 dx es -1/x en un intervalo definido entonces la formula queda
-     * -Caudal * 1/k * (1/co - 1/cf)
-     */
-    private Double resolveSecondOrder(Process process, ReactorVolumeRequest request){
-        double a = 1/request.getInitialConcentration() - 1/request.getFinalConcentration();
-        double b = 1/process.getKineticConstant();
-        double c = - request.getFlow();
-
-        return a * b * c;
     }
 
     private void validateProcessKineticInformation(Process process){
