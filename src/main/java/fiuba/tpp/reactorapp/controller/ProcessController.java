@@ -2,10 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.dto.SearchByAdsorbateDTO;
-import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
-import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
-import fiuba.tpp.reactorapp.model.exception.InvalidReactionOrderException;
-import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
+import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
@@ -46,6 +43,9 @@ public class ProcessController {
         }catch (InvalidReactionOrderException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REACTION_ORDER.getMessage(), e);
+        }catch (InvalidKineticConstantException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_KINETIC_CONSTANT.getMessage(), e);
         }catch (Exception e){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
@@ -57,7 +57,7 @@ public class ProcessController {
     public ProcessResponse updateProcess(@PathVariable Long id, @RequestBody ProcessRequest request) {
         ProcessResponse response = null;
         try{
-            validateReactionOrder(request.getReactionOrder());
+            validateKineticData(request.getReactionOrder(), request.getKineticConstant());
             response = new ProcessResponse(processService.updateProcess(id, request));
         } catch (InvalidProcessException e) {
             throw new ResponseStatusException(
@@ -65,6 +65,9 @@ public class ProcessController {
         }catch (InvalidReactionOrderException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REACTION_ORDER.getMessage(), e);
+        }catch (InvalidKineticConstantException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_KINETIC_CONSTANT.getMessage(), e);
         }catch (Exception e){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
@@ -145,11 +148,12 @@ public class ProcessController {
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();
         if(request.getIdAdsorbent() == null ) throw new InvalidRequestException();
-        validateReactionOrder(request.getReactionOrder());
+        validateKineticData(request.getReactionOrder(),request.getKineticConstant());
     }
 
-    private void validateReactionOrder(Integer reactionOrder){
+    private void validateKineticData(Integer reactionOrder, Float kineticConstant){
         if(reactionOrder != null && reactionOrder != 1 && reactionOrder != 2) throw new InvalidReactionOrderException();
+        if(kineticConstant != null && kineticConstant <= 0) throw new InvalidKineticConstantException();
     }
 
     private void validateVolumeRequest(ReactorVolumeRequest request){
