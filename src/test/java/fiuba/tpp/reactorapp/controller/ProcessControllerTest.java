@@ -1,14 +1,13 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
-import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
-import fiuba.tpp.reactorapp.model.request.ProcessRequest;
-import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
+import fiuba.tpp.reactorapp.model.request.*;
 import fiuba.tpp.reactorapp.model.response.*;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -389,7 +388,145 @@ class ProcessControllerTest {
             processMockController.deleteProcess(1L);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+    }
 
+    @Test
+    void testCreateProcessInvalidReactionOrder() {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        request.setReactionOrder(3);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.createProcess(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_REACTION_ORDER.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testCreateProcessInvalidKineticConstant() {
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        request.setReactionOrder(2);
+        request.setKineticConstant(-10F);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.createProcess(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_KINETIC_CONSTANT.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testUpdateProcessInvalidReactionOrder(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+
+        ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
+        requestUpdate.setIdAdsorbate(adsorbate.getId());
+        requestUpdate.setIdAdsorbent(adsorbent.getId());
+        requestUpdate.setReactionOrder(3);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.updateProcess(1L, requestUpdate);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_REACTION_ORDER.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testUpdateProcessInvalidKineticConstant(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+
+        ProcessRequest requestUpdate = new ProcessRequest(65f,1f,1f,1f,true,true,true);
+        requestUpdate.setIdAdsorbate(adsorbate.getId());
+        requestUpdate.setIdAdsorbent(adsorbent.getId());
+        requestUpdate.setReactionOrder(2);
+        requestUpdate.setKineticConstant(-10F);
+
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.updateProcess(1L, requestUpdate);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_KINETIC_CONSTANT.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testProcessNotFoundExceptionVolume(){
+        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5, 1.0,20.0);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.calculateReactorVolume(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.PROCESS_NOT_FOUND.getMessage(),e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1.0, ,",
+            ", 2.0,",
+            ", ,20.0",
+            "1.0, 2.0,",
+            "-1.0,2.0,10.0",
+            "1.0,-2.0,10.0",
+            "1.0,2.0,-10.0",
+    })
+    void testInvalidVolumeRequest(Double ci, Double cf, Double flow){
+        ReactorVolumeRequest request = new ReactorVolumeRequest(ci, cf,flow);
+        createProcess();
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.calculateReactorVolume(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_VOLUME_REQUEST.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testProcessWithNoKinecticInfo(){
+        ReactorVolumeRequest request = new ReactorVolumeRequest(1.5, 1.0,20.0);
+        createProcess();
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            processController.calculateReactorVolume(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_KINECT_INFORMATION.getMessage(),e.getReason());
+    }
+
+    private void createProcess(){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
     }
 
 }

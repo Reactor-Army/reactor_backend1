@@ -3,8 +3,10 @@ package fiuba.tpp.reactorapp.entities;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name ="PROCESS")
@@ -40,6 +42,12 @@ public class Process {
 
     private String source;
 
+    @Positive
+    private Float kineticConstant;
+
+    @Range(min = 1, max = 2)
+    private Integer reactionOrder;
+
 
     public Process() {
     }
@@ -66,6 +74,8 @@ public class Process {
         this.chemicalReaction = request.isChemicalReaction();
         this.observation = request.getObservation();
         this.source = request.getSource();
+        this.kineticConstant = request.getKineticConstant();
+        this.reactionOrder = request.getReactionOrder();
     }
 
     public Long getId() {
@@ -162,6 +172,22 @@ public class Process {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public Float getKineticConstant() {
+        return kineticConstant;
+    }
+
+    public void setKineticConstant(Float kineticConstant) {
+        this.kineticConstant = kineticConstant;
+    }
+
+    public Integer getReactionOrder() {
+        return reactionOrder;
+    }
+
+    public void setReactionOrder(Integer reactionOrder) {
+        this.reactionOrder = reactionOrder;
     }
 
     @Override

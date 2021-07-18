@@ -95,25 +95,27 @@ public class LoadDataService {
             Float ionRadius = (float) row.getCell(7).getNumericCellValue();
             Float qMax = (float) row.getCell(8).getNumericCellValue();
             Float equilibriumTime = (float) row.getCell(9).getNumericCellValue();
-            Float temperature = (float) row.getCell(10).getNumericCellValue();
-            Float initialPH = (float) row.getCell(11).getNumericCellValue();
-            Float sBet = (float) row.getCell(12).getNumericCellValue();
-            Float vBet = (float) row.getCell(13).getNumericCellValue();
-            Float pHZeroCharge = (float) row.getCell(14).getNumericCellValue();
+            Float kineticConstant = (float) row.getCell(10).getNumericCellValue();
+            Integer reactionOrder = (int) row.getCell(11).getNumericCellValue();
+            Float temperature = (float) row.getCell(12).getNumericCellValue();
+            Float initialPH = (float) row.getCell(13).getNumericCellValue();
+            Float sBet = (float) row.getCell(14).getNumericCellValue();
+            Float vBet = (float) row.getCell(15).getNumericCellValue();
+            Float pHZeroCharge = (float) row.getCell(16).getNumericCellValue();
 
-            String complexation = row.getCell(15).getStringCellValue();
+            String complexation = row.getCell(17).getStringCellValue();
             boolean complexationBool = stringToBoolean(complexation);
 
-            String interchange = row.getCell(16).getStringCellValue();
+            String interchange = row.getCell(18).getStringCellValue();
             boolean interchangeBool = stringToBoolean(interchange);
 
-            String reaction = row.getCell(17).getStringCellValue();
+            String reaction = row.getCell(19).getStringCellValue();
             boolean reactionBool = stringToBoolean(reaction);
 
-            Float limit = (float) row.getCell(18).getNumericCellValue();
+            Float limit = (float) row.getCell(20).getNumericCellValue();
 
-            String observation = row.getCell(19).getStringCellValue();
-            String source = row.getCell(20).getStringCellValue();
+            String observation = row.getCell(21).getStringCellValue();
+            String source = row.getCell(22).getStringCellValue();
 
             Optional<Adsorbent> adsorbent = adsorbentRepository.findByNameAndParticleSize(nameAdsorbent, sizeAdsorbent);
 
@@ -165,6 +167,8 @@ public class LoadDataService {
                 nuevoProcess.setQmax(qMax);
                 nuevoProcess.setTemperature(temperature);
                 nuevoProcess.setEquilibriumTime(equilibriumTime);
+                nuevoProcess.setKineticConstant(kineticConstant);
+                nuevoProcess.setReactionOrder(reactionOrder);
 
                 processRepository.save(nuevoProcess);
             }
