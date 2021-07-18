@@ -493,6 +493,9 @@ class ProcessControllerTest {
             ", 2.0,",
             ", ,20.0",
             "1.0, 2.0,",
+            "-1.0,2.0,10.0",
+            "1.0,-2.0,10.0",
+            "1.0,2.0,-10.0",
     })
     void testInvalidVolumeRequest(Double ci, Double cf, Double flow){
         ReactorVolumeRequest request = new ReactorVolumeRequest(ci, cf,flow);

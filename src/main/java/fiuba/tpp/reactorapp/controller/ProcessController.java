@@ -157,7 +157,9 @@ public class ProcessController {
     }
 
     private void validateVolumeRequest(ReactorVolumeRequest request){
-        if(request.getInitialConcentration() == null || request.getFinalConcentration() == null || request.getFlow() == null) throw new InvalidRequestException();
+        if(request.getInitialConcentration() == null || request.getInitialConcentration() <= 0
+                || request.getFinalConcentration() == null || request.getFinalConcentration() <= 0
+                || request.getFlow() == null || request.getFlow() <= 0) throw new InvalidRequestException();
 
     }
 }
