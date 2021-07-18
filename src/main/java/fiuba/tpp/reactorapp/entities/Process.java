@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name ="PROCESS")
@@ -41,6 +42,7 @@ public class Process {
 
     private String source;
 
+    @Positive
     private Float kineticConstant;
 
     @Range(min = 1, max = 2)

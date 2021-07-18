@@ -8,7 +8,10 @@ import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
+import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
+import fiuba.tpp.reactorapp.model.response.ProcessResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.repository.ProcessRepository;
@@ -28,6 +31,9 @@ public class ProcessService {
 
     @Autowired
     private AdsorbentRepository adsorbentRepository;
+
+    @Autowired
+    private MathService mathService;
 
     public Process createProcess(ProcessRequest request) throws InvalidProcessException {
         Optional<Adsorbent> adsorbent = adsorbentRepository.findById(request.getIdAdsorbent());
@@ -94,4 +100,23 @@ public class ProcessService {
     }
 
     public List<Process> search(ProcessFilter filter){ return processRepository.getAll(filter);}
+
+    public ReactorVolumeResponse calculateVolume(Long id, ReactorVolumeRequest request) throws ComponentNotFoundException , InvalidProcessException{
+        Process process = getById(id);
+        validateProcessKineticInformation(process);
+
+        double reactorVolume;
+
+        if(process.getReactionOrder() == 1){
+            reactorVolume = mathService.resolveFirstOrder(process,request.getInitialConcentration(), request.getFinalConcentration(), request.getFlow());
+        }else{
+            reactorVolume = mathService.resolveSecondOrder(process,request.getInitialConcentration(), request.getFinalConcentration(), request.getFlow());
+        }
+        return new ReactorVolumeResponse(new ProcessResponse(process),reactorVolume);
+    }
+
+    private void validateProcessKineticInformation(Process process){
+        if(process.getKineticConstant() == null) throw new InvalidProcessException();
+        if(process.getReactionOrder() == null ) throw new InvalidProcessException();
+    }
 }

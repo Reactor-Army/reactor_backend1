@@ -13,6 +13,9 @@ public enum ResponseMessage {
     PROCESS_INVALID_REQUEST("El sistema debe estar conformado de un adsorbato o un adsorbente"),
     INVALID_PROCESS_CREATE("Adsorbente o Adsorbato invalidos"),
     INVALID_REACTION_ORDER("El orden de la reacción debe ser 1 o 2"),
+    INVALID_KINETIC_CONSTANT("La constante cinetica tiene que ser mayor a 0"),
+    INVALID_VOLUME_REQUEST("Se necesitan todos los datos para calcular el volumen del reactor, deben ser positivos"),
+    INVALID_KINECT_INFORMATION("El sistema no tiene los datos del modelo cinetico"),
     DUPLICATE_EMAIL("El email ya existe en el sistema"),
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
     INTERNAL_ERROR("Ocurrio un error inesperado");
