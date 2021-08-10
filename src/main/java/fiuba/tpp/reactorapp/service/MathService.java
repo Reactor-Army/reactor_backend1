@@ -13,6 +13,8 @@ import java.util.List;
 @Service
 public class MathService {
 
+    private static final int NUMBER_OF_DECIMALS = 2;
+
     /**
      * La integral de 1/x dx es ln(x) en un intervalo definido entonces la formula queda
      * -Caudal * 1/k * (Ln(cf) - ln(co))
@@ -22,7 +24,7 @@ public class MathService {
         double b = 1/process.getKineticConstant();
         double c = - flow;
 
-        return a * b * c;
+        return round(a * b * c);
     }
 
     /**
@@ -34,22 +36,22 @@ public class MathService {
         double b = 1/process.getKineticConstant();
         double c = - flow;
 
-        return a * b * c;
+        return round(a * b * c);
     }
 
     public RegressionResult calculateRegression(List<Observation> observations) throws NotEnoughObservationsException {
         if(observations.size() < 2) throw new NotEnoughObservationsException();
 
-        RegressionResult result = new RegressionResult();
         //Crearla con true, hace que incluya le valor de b en la regresion
         SimpleRegression regression = new SimpleRegression(true);
 
         for (Observation observation: observations) {
             regression.addData(observation.getX(), observation.getY());
         }
-        result.setIntercept(Precision.round(regression.getIntercept(),2));
-        result.setSlope(Precision.round(regression.getSlope(),2));
-        return result;
+        return new RegressionResult(round(regression.getIntercept()),round(regression.getSlope()));
+    }
 
+    private double round(double value){
+        return Precision.round(value,NUMBER_OF_DECIMALS);
     }
 }
