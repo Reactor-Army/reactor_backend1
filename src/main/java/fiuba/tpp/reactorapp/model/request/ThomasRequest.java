@@ -10,6 +10,10 @@ public class ThomasRequest {
         this.observations = observations;
     }
 
+    public ThomasRequest() {
+
+    }
+
     public MultipartFile getObservations() {
         return observations;
     }
