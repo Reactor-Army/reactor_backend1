@@ -1,10 +1,19 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Process;
+import fiuba.tpp.reactorapp.model.exception.NotEnoughObservationsException;
+import fiuba.tpp.reactorapp.model.math.Observation;
+import fiuba.tpp.reactorapp.model.math.RegressionResult;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MathService {
+
+    private static final int NUMBER_OF_DECIMALS = 2;
 
     /**
      * La integral de 1/x dx es ln(x) en un intervalo definido entonces la formula queda
@@ -15,7 +24,7 @@ public class MathService {
         double b = 1/process.getKineticConstant();
         double c = - flow;
 
-        return a * b * c;
+        return round(a * b * c);
     }
 
     /**
@@ -27,6 +36,22 @@ public class MathService {
         double b = 1/process.getKineticConstant();
         double c = - flow;
 
-        return a * b * c;
+        return round(a * b * c);
+    }
+
+    public RegressionResult calculateRegression(List<Observation> observations) throws NotEnoughObservationsException {
+        if(observations.size() < 2) throw new NotEnoughObservationsException();
+
+        //Crearla con true, hace que incluya le valor de b en la regresion
+        SimpleRegression regression = new SimpleRegression(true);
+
+        for (Observation observation: observations) {
+            regression.addData(observation.getX(), observation.getY());
+        }
+        return new RegressionResult(round(regression.getIntercept()),round(regression.getSlope()));
+    }
+
+    private double round(double value){
+        return Precision.round(value,NUMBER_OF_DECIMALS);
     }
 }
