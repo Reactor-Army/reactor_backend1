@@ -2,7 +2,6 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
-import fiuba.tpp.reactorapp.model.math.RegressionResult;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.ThomasResponse;
