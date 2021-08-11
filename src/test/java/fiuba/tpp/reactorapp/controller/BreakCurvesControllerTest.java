@@ -90,10 +90,10 @@ class BreakCurvesControllerTest {
                 MediaType.TEXT_PLAIN_VALUE,
                 ("volumenEfluente,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
         );
-        ThomasRequest request = new ThomasRequest(file,1d,1d,1d);
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
         ThomasResponse result = breakCurvesController.thomas(request);
-        Assertions.assertEquals(1.1, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(0.1, result.getThomasConstant(),0.01);
     }
 
     @ParameterizedTest

@@ -54,28 +54,28 @@ public class MathService {
     }
 
     public double ln(double value){
-        return round(Math.log(value));
+        return Math.log(value);
     }
 
     public ThomasResponse calculateThomas(RegressionResult regression, ThomasRequest request){
-        double kth = thomasConstant(regression,request);
-        double qo = thomasQo(regression,request,kth);
+        double kth = round(thomasConstant(regression,request));
+        double qo = round(thomasQo(regression,request,kth));
 
         return new ThomasResponse(kth,qo);
     }
 
     //Kth * Co / F = slope
     // Entonces
-    // Kth = slope * F /Co
+    // Kth =- slope * F /Co
     private double thomasConstant(RegressionResult regression, ThomasRequest request){
-        return round((regression.getSlope() * request.getCaudalVolumetrico()) / request.getConcentracionInicial());
+        return -(regression.getSlope() * request.getCaudalVolumetrico()) / request.getConcentracionInicial();
     }
 
     //Una vez que tenemos Kth
     //Kth * Qo * W /F = intercept
     // Qo = intercept * F / W * Kth
     private double thomasQo(RegressionResult regression, ThomasRequest request, double thomasConstant){
-        return round((regression.getIntercept() * request.getCaudalVolumetrico()) / (request.getSorbenteReactor() * thomasConstant));
+        return (regression.getIntercept() * request.getCaudalVolumetrico()) / (request.getSorbenteReactor() * thomasConstant);
     }
 
     private double round(double value){

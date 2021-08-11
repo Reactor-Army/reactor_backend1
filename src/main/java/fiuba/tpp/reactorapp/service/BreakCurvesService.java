@@ -46,7 +46,7 @@ public class BreakCurvesService {
     }
 
     private double concentrationLogarithm(double concentration, double initialConcentration){
-        return mathService.ln((concentration/initialConcentration) - 1);
+        return mathService.ln((initialConcentration/concentration) - 1);
     }
 
     private List<ChemicalObservation> parseCSV(MultipartFile file){
