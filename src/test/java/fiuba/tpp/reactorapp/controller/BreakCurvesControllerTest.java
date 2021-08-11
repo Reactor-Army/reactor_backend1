@@ -78,6 +78,20 @@ class BreakCurvesControllerTest {
 
     }
 
+    @Test
+    void testEasyResponse(){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("x,y\n" + "1,2\n" +"2,4\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file);
+
+        RegressionResult result = breakCurvesController.thomas(request);
+        Assertions.assertEquals(2, result.getSlope(),0.01);
+    }
 
 
 
