@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
 import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
 import fiuba.tpp.reactorapp.model.math.RegressionResult;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
+import fiuba.tpp.reactorapp.model.response.ThomasResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -66,14 +67,14 @@ class BreakCurvesControllerTest {
                 MediaType.TEXT_PLAIN_VALUE,
                 "blabla".getBytes()
         );
-        ThomasRequest request = new ThomasRequest(file);
+        ThomasRequest request = new ThomasRequest(file,1d,1d,1d);
 
-        Mockito.when(breakCurvesService.calculateByThomas(request)).thenReturn(new RegressionResult(1,1));
+        Mockito.when(breakCurvesService.calculateByThomas(request)).thenReturn(new ThomasResponse(1,1));
 
-        RegressionResult result = breakCurvesMockController.thomas(request);
+        ThomasResponse result = breakCurvesMockController.thomas(request);
 
-        Assertions.assertEquals(1, result.getSlope(),0.01);
-        Assertions.assertEquals(1, result.getIntercept(),0.01);
+        Assertions.assertEquals(1, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(1, result.getMaxConcentration(),0.01);
 
 
     }
@@ -85,12 +86,12 @@ class BreakCurvesControllerTest {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("x,y\n" + "1,2\n" +"2,4\n").getBytes()
+                ("volumenEfluente,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
         );
-        ThomasRequest request = new ThomasRequest(file);
+        ThomasRequest request = new ThomasRequest(file,1d,1d,1d);
 
-        RegressionResult result = breakCurvesController.thomas(request);
-        Assertions.assertEquals(2, result.getSlope(),0.01);
+        ThomasResponse result = breakCurvesController.thomas(request);
+        Assertions.assertEquals(1.1, result.getThomasConstant(),0.01);
     }
 
 

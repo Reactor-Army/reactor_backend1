@@ -4,6 +4,8 @@ import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.exception.NotEnoughObservationsException;
 import fiuba.tpp.reactorapp.model.math.Observation;
 import fiuba.tpp.reactorapp.model.math.RegressionResult;
+import fiuba.tpp.reactorapp.model.request.ThomasRequest;
+import fiuba.tpp.reactorapp.model.response.ThomasResponse;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,31 @@ public class MathService {
             regression.addData(observation.getX(), observation.getY());
         }
         return new RegressionResult(round(regression.getIntercept()),round(regression.getSlope()));
+    }
+
+    public double ln(double value){
+        return round(Math.log(value));
+    }
+
+    public ThomasResponse calculateThomas(RegressionResult regression, ThomasRequest request){
+        double kth = thomasConstant(regression,request);
+        double qo = thomasQo(regression,request,kth);
+
+        return new ThomasResponse(kth,qo);
+    }
+
+    //Kth * Co / F = slope
+    // Entonces
+    // Kth = slope * F /Co
+    private double thomasConstant(RegressionResult regression, ThomasRequest request){
+        return round((regression.getSlope() * request.getCaudalVolumetrico()) / request.getConcentracionInicial());
+    }
+
+    //Una vez que tenemos Kth
+    //Kth * Qo * W /F = intercept
+    // Qo = intercept * F / W * Kth
+    private double thomasQo(RegressionResult regression, ThomasRequest request, double thomasConstant){
+        return round((regression.getIntercept() * request.getCaudalVolumetrico()) / (request.getSorbenteReactor() * thomasConstant));
     }
 
     private double round(double value){
