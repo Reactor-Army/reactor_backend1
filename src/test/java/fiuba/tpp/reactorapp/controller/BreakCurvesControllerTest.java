@@ -9,6 +9,8 @@ import fiuba.tpp.reactorapp.service.BreakCurvesService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -92,6 +94,28 @@ class BreakCurvesControllerTest {
 
         ThomasResponse result = breakCurvesController.thomas(request);
         Assertions.assertEquals(1.1, result.getThomasConstant(),0.01);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            ",1.0 ,1.0",
+            "1.0, ,1.0",
+            "1.0,1.0,",
+            ",,,"
+    })
+    void testInvalidRequestResponse(Double caudal, Double ci, Double sorbenteReactor){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("volumenEfluente,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,caudal,ci,sorbenteReactor);
+
+        Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.thomas(request);
+        });
     }
 
 
