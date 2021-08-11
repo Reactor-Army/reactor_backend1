@@ -64,7 +64,7 @@ public class MathService {
         return new ThomasResponse(kth,qo);
     }
 
-    //Kth * Co / F = slope
+    //-Kth * Co / F = slope
     // Entonces
     // Kth =- slope * F /Co
     private double thomasConstant(RegressionResult regression, ThomasRequest request){
