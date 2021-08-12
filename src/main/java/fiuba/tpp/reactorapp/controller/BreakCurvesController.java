@@ -24,7 +24,7 @@ public class BreakCurvesController {
 
     private static final String FILE_EXTENSION = "csv";
 
-    @PostMapping(value= "/thomas",consumes = {"multipart/form-data"})
+    @PostMapping(value= "/thomas")
     public ThomasResponse thomas(@ModelAttribute ThomasRequest request){
         try{
             validateThomasRequest(request);
