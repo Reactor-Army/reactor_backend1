@@ -1,6 +1,5 @@
 package fiuba.tpp.reactorapp.controller;
 
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.exception.InvalidFileException;

@@ -2,7 +2,6 @@ package fiuba.tpp.reactorapp.service;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import fiuba.tpp.reactorapp.model.exception.ErrorReadingCSVException;
 import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.math.Observation;
@@ -62,14 +61,12 @@ public class BreakCurvesService {
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
 
-            try{
-                return csvToBean.parse();
-            }catch(Exception e){
-                throw new InvalidCSVFormatException();
-            }
+            return csvToBean.parse();
 
         }catch (IOException e) {
             throw new ErrorReadingCSVException();
+        }catch(Exception e){
+            throw new InvalidCSVFormatException();
         }
     }
 }
