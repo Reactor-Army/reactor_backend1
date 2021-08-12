@@ -19,6 +19,7 @@ public enum ResponseMessage {
     DUPLICATE_EMAIL("El email ya existe en el sistema"),
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
     FILE_NOT_FOUND("El archivo de observaciones no puede estar vacío"),
+    INVALID_FILE("El archivo debe tener una extensión csv"),
     INVALID_THOMAS("Se requiere el caudal volumetrico, la concentracion inicial del adsorbato, la cantidad de sorbente en el reactor y las observaciones"),
     INTERNAL_ERROR("Ocurrio un error inesperado");
 

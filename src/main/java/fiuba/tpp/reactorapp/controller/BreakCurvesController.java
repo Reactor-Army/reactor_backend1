@@ -1,11 +1,13 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.InvalidFileException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.ThomasResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,8 @@ public class BreakCurvesController {
     @Autowired
     private BreakCurvesService breakCurvesService;
 
+    private static final String FILE_EXTENSION = "csv";
+
     @PostMapping(value= "/thomas",consumes = {"multipart/form-data"})
     public ThomasResponse thomas(@ModelAttribute ThomasRequest request){
         try{
@@ -31,6 +35,9 @@ public class BreakCurvesController {
         }catch(InvalidRequestException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_THOMAS.getMessage(), e);
+        }catch(InvalidFileException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FILE.getMessage(), e);
         }
     }
 
@@ -42,5 +49,7 @@ public class BreakCurvesController {
     }
     private void validateFile(MultipartFile file) {
         if(file == null ||file.isEmpty()) throw new FileNotFoundException();
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        if(!extension.equalsIgnoreCase(FILE_EXTENSION)) throw new InvalidFileException();
     }
 }

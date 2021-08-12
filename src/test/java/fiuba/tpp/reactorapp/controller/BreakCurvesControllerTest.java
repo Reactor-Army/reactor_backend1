@@ -4,6 +4,7 @@ import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
 import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
 import fiuba.tpp.reactorapp.model.math.RegressionResult;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.ThomasResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
 import org.junit.Assert;
@@ -58,6 +59,23 @@ class BreakCurvesControllerTest {
         Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.thomas(request);
         });
+    }
+
+    @Test
+    void testFileNotCSV(){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("volumenEfluente,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.thomas(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_FILE.getMessage(),e.getReason());
     }
 
     @Test
