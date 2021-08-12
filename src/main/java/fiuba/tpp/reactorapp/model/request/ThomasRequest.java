@@ -2,6 +2,8 @@ package fiuba.tpp.reactorapp.model.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * ln(Co/C -1) = (Kth * Qo * W)/ F - (Kth * Co)/F Vef
  *

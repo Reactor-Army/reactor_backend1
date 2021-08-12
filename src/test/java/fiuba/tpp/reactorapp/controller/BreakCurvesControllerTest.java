@@ -20,9 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.server.ResponseStatusException;
 
 @SpringBootTest
@@ -41,8 +41,9 @@ class BreakCurvesControllerTest {
     @Test
     void testInvalidFile(){
         ThomasRequest request = new ThomasRequest();
+        Errors errors = new BeanPropertyBindingResult(request, "request");
         Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.thomas(request);
+            breakCurvesController.thomas(request, errors);
         });
     }
 
@@ -57,8 +58,10 @@ class BreakCurvesControllerTest {
         );
         ThomasRequest request = new ThomasRequest(file);
 
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
         Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.thomas(request);
+            breakCurvesController.thomas(request, errors);
         });
     }
 
@@ -73,8 +76,10 @@ class BreakCurvesControllerTest {
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.thomas(request);
+            breakCurvesController.thomas(request, errors);
         });
         Assert.assertEquals(ResponseMessage.INVALID_FILE.getMessage(),e.getReason());
     }
@@ -90,8 +95,10 @@ class BreakCurvesControllerTest {
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.thomas(request);
+            breakCurvesController.thomas(request, errors);
         });
         Assert.assertEquals(ResponseMessage.INVALID_HEADER.getMessage(),e.getReason());
     }
@@ -107,9 +114,11 @@ class BreakCurvesControllerTest {
         );
         ThomasRequest request = new ThomasRequest(file,1d,1d,1d);
 
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
         Mockito.when(breakCurvesService.calculateByThomas(request)).thenReturn(new ThomasResponse(1,1));
 
-        ThomasResponse result = breakCurvesMockController.thomas(request);
+        ThomasResponse result = breakCurvesMockController.thomas(request, errors);
 
         Assertions.assertEquals(1, result.getThomasConstant(),0.01);
         Assertions.assertEquals(1, result.getMaxConcentration(),0.01);
@@ -126,7 +135,9 @@ class BreakCurvesControllerTest {
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
-        ThomasResponse result = breakCurvesController.thomas(request);
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
+        ThomasResponse result = breakCurvesController.thomas(request, errors);
         Assertions.assertEquals(0.1, result.getThomasConstant(),0.01);
     }
 
@@ -147,8 +158,10 @@ class BreakCurvesControllerTest {
         );
         ThomasRequest request = new ThomasRequest(file,caudal,ci,sorbenteReactor);
 
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
         Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.thomas(request);
+            breakCurvesController.thomas(request, errors);
         });
     }
 
