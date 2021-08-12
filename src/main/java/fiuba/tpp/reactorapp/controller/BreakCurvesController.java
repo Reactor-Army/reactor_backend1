@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/curvasRuptura")
+@RequestMapping("/curvas-ruptura")
 public class BreakCurvesController {
 
     @Autowired
@@ -29,9 +29,8 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.FILE_NOT_FOUND.getMessage(), e);
         }catch(InvalidRequestException e){
-            //TO DO nuevo mensaje
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_THOMAS.getMessage(), e);
         }
     }
 
