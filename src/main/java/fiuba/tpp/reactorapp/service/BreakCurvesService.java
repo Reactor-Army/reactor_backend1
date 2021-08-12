@@ -25,12 +25,15 @@ public class BreakCurvesService {
     @Autowired
     private MathService mathService;
 
+    @Autowired
+    private ThomasModelService thomasModelService;
+
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = parseCSV(request.getObservaciones());
 
         RegressionResult regression = mathService.calculateRegression(calculateObservations(chemicalObservations,request.getConcentracionInicial()));
 
-        return mathService.calculateThomas(regression,request);
+        return thomasModelService.calculateThomas(regression,request);
     }
 
 
