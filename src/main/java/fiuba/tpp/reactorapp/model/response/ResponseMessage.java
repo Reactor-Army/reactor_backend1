@@ -18,7 +18,7 @@ public enum ResponseMessage {
     INVALID_KINECT_INFORMATION("El sistema no tiene los datos del modelo cinetico"),
     DUPLICATE_EMAIL("El email ya existe en el sistema"),
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
-    FILE_NOT_FOUND("No subiste un archivo"),
+    FILE_NOT_FOUND("El archivo es invalido o no cumple con el formato correcto"),
     INVALID_FILE("El archivo debe tener una extensión csv"),
     INVALID_HEADER("El archivo debe tener las columnas volumenEfluente y concentracionSalida, los datos de las columnas deben ser numericos"),
     INVALID_THOMAS("Se requiere el caudal volumetrico, la concentracion inicial del adsorbato, la cantidad de sorbente en el reactor y las observaciones"),
