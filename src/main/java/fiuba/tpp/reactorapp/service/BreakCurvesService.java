@@ -37,7 +37,6 @@ public class BreakCurvesService {
         return thomasModelService.calculateThomas(regression,request);
     }
 
-
     private List<Observation> calculateObservations(List<ChemicalObservation> chemicals, double initialConcentration){
         List<Observation> observations = new ArrayList<>();
         for (ChemicalObservation chemical: chemicals ) {
