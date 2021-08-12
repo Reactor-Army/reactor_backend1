@@ -1,6 +1,8 @@
 package fiuba.tpp.reactorapp.controller;
 
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.exception.InvalidFileException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
@@ -38,6 +40,9 @@ public class BreakCurvesController {
         }catch(InvalidFileException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FILE.getMessage(), e);
+        }catch(InvalidCSVFormatException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_HEADER.getMessage(), e);
         }
     }
 

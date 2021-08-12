@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.service;
 
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import fiuba.tpp.reactorapp.model.math.RegressionResult;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ThomasResponse;
@@ -19,7 +20,7 @@ class BreakCurvesServiceTests {
     private BreakCurvesService breakCurvesService;
 
     @Test
-    void testEasyResult(){
+    void testEasyResult() {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
@@ -36,7 +37,7 @@ class BreakCurvesServiceTests {
 
     //Este test lo hice a manopla en papel
     @Test
-    void testCalculateResult(){
+    void testCalculateResult() {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",

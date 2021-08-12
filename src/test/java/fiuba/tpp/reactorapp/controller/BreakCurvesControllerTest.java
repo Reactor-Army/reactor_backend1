@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
 import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
 import fiuba.tpp.reactorapp.model.math.RegressionResult;
@@ -79,11 +80,28 @@ class BreakCurvesControllerTest {
     }
 
     @Test
-    void testMockResponse(){
+    void testInvalidHeaderCSV(){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("x,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.thomas(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_HEADER.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testMockResponse() {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
-                "hello.txt",
+                "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
                 "blabla".getBytes()
         );
@@ -95,8 +113,6 @@ class BreakCurvesControllerTest {
 
         Assertions.assertEquals(1, result.getThomasConstant(),0.01);
         Assertions.assertEquals(1, result.getMaxConcentration(),0.01);
-
-
     }
 
     @Test
@@ -135,7 +151,5 @@ class BreakCurvesControllerTest {
             breakCurvesController.thomas(request);
         });
     }
-
-
 
 }

@@ -4,10 +4,10 @@ import com.opencsv.bean.CsvBindByName;
 
 public class ChemicalObservation {
 
-    @CsvBindByName
+    @CsvBindByName(column = "volumenEfluente", required = true)
     private double volumenEfluente;
 
-    @CsvBindByName
+    @CsvBindByName(column = "concentracionSalida", required = true)
     private double concentracionSalida;
 
     public ChemicalObservation() {
