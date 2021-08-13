@@ -167,9 +167,9 @@ class BreakCurvesControllerTest {
         ThomasResponse result = breakCurvesController.thomas(request, errors);
         Assertions.assertEquals(2, result.getObservations().size());
         Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
-        Assertions.assertEquals(5, result.getObservations().get(0).getY(),0.01);
+        Assertions.assertEquals(0.2, result.getObservations().get(0).getY(),0.01);
         Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
-        Assertions.assertEquals(2.5, result.getObservations().get(1).getY(),0.01);
+        Assertions.assertEquals(0.4, result.getObservations().get(1).getY(),0.01);
     }
 
     @ParameterizedTest

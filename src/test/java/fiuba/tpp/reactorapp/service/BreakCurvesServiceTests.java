@@ -50,11 +50,11 @@ class BreakCurvesServiceTests {
 
         Assertions.assertEquals(3, result.getObservations().size());
         Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
-        Assertions.assertEquals(3.33, result.getObservations().get(0).getY(),0.01);
+        Assertions.assertEquals(0.3, result.getObservations().get(0).getY(),0.01);
         Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
-        Assertions.assertEquals(2, result.getObservations().get(1).getY(),0.01);
+        Assertions.assertEquals(0.5, result.getObservations().get(1).getY(),0.01);
         Assertions.assertEquals(3, result.getObservations().get(2).getX(),0.01);
-        Assertions.assertEquals(1.43, result.getObservations().get(2).getY(),0.01);
+        Assertions.assertEquals(0.7, result.getObservations().get(2).getY(),0.01);
 
     }
 
@@ -71,8 +71,8 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,1000d,10d,1d);
 
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(-41.0, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(5.85, result.getMaxConcentration(),0.01);
+        Assertions.assertEquals(-40.55, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(5.81, result.getMaxConcentration(),0.01);
     }
 
 }
