@@ -48,7 +48,7 @@ public class MathService {
         for (Observation observation: observations) {
             regression.addData(observation.getX(), observation.getY());
         }
-        return new RegressionResult(round(regression.getIntercept()),round(regression.getSlope()));
+        return new RegressionResult(regression.getIntercept(),regression.getSlope());
     }
 
     public double ln(double value){

@@ -43,10 +43,15 @@ public class BreakCurvesService {
     private List<Observation> calculateObservations(List<ChemicalObservation> chemicals, double initialConcentration, double flow){
         List<Observation> observations = new ArrayList<>();
         for (ChemicalObservation chemical: chemicals ) {
-            Observation obs = new Observation();
-            obs.setX(calculateEffluentVolume(chemical.getTiempo(),flow));
-            obs.setY(concentrationLogarithm(chemical.getConcentracionSalida(), initialConcentration));
-            observations.add(obs);
+            if(chemical.getConcentracionSalida() > 0){
+                Observation obs = new Observation();
+                obs.setX(calculateEffluentVolume(chemical.getTiempo(),flow));
+                obs.setY(concentrationLogarithm(chemical.getConcentracionSalida(), initialConcentration));
+                if(!Double.isNaN(obs.getY())){
+                    observations.add(obs);
+                }
+
+            }
         }
         return observations;
     }
@@ -56,7 +61,12 @@ public class BreakCurvesService {
         for (ChemicalObservation chemical: chemicals ) {
             Observation obs = new Observation();
             obs.setX(chemical.getTiempo());
-            obs.setY(mathService.divide(initialConcentration,chemical.getConcentracionSalida()));
+            if(chemical.getConcentracionSalida() > 0){
+                obs.setY(mathService.divide(chemical.getConcentracionSalida(),initialConcentration));
+            }else{
+                obs.setY(0);
+            }
+
             observations.add(obs);
         }
         return observations;
