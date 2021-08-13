@@ -4,8 +4,8 @@ import com.opencsv.bean.CsvBindByName;
 
 public class ChemicalObservation {
 
-    @CsvBindByName(column = "volumenEfluente", required = true)
-    private double volumenEfluente;
+    @CsvBindByName(column = "tiempo", required = true)
+    private double tiempo;
 
     @CsvBindByName(column = "concentracionSalida", required = true)
     private double concentracionSalida;
@@ -13,17 +13,17 @@ public class ChemicalObservation {
     public ChemicalObservation() {
     }
 
-    public ChemicalObservation(double volumenEfluente, double concentracionSalida) {
-        this.volumenEfluente = volumenEfluente;
+    public ChemicalObservation(double tiempo, double concentracionSalida) {
+        this.tiempo = tiempo;
         this.concentracionSalida = concentracionSalida;
     }
 
-    public double getVolumenEfluente() {
-        return volumenEfluente;
+    public double getTiempo() {
+        return tiempo;
     }
 
-    public void setVolumenEfluente(double volumenEfluente) {
-        this.volumenEfluente = volumenEfluente;
+    public void setTiempo(double tiempo) {
+        this.tiempo = tiempo;
     }
 
     public double getConcentracionSalida() {

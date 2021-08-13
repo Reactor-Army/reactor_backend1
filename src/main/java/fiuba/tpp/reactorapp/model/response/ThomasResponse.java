@@ -1,6 +1,9 @@
 package fiuba.tpp.reactorapp.model.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fiuba.tpp.reactorapp.model.math.Observation;
+
+import java.util.List;
 
 public class ThomasResponse {
 
@@ -9,6 +12,9 @@ public class ThomasResponse {
 
     @JsonProperty("concentracionMaximaSoluto")
     private double maxConcentration;
+
+    @JsonProperty("observaciones")
+    private List<Observation> observations;
 
     public ThomasResponse() {
     }
@@ -32,5 +38,13 @@ public class ThomasResponse {
 
     public void setMaxConcentration(double maxConcentration) {
         this.maxConcentration = maxConcentration;
+    }
+
+    public List<Observation> getObservations() {
+        return observations;
+    }
+
+    public void setObservations(List<Observation> observations) {
+        this.observations = observations;
     }
 }

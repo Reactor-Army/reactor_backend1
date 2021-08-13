@@ -32,24 +32,46 @@ public class BreakCurvesService {
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = parseCSV(request.getObservaciones());
 
-        RegressionResult regression = mathService.calculateRegression(calculateObservations(chemicalObservations,request.getConcentracionInicial()));
+        RegressionResult regression = mathService.calculateRegression(calculateObservations(chemicalObservations,request.getConcentracionInicial(), request.getCaudalVolumetrico()));
 
-        return thomasModelService.calculateThomas(regression,request);
+        ThomasResponse response = thomasModelService.calculateThomas(regression,request);
+        response.setObservations(getObservationsPoints(chemicalObservations,request.getConcentracionInicial()));
+
+        return response;
     }
 
-    private List<Observation> calculateObservations(List<ChemicalObservation> chemicals, double initialConcentration){
+    private List<Observation> calculateObservations(List<ChemicalObservation> chemicals, double initialConcentration, double flow){
         List<Observation> observations = new ArrayList<>();
         for (ChemicalObservation chemical: chemicals ) {
             Observation obs = new Observation();
-            obs.setX(chemical.getVolumenEfluente());
+            obs.setX(calculateEffluentVolume(chemical.getTiempo(),flow));
             obs.setY(concentrationLogarithm(chemical.getConcentracionSalida(), initialConcentration));
             observations.add(obs);
         }
         return observations;
     }
 
+    private List<Observation> getObservationsPoints(List<ChemicalObservation> chemicals, double initialConcentration){
+        List<Observation> observations = new ArrayList<>();
+        for (ChemicalObservation chemical: chemicals ) {
+            Observation obs = new Observation();
+            obs.setX(chemical.getTiempo());
+            obs.setY(mathService.divide(initialConcentration,chemical.getConcentracionSalida()));
+            observations.add(obs);
+        }
+        return observations;
+
+    }
+
     private double concentrationLogarithm(double concentration, double initialConcentration){
         return mathService.ln((initialConcentration/concentration) - 1);
+    }
+
+
+
+    private double calculateEffluentVolume(double time, double flow){
+        double flowL = flow /1000;
+        return time * flowL;
     }
 
     private List<ChemicalObservation> parseCSV(MultipartFile file){
