@@ -51,18 +51,28 @@ class BreakCurvesControllerTest {
     void testEmptyFile(){
         MockMultipartFile file
                 = new MockMultipartFile(
-                "file",
-                "hello.txt",
-                MediaType.TEXT_PLAIN_VALUE,
-                "".getBytes()
-        );
-        ThomasRequest request = new ThomasRequest(file);
+                "file",new byte[0]);
+
+        ThomasRequest request = new ThomasRequest(file,1d,1d,1d);
 
         Errors errors = new BeanPropertyBindingResult(request, "request");
 
-        Assert.assertThrows(ResponseStatusException.class, () ->{
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.thomas(request, errors);
         });
+        Assert.assertEquals(ResponseMessage.FILE_NOT_FOUND.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testNullFile(){
+        ThomasRequest request = new ThomasRequest(null,1d,1d,1d);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.thomas(request, errors);
+        });
+        Assert.assertEquals(ResponseMessage.FILE_NOT_FOUND.getMessage(),e.getReason());
     }
 
     @Test
@@ -146,7 +156,10 @@ class BreakCurvesControllerTest {
             ",1.0 ,1.0",
             "1.0, ,1.0",
             "1.0,1.0,",
-            ",,,"
+            ",,,",
+            "1.0,0.0,1.0",
+            "0.0,1.0,1.0",
+            "1.0,1.0,0.0",
     })
     void testInvalidRequestResponse(Double caudal, Double ci, Double sorbenteReactor){
         MockMultipartFile file
