@@ -26,13 +26,36 @@ class BreakCurvesServiceTests {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,concentracionSalida\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
+                ("tiempo,concentracionSalida\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(0.08, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(21.13, result.getMaxConcentration(),0.01);
+        Assertions.assertEquals(84.73, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(0.02, result.getMaxConcentration(),0.01);
+    }
+
+    @Test
+    void testEasyObservations() {
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("tiempo,concentracionSalida\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+
+        Assertions.assertEquals(3, result.getObservations().size());
+        Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
+        Assertions.assertEquals(3.33, result.getObservations().get(0).getY(),0.01);
+        Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
+        Assertions.assertEquals(2, result.getObservations().get(1).getY(),0.01);
+        Assertions.assertEquals(3, result.getObservations().get(2).getX(),0.01);
+        Assertions.assertEquals(1.43, result.getObservations().get(2).getY(),0.01);
+
     }
 
     //Este test lo hice a manopla en papel
@@ -43,13 +66,13 @@ class BreakCurvesServiceTests {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,concentracionSalida\n" + "4,2\n" +"6,1\n").getBytes()
+                ("tiempo,concentracionSalida\n" + "4,2\n" +"6,1\n").getBytes()
         );
-        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+        ThomasRequest request = new ThomasRequest(file,1000d,10d,1d);
 
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(-0.04, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(6.00, result.getMaxConcentration(),0.01);
+        Assertions.assertEquals(-41.0, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(5.85, result.getMaxConcentration(),0.01);
     }
 
 }
