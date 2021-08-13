@@ -100,6 +100,13 @@ class MathServiceTests {
         });
     }
 
+    @Test
+    void testLn(){
+        double result = mathService.ln(10d);
+        Assertions.assertEquals(2.3, result,0.01);
+    }
+
+
 
 
 

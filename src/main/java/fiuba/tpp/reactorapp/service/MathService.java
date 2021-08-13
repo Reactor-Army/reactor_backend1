@@ -51,7 +51,11 @@ public class MathService {
         return new RegressionResult(round(regression.getIntercept()),round(regression.getSlope()));
     }
 
-    private double round(double value){
+    public double ln(double value){
+        return Math.log(value);
+    }
+
+    public double round(double value){
         return Precision.round(value,NUMBER_OF_DECIMALS);
     }
 }
