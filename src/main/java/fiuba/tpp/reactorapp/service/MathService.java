@@ -58,8 +58,4 @@ public class MathService {
     public double round(double value){
         return Precision.round(value,NUMBER_OF_DECIMALS);
     }
-
-    public double divide(double value, double divider){
-        return round(value/divider);
-    }
 }

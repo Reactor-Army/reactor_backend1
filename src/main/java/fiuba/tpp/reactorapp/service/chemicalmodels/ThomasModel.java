@@ -71,31 +71,4 @@ public class ThomasModel {
         return observations;
     }
 
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
-    }
-
-    public double getW() {
-        return w;
-    }
-
-    public void setW(double w) {
-        this.w = w;
-    }
-
-    public double getF() {
-        return f;
-    }
-
-    public void setF(double f) {
-        this.f = f;
-    }
-
-    public double getCo() {
-        return co;
-    }
-
-    public void setCo(double co) {
-        this.co = co;
-    }
 }
