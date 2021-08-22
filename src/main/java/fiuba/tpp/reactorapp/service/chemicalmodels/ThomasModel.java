@@ -9,23 +9,37 @@ import java.util.List;
 public class ThomasModel {
 
 
-    private List<Observation> observations;
+    /**
+     * Observaciones de Vef C/C0
+     */
+    private final List<Observation> observations;
 
-    private double w;
+    /**
+    * Cantidad de sorbente en el reactor W
+     */
+    private final double w;
 
-    private double f;
+    /**
+     * Caudal F
+     */
+    private final double f;
 
-    private double co;
+    /**
+     * Concentracion inicial C0
+     */
+    private final double co;
 
-    private ThomasModelNumeric numericModel;
+    private final ThomasModelNumeric numericModel;
+
+    private static final double  TOLERANCE = 1.0e-12;
 
     public ThomasModel(List<Observation> observations, double w, double f, double co) {
         this.observations = observations;
         this.w = w;
         this.f = f;
         this.co = co;
-        LeastSquaresOptimizer optimizer = new LevenbergMarquardtOptimizer().withCostRelativeTolerance(1.0e-12).
-                withParameterRelativeTolerance(1.0e-12);
+        LeastSquaresOptimizer optimizer = new LevenbergMarquardtOptimizer().withCostRelativeTolerance(TOLERANCE).
+                withParameterRelativeTolerance(TOLERANCE);
         numericModel = new ThomasModelNumeric(observations, optimizer);
     }
 
@@ -40,8 +54,8 @@ public class ThomasModel {
         double a = optimum.getPoint().getEntry(0);
         double b = optimum.getPoint().getEntry(1);
 
-        double kth = thomasConstant(a);
-        double qo = thomasQo(b, kth);
+        double kth = calculateThomasConstant(a);
+        double qo = calculateThomasQo(b, kth);
 
         return new ThomasResponse(kth,qo);
     }
@@ -52,7 +66,7 @@ public class ThomasModel {
      * @param a
      * @return
      */
-    private double thomasConstant(double a){
+    private double calculateThomasConstant(double a){
         return (a * f) / co;
     }
 
@@ -63,7 +77,7 @@ public class ThomasModel {
      * @param kth
      * @return
      */
-    private double thomasQo(double b, double kth){
+    private double calculateThomasQo(double b, double kth){
         return (b * f) / (kth * w);
     }
 

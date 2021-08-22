@@ -16,6 +16,12 @@ public class ThomasModelNumeric {
 
     private LeastSquaresOptimizer optimizer;
 
+    private static final int JACOBIAN_COLUMNS = 2;
+    private static final double[] SEEDS = {1.0,1.0};
+
+    private static final int MAX_ITERATIONS = 1000;
+    private static final int MAX_EVALUATIONS = 1000;
+
     public ThomasModelNumeric(List<Observation> observations, LeastSquaresOptimizer optimizer) {
         this.observations = observations;
         this.optimizer = optimizer;
@@ -33,7 +39,7 @@ public class ThomasModelNumeric {
             double b = model.getEntry(1);
 
             RealVector residue = new ArrayRealVector(observations.size());
-            RealMatrix jacobian = new Array2DRowRealMatrix(observations.size(), 2);
+            RealMatrix jacobian = new Array2DRowRealMatrix(observations.size(), JACOBIAN_COLUMNS);
 
             for (int i = 0; i < observations.size(); ++i) {
                 Observation obs = observations.get(i);
@@ -66,14 +72,13 @@ public class ThomasModelNumeric {
             yValues[i] = observations.get(i).getY();
         }
 
-        //TO DO pedir minimo de error?
         LeastSquaresProblem problem = new LeastSquaresBuilder().
-                start(new double[] { 1, 1}). // TO DO Mejorar estos valores
+                start(SEEDS).
                 model(this.getModel()).
                 target(yValues).
                 lazyEvaluation(false).
-                maxEvaluations(1000).
-                maxIterations(1000).
+                maxEvaluations(MAX_EVALUATIONS).
+                maxIterations(MAX_ITERATIONS).
                 build();
         return optimizer.optimize(problem);
     }
