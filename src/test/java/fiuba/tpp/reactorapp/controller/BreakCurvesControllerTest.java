@@ -141,14 +141,14 @@ class BreakCurvesControllerTest {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("tiempo,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
         Errors errors = new BeanPropertyBindingResult(request, "request");
 
         ThomasResponse result = breakCurvesController.thomas(request, errors);
-        Assertions.assertEquals(98.08, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(1.94, result.getThomasConstant(),0.01);
     }
 
     @Test
@@ -158,7 +158,7 @@ class BreakCurvesControllerTest {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("tiempo,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
@@ -167,9 +167,9 @@ class BreakCurvesControllerTest {
         ThomasResponse result = breakCurvesController.thomas(request, errors);
         Assertions.assertEquals(2, result.getObservations().size());
         Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
-        Assertions.assertEquals(0.2, result.getObservations().get(0).getY(),0.01);
+        Assertions.assertEquals(2.0, result.getObservations().get(0).getY(),0.01);
         Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
-        Assertions.assertEquals(0.4, result.getObservations().get(1).getY(),0.01);
+        Assertions.assertEquals(4.0, result.getObservations().get(1).getY(),0.01);
     }
 
     @ParameterizedTest
@@ -188,7 +188,7 @@ class BreakCurvesControllerTest {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,caudal,ci,sorbenteReactor);
 

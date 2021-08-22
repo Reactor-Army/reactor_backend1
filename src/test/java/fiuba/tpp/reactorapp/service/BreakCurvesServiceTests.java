@@ -26,13 +26,13 @@ class BreakCurvesServiceTests {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("tiempo,concentracionSalida\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
+                ("volumenEfluente,C/C0\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(84.73, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(0.02, result.getMaxConcentration(),0.01);
+        Assertions.assertEquals(2.87, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(-3.48, result.getMaxConcentration(),0.01);
     }
 
     @Test
@@ -42,7 +42,7 @@ class BreakCurvesServiceTests {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("tiempo,concentracionSalida\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
+                ("volumenEfluente,C/C0\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
@@ -50,15 +50,15 @@ class BreakCurvesServiceTests {
 
         Assertions.assertEquals(3, result.getObservations().size());
         Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
-        Assertions.assertEquals(0.3, result.getObservations().get(0).getY(),0.01);
+        Assertions.assertEquals(3.0, result.getObservations().get(0).getY(),0.01);
         Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
-        Assertions.assertEquals(0.5, result.getObservations().get(1).getY(),0.01);
+        Assertions.assertEquals(5.0, result.getObservations().get(1).getY(),0.01);
         Assertions.assertEquals(3, result.getObservations().get(2).getX(),0.01);
-        Assertions.assertEquals(0.7, result.getObservations().get(2).getY(),0.01);
+        Assertions.assertEquals(7.0, result.getObservations().get(2).getY(),0.01);
 
     }
 
-    //Este test lo hice a manopla en papel
+    //TO DO REEMPLAZAR POR ANDREA TEST
     @Test
     void testCalculateResult() {
         MockMultipartFile file
@@ -66,13 +66,13 @@ class BreakCurvesServiceTests {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("tiempo,concentracionSalida\n" + "4,2\n" +"6,1\n").getBytes()
+                ("volumenEfluente,C/C0\n" + "4,2\n" +"6,1\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1000d,10d,1d);
 
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(-40.55, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(5.81, result.getMaxConcentration(),0.01);
+        Assertions.assertEquals(-4820.43, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(63.11, result.getMaxConcentration(),0.01);
     }
 
 }

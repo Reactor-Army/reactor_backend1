@@ -1,10 +1,16 @@
 package fiuba.tpp.reactorapp.service;
 
-import fiuba.tpp.reactorapp.model.math.RegressionResult;
+import fiuba.tpp.reactorapp.model.math.Observation;
+import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ThomasResponse;
+import fiuba.tpp.reactorapp.service.chemicalmodels.ThomasModel;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ThomasModelService {
@@ -12,41 +18,33 @@ public class ThomasModelService {
     @Autowired
     private MathService mathService;
 
-    /**
-     * ln(Co/C -1) = (Kth * Qo * W)/ F - (Kth * Co)/F Vef
-     * @param regression
-     * @param request
-     * @return
-     */
-    public ThomasResponse calculateThomas(RegressionResult regression, ThomasRequest request){
-        double kth = mathService.round(thomasConstant(regression,request));
-        double qo = mathService.round(thomasQo(regression,request,kth));
+    public ThomasResponse thomasEvaluation(List<ChemicalObservation> chemicalObs, ThomasRequest request){
+        List<Observation> observations = getObservationsPoints(chemicalObs);
 
-        return new ThomasResponse(kth,qo);
+        ThomasModel thomasModel = new ThomasModel(observations,request.getSorbenteReactor(),request.getCaudalVolumetrico(),request.getConcentracionInicial());
+
+        ThomasResponse response = thomasModel.calculate();
+        response.setThomasConstant(mathService.round(response.getThomasConstant()));
+        response.setMaxConcentration(mathService.round(response.getMaxConcentration()));
+        response.setObservations(observations);
+        return response;
     }
 
-    /**
-     * -Kth * Co / F = slope
-     *  Kth =- slope * F /Co
-     * @param regression
-     * @param request
-     * @return
-     */
-    private double thomasConstant(RegressionResult regression, ThomasRequest request){
-        return -(regression.getSlope() * request.getCaudalVolumetrico()) / request.getConcentracionInicial();
+
+
+    private List<Observation> getObservationsPoints(List<ChemicalObservation> chemicals){
+        List<Observation> observations = new ArrayList<>();
+        for (ChemicalObservation chemical: chemicals ) {
+            if(chemical.getRelacionConcentraciones() > 0){
+                Observation obs = new Observation();
+                obs.setX(chemical.getVolumenEfluente());
+                obs.setY(chemical.getRelacionConcentraciones());
+                observations.add(obs);
+            }
+        }
+        return observations;
+
     }
 
-    /**
-     * Una vez que tenemos Kth
-     * Kth * Qo * W /F = intercept
-     * Qo = intercept * F / W * Kth
-     * @param regression
-     * @param request
-     * @param thomasConstant
-     * @return
-     */
-    private double thomasQo(RegressionResult regression, ThomasRequest request, double thomasConstant){
-        return (regression.getIntercept() * request.getCaudalVolumetrico()) / (request.getSorbenteReactor() * thomasConstant);
-    }
 
 }
