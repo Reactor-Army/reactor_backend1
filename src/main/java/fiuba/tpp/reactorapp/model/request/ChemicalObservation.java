@@ -1,7 +1,5 @@
 package fiuba.tpp.reactorapp.model.request;
 
-import com.opencsv.bean.CsvBindByName;
-
 public class ChemicalObservation {
 
     private double volumenEfluente;
