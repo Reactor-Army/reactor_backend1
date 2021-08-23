@@ -1,12 +1,8 @@
 package fiuba.tpp.reactorapp.controller;
 
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
-import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
-import fiuba.tpp.reactorapp.model.math.RegressionResult;
-import fiuba.tpp.reactorapp.model.request.ThomasRequest;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
-import fiuba.tpp.reactorapp.model.response.ThomasResponse;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -132,44 +128,6 @@ class BreakCurvesControllerTest {
 
         Assertions.assertEquals(1, result.getThomasConstant(),0.01);
         Assertions.assertEquals(1, result.getMaxConcentration(),0.01);
-    }
-
-    @Test
-    void testEasyResponse(){
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.csv",
-                MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
-        );
-        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
-
-        Errors errors = new BeanPropertyBindingResult(request, "request");
-
-        ThomasResponse result = breakCurvesController.thomas(request, errors);
-        Assertions.assertEquals(1.94, result.getThomasConstant(),0.01);
-    }
-
-    @Test
-    void testEasyObservations(){
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.csv",
-                MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
-        );
-        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
-
-        Errors errors = new BeanPropertyBindingResult(request, "request");
-
-        ThomasResponse result = breakCurvesController.thomas(request, errors);
-        Assertions.assertEquals(2, result.getObservations().size());
-        Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
-        Assertions.assertEquals(2.0, result.getObservations().get(0).getY(),0.01);
-        Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
-        Assertions.assertEquals(4.0, result.getObservations().get(1).getY(),0.01);
     }
 
     @ParameterizedTest

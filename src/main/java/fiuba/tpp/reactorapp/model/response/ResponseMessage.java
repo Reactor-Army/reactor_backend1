@@ -22,6 +22,7 @@ public enum ResponseMessage {
     INVALID_FILE("El archivo debe tener una extensión csv"),
     INVALID_HEADER("El archivo debe tener las columnas tiempo y concentracionSalida, los datos de las columnas deben ser numéricos"),
     INVALID_THOMAS("Se requiere el caudal volumétrico, la concentración inicial del adsorbato, la cantidad de sorbente en el reactor y las observaciones"),
+    INVALID_NELSON("Se requiere el caudal volumétrico y las observaciones"),
     INVALID_FIELDS("Recordá que los campos deben ser numéricos"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 

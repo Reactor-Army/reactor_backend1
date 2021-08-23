@@ -1,9 +1,9 @@
 package fiuba.tpp.reactorapp.service;
 
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import fiuba.tpp.reactorapp.model.math.RegressionResult;
-import fiuba.tpp.reactorapp.model.request.ThomasRequest;
-import fiuba.tpp.reactorapp.model.response.ThomasResponse;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +19,6 @@ class BreakCurvesServiceTests {
     @Autowired
     private BreakCurvesService breakCurvesService;
 
-    @Test
-    void testEasyResult() {
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.csv",
-                MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,C/C0\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
-        );
-        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
-
-        ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(2.87, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(-3.48, result.getMaxConcentration(),0.01);
-    }
 
     @Test
     void testEasyObservations() {
@@ -42,37 +27,23 @@ class BreakCurvesServiceTests {
                 "file",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,C/C0\n" + "1,3\n" +"2,5\n" +"3,7\n").getBytes()
+                ("volumenEfluente,C/C0\n" +
+                        "0.07050,0.64700\n" +
+                        "0.07200,0.73158\n" +
+                        "0.07350,0.76736\n" ).getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
 
         Assertions.assertEquals(3, result.getObservations().size());
-        Assertions.assertEquals(1, result.getObservations().get(0).getX(),0.01);
-        Assertions.assertEquals(3.0, result.getObservations().get(0).getY(),0.01);
-        Assertions.assertEquals(2, result.getObservations().get(1).getX(),0.01);
-        Assertions.assertEquals(5.0, result.getObservations().get(1).getY(),0.01);
-        Assertions.assertEquals(3, result.getObservations().get(2).getX(),0.01);
-        Assertions.assertEquals(7.0, result.getObservations().get(2).getY(),0.01);
+        Assertions.assertEquals(0.07050, result.getObservations().get(0).getX(),0.01);
+        Assertions.assertEquals(0.64700, result.getObservations().get(0).getY(),0.01);
+        Assertions.assertEquals(0.07200, result.getObservations().get(1).getX(),0.01);
+        Assertions.assertEquals(0.73158, result.getObservations().get(1).getY(),0.01);
+        Assertions.assertEquals(0.07350, result.getObservations().get(2).getX(),0.01);
+        Assertions.assertEquals(0.76736, result.getObservations().get(2).getY(),0.01);
 
-    }
-
-    //TO DO REEMPLAZAR POR ANDREA TEST
-    @Test
-    void testCalculateResult() {
-        MockMultipartFile file
-                = new MockMultipartFile(
-                "file",
-                "hello.csv",
-                MediaType.TEXT_PLAIN_VALUE,
-                ("volumenEfluente,C/C0\n" + "4,2\n" +"6,1\n").getBytes()
-        );
-        ThomasRequest request = new ThomasRequest(file,1000d,10d,1d);
-
-        ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(-4820.43, result.getThomasConstant(),0.01);
-        Assertions.assertEquals(63.11, result.getMaxConcentration(),0.01);
     }
 
     @Test
@@ -82,6 +53,16 @@ class BreakCurvesServiceTests {
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
+    }
+
+    //NO AJUSTA
+    @Test
+    void testYoonNelsonWithDataFromTesis(){
+        MockMultipartFile file = dataFromTesisThomas();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.0005);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        Assertions.assertEquals(0.009, result.getYoonNelsonConstant(),0.01);
+        Assertions.assertEquals(310.675, result.getTimeFiftyPercent(),0.01);
 
     }
 

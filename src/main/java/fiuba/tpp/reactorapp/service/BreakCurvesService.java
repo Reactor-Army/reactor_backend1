@@ -5,8 +5,10 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import fiuba.tpp.reactorapp.model.exception.ErrorReadingCSVException;
 import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
-import fiuba.tpp.reactorapp.model.request.ThomasRequest;
-import fiuba.tpp.reactorapp.model.response.ThomasResponse;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +25,20 @@ public class BreakCurvesService {
     @Autowired
     private ThomasModelService thomasModelService;
 
+    @Autowired
+    private YoonNelsonModelService yoonNelsonModelService;
+
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = parseCSV(request.getObservaciones());
 
         return thomasModelService.thomasEvaluation(chemicalObservations,request);
     }
 
+    public YoonNelsonResponse calculateByYoonNelson(YoonNelsonRequest request){
+        List<ChemicalObservation> chemicalObservations = parseCSV(request.getObservaciones());
+
+        return yoonNelsonModelService.yoonNelsonEvaluation(chemicalObservations,request);
+    }
 
     private List<ChemicalObservation> parseCSV(MultipartFile file){
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
