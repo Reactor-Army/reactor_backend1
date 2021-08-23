@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class MathService {
 
-    private static final int NUMBER_OF_DECIMALS = 2;
+    private static final int NUMBER_OF_DECIMALS = 3;
 
     /**
      * La integral de 1/x dx es ln(x) en un intervalo definido entonces la formula queda

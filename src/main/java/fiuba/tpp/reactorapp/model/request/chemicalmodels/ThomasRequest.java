@@ -1,4 +1,4 @@
-package fiuba.tpp.reactorapp.model.request;
+package fiuba.tpp.reactorapp.model.request.chemicalmodels;
 
 import org.springframework.web.multipart.MultipartFile;
 

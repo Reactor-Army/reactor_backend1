@@ -20,8 +20,9 @@ public enum ResponseMessage {
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
     FILE_NOT_FOUND("El archivo es invalido o no cumple con el formato correcto"),
     INVALID_FILE("El archivo debe tener una extensión csv"),
-    INVALID_HEADER("El archivo debe tener las columnas volumenEfluente y concentracionSalida, los datos de las columnas deben ser numéricos"),
+    INVALID_HEADER("El archivo debe tener las columnas tiempo y concentracionSalida, los datos de las columnas deben ser numéricos"),
     INVALID_THOMAS("Se requiere el caudal volumétrico, la concentración inicial del adsorbato, la cantidad de sorbente en el reactor y las observaciones"),
+    INVALID_NELSON("Se requiere el caudal volumétrico y las observaciones"),
     INVALID_FIELDS("Recordá que los campos deben ser numéricos"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 

@@ -7,16 +7,8 @@ public class ChemicalObservation {
     @CsvBindByName(column = "volumenEfluente", required = true)
     private double volumenEfluente;
 
-    @CsvBindByName(column = "concentracionSalida", required = true)
-    private double concentracionSalida;
-
-    public ChemicalObservation() {
-    }
-
-    public ChemicalObservation(double volumenEfluente, double concentracionSalida) {
-        this.volumenEfluente = volumenEfluente;
-        this.concentracionSalida = concentracionSalida;
-    }
+    @CsvBindByName(column = "C/C0", required = true)
+    private double relacionConcentraciones;
 
     public double getVolumenEfluente() {
         return volumenEfluente;
@@ -26,11 +18,11 @@ public class ChemicalObservation {
         this.volumenEfluente = volumenEfluente;
     }
 
-    public double getConcentracionSalida() {
-        return concentracionSalida;
+    public double getRelacionConcentraciones() {
+        return relacionConcentraciones;
     }
 
-    public void setConcentracionSalida(double concentracionSalida) {
-        this.concentracionSalida = concentracionSalida;
+    public void setRelacionConcentraciones(double relacionConcentraciones) {
+        this.relacionConcentraciones = relacionConcentraciones;
     }
 }
