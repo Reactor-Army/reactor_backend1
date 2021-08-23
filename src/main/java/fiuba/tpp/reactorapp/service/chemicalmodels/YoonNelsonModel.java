@@ -1,7 +1,6 @@
 package fiuba.tpp.reactorapp.service.chemicalmodels;
 
 import fiuba.tpp.reactorapp.model.math.Observation;
-import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
