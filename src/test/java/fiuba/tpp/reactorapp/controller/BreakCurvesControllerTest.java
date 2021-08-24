@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
@@ -154,6 +155,36 @@ class BreakCurvesControllerTest {
 
         Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.thomas(request, errors);
+        });
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            ",1.0 ,1.0, 1.0",
+            "1.0, ,1.0,1.0",
+            "1.0,1.0,,1.0",
+            "1.0,1.0,1.0,",
+            ",,,,",
+            "1.0,0.0,1.0,1.0",
+            "0.0,1.0,1.0,1.0",
+            "1.0,1.0,0.0, 1.0",
+            "1.0,1.0,1.0, 0.0",
+    })
+    void testInvalidRequestResponseAdams(Double caudal, Double ci, Double uo,Double z){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
+        );
+
+        AdamsBohartRequest request = new AdamsBohartRequest(file,caudal,ci,uo,z);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
+        Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.adamsBohart(request, errors);
         });
     }
 

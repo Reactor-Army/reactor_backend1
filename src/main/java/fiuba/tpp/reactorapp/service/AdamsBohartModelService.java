@@ -4,9 +4,7 @@ import fiuba.tpp.reactorapp.model.math.Observation;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
-import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.service.chemicalmodels.AdamsBohartModel;
-import fiuba.tpp.reactorapp.service.chemicalmodels.YoonNelsonModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

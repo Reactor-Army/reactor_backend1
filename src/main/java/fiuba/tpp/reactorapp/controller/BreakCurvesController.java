@@ -84,7 +84,7 @@ public class BreakCurvesController {
                     HttpStatus.BAD_REQUEST, ResponseMessage.FILE_NOT_FOUND.getMessage(), e);
         }catch(InvalidRequestException e){
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_NELSON.getMessage(), e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_BOHART.getMessage(), e);
         }catch(InvalidFileException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FILE.getMessage(), e);
@@ -114,10 +114,10 @@ public class BreakCurvesController {
 
     private void validateAdamsBohart(AdamsBohartRequest request, Errors errors){
         handleErrors(errors);
-        if(request.getCaudalVolumetrico() == null || request.getCaudalVolumetrico() == 0) throw new InvalidRequestException();
-        if(request.getConcentracionInicial() == null || request.getConcentracionInicial() == 0) throw new InvalidRequestException();
         if(request.getAlturaLechoReactor()== null || request.getAlturaLechoReactor() == 0) throw new InvalidRequestException();
         if(request.getVelocidadLineal() == null || request.getVelocidadLineal() == 0) throw new InvalidRequestException();
+        if(request.getCaudalVolumetrico() == null || request.getCaudalVolumetrico() == 0) throw new InvalidRequestException();
+        if(request.getConcentracionInicial() == null || request.getConcentracionInicial() == 0) throw new InvalidRequestException();
         validateFile(request.getObservaciones());
     }
 
