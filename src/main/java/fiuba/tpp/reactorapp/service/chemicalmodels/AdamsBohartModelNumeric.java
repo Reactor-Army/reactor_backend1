@@ -1,5 +1,14 @@
 package fiuba.tpp.reactorapp.service.chemicalmodels;
 
+/**
+ * El modelo de Adams - Bohart establece que
+ * C/C0 = exp( (Kab * Co * Vef)/ F - (Kab * No * Z)/ Uo)
+ * Esto lo podemos reducir a
+ * Y = exp( aX - B)
+ * Donde Y es C/C0
+ * y X es Vef
+ * De esta manera tenemos la funcion sobre la que calculamos el jacobiano
+ */
 public class AdamsBohartModelNumeric implements NumericModel{
 
     @Override

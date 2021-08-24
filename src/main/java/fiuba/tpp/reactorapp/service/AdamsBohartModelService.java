@@ -26,7 +26,7 @@ public class AdamsBohartModelService implements ModelService{
 
         AdamsBohartResponse response = model.calculate(seedService.generateSeedForAdamsBohart(observations));
         response.setAdamsBohartConstant(mathService.round(response.getAdamsBohartConstant()));
-        response.setMaxAbsortionCapacity(mathService.round(response.getMaxAbsortionCapacity()));
+        response.setMaxAbsorptionCapacity(mathService.round(response.getMaxAbsorptionCapacity()));
         response.setObservations(observations);
         return response;
     }

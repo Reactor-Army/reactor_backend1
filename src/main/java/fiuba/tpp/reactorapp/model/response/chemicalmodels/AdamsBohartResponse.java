@@ -11,14 +11,14 @@ public class AdamsBohartResponse {
     private double adamsBohartConstant;
 
     @JsonProperty("capacidadMaximaAbsorcion")
-    private double maxAbsortionCapacity;
+    private double maxAbsorptionCapacity;
 
     @JsonProperty("observaciones")
     private List<Observation> observations;
 
-    public AdamsBohartResponse(double adamsBohartConstant, double maxAbsortionCapacity) {
+    public AdamsBohartResponse(double adamsBohartConstant, double maxAbsorptionCapacity) {
         this.adamsBohartConstant = adamsBohartConstant;
-        this.maxAbsortionCapacity = maxAbsortionCapacity;
+        this.maxAbsorptionCapacity = maxAbsorptionCapacity;
     }
 
     public double getAdamsBohartConstant() {
@@ -29,12 +29,12 @@ public class AdamsBohartResponse {
         this.adamsBohartConstant = adamsBohartConstant;
     }
 
-    public double getMaxAbsortionCapacity() {
-        return maxAbsortionCapacity;
+    public double getMaxAbsorptionCapacity() {
+        return maxAbsorptionCapacity;
     }
 
-    public void setMaxAbsortionCapacity(double maxAbsortionCapacity) {
-        this.maxAbsortionCapacity = maxAbsortionCapacity;
+    public void setMaxAbsorptionCapacity(double maxAbsorptionCapacity) {
+        this.maxAbsorptionCapacity = maxAbsorptionCapacity;
     }
 
     public List<Observation> getObservations() {

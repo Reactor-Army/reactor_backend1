@@ -74,7 +74,7 @@ class BreakCurvesServiceTests {
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.5,42.1,0.4723,15.0);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
         Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
-        Assertions.assertEquals(0.195, result.getMaxAbsortionCapacity(),0.01);
+        Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
 
     }
 
