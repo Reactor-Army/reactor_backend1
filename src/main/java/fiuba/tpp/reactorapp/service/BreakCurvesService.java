@@ -1,11 +1,7 @@
 package fiuba.tpp.reactorapp.service;
 
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import fiuba.tpp.reactorapp.model.exception.ErrorReadingCSVException;
-import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
+
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
-import fiuba.tpp.reactorapp.model.request.ChemicalObservationCSV;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
