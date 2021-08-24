@@ -61,8 +61,8 @@ class BreakCurvesServiceTests {
         MockMultipartFile file = dataFromTesisThomas();
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.0005);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
-        Assertions.assertEquals(0.009, result.getYoonNelsonConstant(),0.01);
-        Assertions.assertEquals(310.675, result.getTimeFiftyPercent(),0.01);
+        Assertions.assertEquals(0.1, result.getYoonNelsonConstant(),0.01);
+        Assertions.assertEquals(136.314, result.getTimeFiftyPercent(),0.01);
 
     }
 

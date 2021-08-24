@@ -1,13 +1,9 @@
 package fiuba.tpp.reactorapp.model.request;
 
-import com.opencsv.bean.CsvBindByName;
-
 public class ChemicalObservation {
 
-    @CsvBindByName(column = "volumenEfluente", required = true)
     private double volumenEfluente;
 
-    @CsvBindByName(column = "C/C0", required = true)
     private double relacionConcentraciones;
 
     public double getVolumenEfluente() {
