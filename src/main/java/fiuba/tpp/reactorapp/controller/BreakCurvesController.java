@@ -1,9 +1,11 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.exception.*;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
@@ -72,6 +74,30 @@ public class BreakCurvesController {
 
     }
 
+    @PostMapping(value= "/adams-bohart")
+    public AdamsBohartResponse adamsBohart(@ModelAttribute AdamsBohartRequest request, Errors errors){
+        try{
+            validateAdamsBohart(request,errors);
+            return breakCurvesService.calculateByAdamsBohart(request);
+        }catch(FileNotFoundException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.FILE_NOT_FOUND.getMessage(), e);
+        }catch(InvalidRequestException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_NELSON.getMessage(), e);
+        }catch(InvalidFileException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FILE.getMessage(), e);
+        }catch(InvalidCSVFormatException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_HEADER.getMessage(), e);
+        }catch(InvalidFieldException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
+        }
+
+    }
+
     private void validateThomasRequest(ThomasRequest request, Errors errors){
         handleErrors(errors);
         if(request.getCaudalVolumetrico() == null || request.getCaudalVolumetrico() == 0) throw new InvalidRequestException();
@@ -83,6 +109,15 @@ public class BreakCurvesController {
     private void validateYoonNelsonRequest(YoonNelsonRequest request, Errors errors){
         handleErrors(errors);
         if(request.getCaudalVolumetrico() == null || request.getCaudalVolumetrico() == 0) throw new InvalidRequestException();
+        validateFile(request.getObservaciones());
+    }
+
+    private void validateAdamsBohart(AdamsBohartRequest request, Errors errors){
+        handleErrors(errors);
+        if(request.getCaudalVolumetrico() == null || request.getCaudalVolumetrico() == 0) throw new InvalidRequestException();
+        if(request.getConcentracionInicial() == null || request.getConcentracionInicial() == 0) throw new InvalidRequestException();
+        if(request.getAlturaLechoReactor()== null || request.getAlturaLechoReactor() == 0) throw new InvalidRequestException();
+        if(request.getVelocidadLineal() == null || request.getVelocidadLineal() == 0) throw new InvalidRequestException();
         validateFile(request.getObservaciones());
     }
 

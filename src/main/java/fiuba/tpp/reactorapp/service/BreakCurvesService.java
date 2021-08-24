@@ -2,8 +2,10 @@ package fiuba.tpp.reactorapp.service;
 
 
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.service.utils.CSVParserService;
@@ -22,6 +24,9 @@ public class BreakCurvesService {
     private YoonNelsonModelService yoonNelsonModelService;
 
     @Autowired
+    private AdamsBohartModelService adamsBohartModelService;
+
+    @Autowired
     private CSVParserService csvParserService;
 
     public ThomasResponse calculateByThomas(ThomasRequest request){
@@ -36,6 +41,10 @@ public class BreakCurvesService {
         return yoonNelsonModelService.yoonNelsonEvaluation(chemicalObservations,request);
     }
 
+    public AdamsBohartResponse calculateByAdamsBohart(AdamsBohartRequest request){
+        List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
+        return adamsBohartModelService.adamsBohartEvaluation(chemicalObservations,request);
+    }
 
 }

@@ -1,7 +1,9 @@
 package fiuba.tpp.reactorapp.service;
 
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import org.junit.jupiter.api.Assertions;
@@ -55,7 +57,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
     }
 
-    //NO AJUSTA
+
     @Test
     void testYoonNelsonWithDataFromTesis(){
         MockMultipartFile file = dataFromTesisThomas();
@@ -66,8 +68,22 @@ class BreakCurvesServiceTests {
 
     }
 
+    @Test
+    void testAdamsBohartWithDataFromTesis(){
+        MockMultipartFile file = dataFromTesisAdams();
+        AdamsBohartRequest request = new AdamsBohartRequest(file,0.5,42.1,0.4723,15.0);
+        AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
+        Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
+        Assertions.assertEquals(0.195, result.getMaxAbsortionCapacity(),0.01);
+
+    }
+
     private MockMultipartFile dataFromTesisThomas(){
         return new MockMultipartFile("thomas","thomas.csv",MediaType.TEXT_PLAIN_VALUE,tesisData().getBytes());
+    }
+
+    private MockMultipartFile dataFromTesisAdams(){
+        return new MockMultipartFile("adams","adams.csv",MediaType.TEXT_PLAIN_VALUE,tesisDataAdams().getBytes());
     }
 
     private String tesisData(){
@@ -162,6 +178,60 @@ class BreakCurvesServiceTests {
                 "0.13050,1.03410\n" +
                 "0.13200,1.03410\n" +
                 "0.13350,1.0341\n";
+    }
+
+    private String tesisDataAdams(){
+        return "volumenEfluente,C/C0\n" +
+                "0.00000,0.00000\n" +
+                "0.00150,-0.0019\n" +
+                "0.00300,0.00781\n" +
+                "0.00450,-0.0035\n" +
+                "0.00600,0.02895\n" +
+                "0.00750,0.00455\n" +
+                "0.00900,-0.0084\n" +
+                "0.01050,0.00130\n" +
+                "0.01200,-0.0032\n" +
+                "0.01350,0.00618\n" +
+                "0.01500,0.01106\n" +
+                "0.01650,0.00130\n" +
+                "0.01800,-0.0019\n" +
+                "0.01950,-0.0035\n" +
+                "0.02100,0.01757\n" +
+                "0.02250,0.00130\n" +
+                "0.02400,-32.500\n" +
+                "0.02550,-0.0084\n" +
+                "0.02700,0.00130\n" +
+                "0.02850,-32.500\n" +
+                "0.03000,0.00455\n" +
+                "0.03150,0.01269\n" +
+                "0.03300,0.02895\n" +
+                "0.03450,0.00130\n" +
+                "0.03600,0.00130\n" +
+                "0.03750,-0.0084\n" +
+                "0.03900,-0.0019\n" +
+                "0.04050,-0.0084\n" +
+                "0.04200,-0.0084\n" +
+                "0.04350,0.01106\n" +
+                "0.04500,0.01919\n" +
+                "0.04650,-0.0084\n" +
+                "0.04800,0.00943\n" +
+                "0.04950,-0.0035\n" +
+                "0.05100,0.00130\n" +
+                "0.05250,0.00130\n" +
+                "0.05400,0.01594\n" +
+                "0.05550,0.06473\n" +
+                "0.05700,0.04359\n" +
+                "0.05850,0.10377\n" +
+                "0.06000,0.12491\n" +
+                "0.06150,0.18184\n" +
+                "0.06300,0.25340\n" +
+                "0.06450,0.33147\n" +
+                "0.06600,0.42418\n" +
+                "0.06750,0.47948\n" +
+                "0.06900,0.57381\n" +
+                "0.07050,0.64700\n" +
+                "0.07200,0.73158\n";
+
     }
 
 }
