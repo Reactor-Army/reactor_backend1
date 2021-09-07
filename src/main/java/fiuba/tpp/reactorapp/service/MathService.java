@@ -48,7 +48,10 @@ public class MathService {
         for (Observation observation: observations) {
             regression.addData(observation.getX(), observation.getY());
         }
-        return new RegressionResult(round(regression.getIntercept()),round(regression.getSlope()));
+        RegressionResult result = new RegressionResult();
+        result.setSlope(Double.isNaN(round(regression.getSlope()))? 1D: round(regression.getSlope()));
+        result.setIntercept(Double.isNaN(round(regression.getIntercept()))? 1D : round(regression.getIntercept()));
+        return result;
     }
 
     public double ln(double value){
