@@ -92,8 +92,9 @@ class AuthControllerTest {
 
     @Test
     void testAuthCodeEmailNotFound(){
+        AuthRequest request = new AuthRequest("lucas@gmail.com","");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.generateCodeResetPassword(new AuthRequest("lucas@gmail.com",""));
+            authController.generateCodeResetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.EMAIL_NOT_FOUND.getMessage(),e.getReason());
     }
@@ -105,8 +106,9 @@ class AuthControllerTest {
             "'matigmail.com'"
     })
     void testAuthCodeInvalidEmail(String email){
+        AuthRequest request = new AuthRequest(email,"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.generateCodeResetPassword(new AuthRequest(email,""));
+            authController.generateCodeResetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_REGISTER.getMessage(),e.getReason());
     }

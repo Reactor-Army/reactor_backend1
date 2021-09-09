@@ -25,8 +25,8 @@ public class AuthCodeService {
     CodeGeneratorService codeGeneratorService;
 
 
-    private static int CODE_LENGTH = 6;
-    private static String EMAIL_SUBJECT = "Codigo renovacion de contraseña";
+    private static final int CODE_LENGTH = 6;
+    private static final String EMAIL_SUBJECT = "Codigo renovacion de contraseña";
 
     public void generateAuthCode(User user){
         String randomString = codeGeneratorService.generateRandomStringAlphanumeric(CODE_LENGTH);

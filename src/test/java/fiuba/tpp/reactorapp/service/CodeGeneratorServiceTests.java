@@ -9,7 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class CodeGeneratorServiceTests {
+class CodeGeneratorServiceTests {
 
     @Autowired
     CodeGeneratorService codeGeneratorService;

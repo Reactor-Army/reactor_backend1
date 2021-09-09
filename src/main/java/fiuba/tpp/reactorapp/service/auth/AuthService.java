@@ -10,8 +10,6 @@ import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
-import fiuba.tpp.reactorapp.service.utils.CodeGeneratorService;
-import fiuba.tpp.reactorapp.service.utils.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
