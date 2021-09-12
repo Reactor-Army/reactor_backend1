@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.auth.AuthCode;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
@@ -31,6 +32,7 @@ class AuthControllerTest {
 
     @InjectMocks
     private AuthController authMockController = new AuthController();
+
 
 
     @Test
@@ -112,4 +114,5 @@ class AuthControllerTest {
         });
         Assert.assertEquals(ResponseMessage.INVALID_REGISTER.getMessage(),e.getReason());
     }
+
 }

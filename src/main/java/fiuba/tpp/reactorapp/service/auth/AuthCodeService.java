@@ -19,10 +19,10 @@ public class AuthCodeService {
     private AuthCodeRepository authCodeRepository;
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Autowired
-    CodeGeneratorService codeGeneratorService;
+    private CodeGeneratorService codeGeneratorService;
 
 
     private static final int CODE_LENGTH = 6;

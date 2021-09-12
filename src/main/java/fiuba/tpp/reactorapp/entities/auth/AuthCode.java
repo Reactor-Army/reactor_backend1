@@ -11,7 +11,7 @@ public class AuthCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
