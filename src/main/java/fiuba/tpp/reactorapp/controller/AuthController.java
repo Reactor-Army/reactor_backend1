@@ -2,7 +2,6 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.exception.InvalidRegisterException;
-import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
@@ -49,6 +48,7 @@ public class AuthController {
             validateAuthRequest(request);
             authService.resetPasswordGenerateCode(request);
         } catch (Exception ignored) {
+            //Ignoramos cualquier excepcion y retornamos 200
         }
     }
 
