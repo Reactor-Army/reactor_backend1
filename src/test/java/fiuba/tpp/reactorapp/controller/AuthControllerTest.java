@@ -1,6 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.entities.auth.AuthCode;
+import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
@@ -113,6 +113,15 @@ class AuthControllerTest {
             authController.generateCodeResetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_REGISTER.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testAuthCode() throws UserNotFoundException {
+        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
+        Mockito.doNothing().when(authService).resetPasswordGenerateCode(request);
+        authController.registerUser(request);
+        authMockController.generateCodeResetPassword(request);
+
     }
 
 }
