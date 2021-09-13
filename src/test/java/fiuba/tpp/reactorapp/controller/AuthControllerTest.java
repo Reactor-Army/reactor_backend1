@@ -20,6 +20,8 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthControllerTest {
@@ -120,8 +122,7 @@ class AuthControllerTest {
         AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
         Mockito.doNothing().when(authService).resetPasswordGenerateCode(request);
         authController.registerUser(request);
-        authMockController.generateCodeResetPassword(request);
-
+        assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
     }
 
 }

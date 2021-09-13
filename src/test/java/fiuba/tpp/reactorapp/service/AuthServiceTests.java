@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -34,11 +35,10 @@ class AuthServiceTests {
     }
 
     @Test
-    void testAuthCode() throws UserNotFoundException {
+    void testAuthCode(){
         AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
         Mockito.doNothing().when(authCodeService).generateAuthCode(any(User.class));
         authMockService.register(request);
-        authMockService.resetPasswordGenerateCode(request);
-
+        assertDoesNotThrow(()->authMockService.resetPasswordGenerateCode(request));
     }
 }
