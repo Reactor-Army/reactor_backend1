@@ -97,9 +97,7 @@ class AuthControllerTest {
     @Test
     void testAuthCodeEmailNotFound(){
         AuthRequest request = new AuthRequest("lucas@gmail.com","");
-        Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.generateCodeResetPassword(request);
-        });
+        assertDoesNotThrow(() -> authController.generateCodeResetPassword(request));
     }
 
     @ParameterizedTest
@@ -110,10 +108,7 @@ class AuthControllerTest {
     })
     void testAuthCodeInvalidEmail(String email){
         AuthRequest request = new AuthRequest(email,"");
-        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.generateCodeResetPassword(request);
-        });
-        Assert.assertEquals(ResponseMessage.INVALID_REGISTER.getMessage(),e.getReason());
+        assertDoesNotThrow(() -> authController.generateCodeResetPassword(request));
     }
 
     @Test
