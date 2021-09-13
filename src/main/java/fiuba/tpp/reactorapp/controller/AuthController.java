@@ -48,12 +48,7 @@ public class AuthController {
         try{
             validateAuthRequest(request);
             authService.resetPasswordGenerateCode(request);
-        } catch (InvalidRegisterException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REGISTER.getMessage(), e);
-        } catch (UserNotFoundException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, ResponseMessage.EMAIL_NOT_FOUND.getMessage(), e);
+        } catch (Exception ignored) {
         }
     }
 

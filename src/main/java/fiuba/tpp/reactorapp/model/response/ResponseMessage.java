@@ -18,7 +18,6 @@ public enum ResponseMessage {
     INVALID_KINECT_INFORMATION("El sistema no tiene los datos del modelo cinético"),
     DUPLICATE_EMAIL("El email ya existe en el sistema"),
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
-    EMAIL_NOT_FOUND("No hay un usuario registrado con ese email"),
     FILE_NOT_FOUND("El archivo es invalido o no cumple con el formato correcto"),
     INVALID_FILE("El archivo debe tener una extensión csv"),
     INVALID_HEADER("El archivo debe tener las columnas volumenEfluente y C/C0, los datos de las columnas deben ser numéricos"),
