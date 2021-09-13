@@ -27,6 +27,7 @@ public class AuthCodeService {
 
     private static final int CODE_LENGTH = 6;
     private static final String EMAIL_SUBJECT = "Codigo renovacion de contraseña";
+    private static final String EMAIL_TEXT = "Tu codigo de verificacion es: ";
 
     public void generateAuthCode(User user){
         String randomString = codeGeneratorService.generateRandomStringAlphanumeric(CODE_LENGTH);
@@ -44,6 +45,7 @@ public class AuthCodeService {
         code.setRefreshDate(time);
         authCodeRepository.save(code);
 
-        emailService.sendSimpleMessage(user.getEmail(), EMAIL_SUBJECT,randomString);
+        String messageText = EMAIL_TEXT + randomString;
+        emailService.sendSimpleMessage(user.getEmail(), EMAIL_SUBJECT,messageText);
     }
 }
