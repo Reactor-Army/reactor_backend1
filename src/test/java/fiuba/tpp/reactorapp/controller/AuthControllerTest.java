@@ -108,7 +108,10 @@ class AuthControllerTest {
     })
     void testAuthCodeInvalidEmail(String email){
         AuthRequest request = new AuthRequest(email,"");
-        assertDoesNotThrow(() -> authController.generateCodeResetPassword(request));
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.generateCodeResetPassword(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_REGISTER.getMessage(),e.getReason());
     }
 
     @Test

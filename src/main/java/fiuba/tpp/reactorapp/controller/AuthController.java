@@ -47,8 +47,11 @@ public class AuthController {
         try{
             validateAuthRequest(request);
             authService.resetPasswordGenerateCode(request);
+        } catch (InvalidRegisterException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REGISTER.getMessage(), e);
         } catch (Exception ignored) {
-            //Ignoramos cualquier excepcion y retornamos 200
+            //Se ignora y se devuelve 200
         }
     }
 
