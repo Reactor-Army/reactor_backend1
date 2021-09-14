@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.auth.AuthCode;
 import fiuba.tpp.reactorapp.entities.auth.User;
+import fiuba.tpp.reactorapp.model.auth.exception.CodeNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
@@ -80,6 +81,19 @@ class AuthCodeServiceTests {
 
         Optional<AuthCode> code = authCodeRepository.findByUser(user);
         Assert.assertTrue(now.before(code.get().getRefreshDate()));
+    }
+
+    @Test
+    void getCode() throws CodeNotFoundException {
+        User user = registerUser();
+        Mockito.doNothing().when(emailService).sendSimpleMessage(anyString(),anyString(),anyString());
+        authCodeMockService.generateAuthCode(user);
+
+        Optional<AuthCode> codeUser = authCodeRepository.findByUser(user);
+        Optional<AuthCode> code = Optional.ofNullable(authCodeMockService.getAuthCode(codeUser.get().getCode()));
+
+        Assert.assertEquals(codeUser.get().getUser().getEmail(),code.get().getUser().getEmail());
+
     }
 
 }

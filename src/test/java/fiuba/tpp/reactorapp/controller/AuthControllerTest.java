@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
@@ -120,6 +121,15 @@ class AuthControllerTest {
         Mockito.doNothing().when(authService).resetPasswordGenerateCode(request);
         authController.registerUser(request);
         assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
+    }
+
+    @Test
+    void testResetPassword() {
+        ResetPasswordRequest request = new ResetPasswordRequest("123456","Prueba123");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.resetPassword(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
     }
 
 }
