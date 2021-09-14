@@ -1,11 +1,15 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.auth.AuthCode;
+import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
+import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +25,10 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
@@ -35,6 +43,12 @@ class AuthControllerTest {
 
     @InjectMocks
     private AuthController authMockController = new AuthController();
+
+    @Autowired
+    private AuthCodeRepository authCodeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
 
@@ -130,6 +144,47 @@ class AuthControllerTest {
             authController.resetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'','prueba123'",
+            ",'prueba123'",
+            "'123456',",
+            "'123456',''"
+    })
+    void testInvalidRequestResetPassword(String code, String pass) {
+        ResetPasswordRequest request = new ResetPasswordRequest(code, pass);
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
+            authController.resetPassword(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testResetPasswordOldCode(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -10);
+
+        AuthCode authCode = createCode(calendar.getTime());
+        ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
+            authController.resetPassword(request);
+        });
+        Assert.assertEquals(ResponseMessage.CODE_EXPIRED.getMessage(), e.getReason());
+    }
+
+    private AuthCode createCode(Date date){
+        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
+        Optional<User> user = userRepository.findByEmail("mati@gmail.com");
+        AuthCode authCode = new AuthCode();
+        authCode.setCode("123456");
+        authCode.setUser(user.get());
+        authCode.setRefreshDate(date);
+        authCodeRepository.save(authCode);
+        return authCode;
+
     }
 
 }
