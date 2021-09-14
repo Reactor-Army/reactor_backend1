@@ -167,12 +167,19 @@ class AuthControllerTest {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -10);
 
-        AuthCode authCode = createCode(calendar.getTime());
+        createCode(calendar.getTime());
         ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
             authController.resetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.CODE_EXPIRED.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testHappyPath(){
+        createCode(Calendar.getInstance().getTime());
+        ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
+        assertDoesNotThrow(()->authController.resetPassword(request));
     }
 
     private AuthCode createCode(Date date){
