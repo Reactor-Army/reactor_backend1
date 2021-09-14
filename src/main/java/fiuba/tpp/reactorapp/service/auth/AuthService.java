@@ -47,7 +47,7 @@ public class AuthService {
     @Autowired
     AuthCodeService authCodeService;
 
-    private final int CODE_DURATION = 10;
+    private static final int CODE_DURATION = 10;
 
     public RegisterResponse register(AuthRequest request) throws EmailAlreadyExistException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
