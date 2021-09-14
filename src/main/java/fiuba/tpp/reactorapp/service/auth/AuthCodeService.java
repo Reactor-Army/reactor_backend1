@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.service.auth;
 
 import fiuba.tpp.reactorapp.entities.auth.AuthCode;
 import fiuba.tpp.reactorapp.entities.auth.User;
+import fiuba.tpp.reactorapp.model.auth.exception.CodeNotFoundException;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
 import fiuba.tpp.reactorapp.service.utils.CodeGeneratorService;
 import fiuba.tpp.reactorapp.service.utils.EmailService;
@@ -47,5 +48,11 @@ public class AuthCodeService {
 
         String messageText = EMAIL_TEXT + randomString;
         emailService.sendSimpleMessage(user.getEmail(), EMAIL_SUBJECT,messageText);
+    }
+
+    public AuthCode getAuthCode(String code) throws CodeNotFoundException {
+        Optional<AuthCode> authCode = authCodeRepository.findTopByCodeOrderByRefreshDate(code);
+        if(authCode.isPresent()) return authCode.get();
+        throw new CodeNotFoundException();
     }
 }
