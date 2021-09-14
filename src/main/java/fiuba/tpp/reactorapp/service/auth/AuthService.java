@@ -3,8 +3,8 @@ package fiuba.tpp.reactorapp.service.auth;
 import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
-import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
-import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
+import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
+import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +38,10 @@ public class AuthService {
     @Autowired
     JwtUtils jwtUtils;
 
-    public RegisterResponse register(RegisterRequest request) throws EmailAlreadyExistException {
+    @Autowired
+    AuthCodeService authCodeService;
+
+    public RegisterResponse register(AuthRequest request) throws EmailAlreadyExistException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
             throw new EmailAlreadyExistException();
         }
@@ -51,7 +55,7 @@ public class AuthService {
 
     }
 
-    public LoginResponse login(LoginRequest request){
+    public LoginResponse login(AuthRequest request){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
@@ -65,5 +69,14 @@ public class AuthService {
 
         return new LoginResponse(jwt, userDetails.getId(), userDetails.getEmail(), roles);
 
+    }
+
+    public void resetPasswordGenerateCode(AuthRequest request) throws UserNotFoundException {
+        Optional<User> user = userRepository.findByEmail(request.getEmail());
+        if(user.isPresent()){
+           authCodeService.generateAuthCode(user.get());
+        }else{
+            throw new UserNotFoundException();
+        }
     }
 }

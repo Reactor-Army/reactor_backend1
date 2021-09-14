@@ -2,8 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.exception.InvalidRegisterException;
-import fiuba.tpp.reactorapp.model.auth.request.LoginRequest;
-import fiuba.tpp.reactorapp.model.auth.request.RegisterRequest;
+import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
@@ -22,14 +21,14 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/login")
-    public LoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+    public LoginResponse authenticateUser(@RequestBody AuthRequest authRequest) {
+        return authService.login(authRequest);
     }
 
     @PostMapping("/register")
-    public RegisterResponse registerUser(@RequestBody RegisterRequest registerRequest) {
+    public RegisterResponse registerUser(@RequestBody AuthRequest registerRequest) {
         try{
-            validateRegisterRequest(registerRequest);
+            validateAuthRequest(registerRequest);
             return authService.register(registerRequest);
         } catch (EmailAlreadyExistException e) {
             throw new ResponseStatusException(
@@ -43,7 +42,20 @@ public class AuthController {
         }
     }
 
-    private void validateRegisterRequest(RegisterRequest request) throws InvalidRegisterException {
+    @PostMapping("/reset/password/code")
+    public void generateCodeResetPassword(@RequestBody AuthRequest request){
+        try{
+            validateAuthRequest(request);
+            authService.resetPasswordGenerateCode(request);
+        } catch (InvalidRegisterException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REGISTER.getMessage(), e);
+        } catch (Exception ignored) {
+            //Se ignora y se devuelve 200
+        }
+    }
+
+    private void validateAuthRequest(AuthRequest request) throws InvalidRegisterException {
         if(request.getEmail() == null || request.getEmail().isEmpty() || !request.getEmail().contains("@")) throw new InvalidRegisterException();
     }
 
