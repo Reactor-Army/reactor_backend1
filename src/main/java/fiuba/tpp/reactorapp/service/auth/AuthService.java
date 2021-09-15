@@ -90,15 +90,18 @@ public class AuthService {
 
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
         AuthCode authCode = authCodeService.getAuthCode(request.getCode());
+        validateCodeExpiration(authCode.getRefreshDate());
+        authCode.getUser().setPassword(encoder.encode(request.getPassword()));
+        userRepository.save(authCode.getUser());
+    }
+
+    private void validateCodeExpiration(Date codeDate) throws CodeExpiredException {
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();
-        calendar.setTime(authCode.getRefreshDate());
+        calendar.setTime(codeDate);
         calendar.add(Calendar.MINUTE, CODE_DURATION);
         Date validTime = calendar.getTime();
-        if(authCode.getRefreshDate().before(now) && validTime.after(now)){
-            authCode.getUser().setPassword(encoder.encode(request.getPassword()));
-            userRepository.save(authCode.getUser());
-        }else{
+        if(!codeDate.before(now) || !validTime.after(now)){
             throw new CodeExpiredException();
         }
     }
