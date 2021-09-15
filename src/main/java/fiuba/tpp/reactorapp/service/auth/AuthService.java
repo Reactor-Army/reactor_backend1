@@ -1,10 +1,14 @@
 package fiuba.tpp.reactorapp.service.auth;
 
+import fiuba.tpp.reactorapp.entities.auth.AuthCode;
 import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.entities.auth.User;
+import fiuba.tpp.reactorapp.model.auth.exception.CodeExpiredException;
+import fiuba.tpp.reactorapp.model.auth.exception.CodeNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
@@ -19,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,6 +46,8 @@ public class AuthService {
 
     @Autowired
     AuthCodeService authCodeService;
+
+    private static final int CODE_DURATION = 10;
 
     public RegisterResponse register(AuthRequest request) throws EmailAlreadyExistException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
@@ -77,6 +85,24 @@ public class AuthService {
            authCodeService.generateAuthCode(user.get());
         }else{
             throw new UserNotFoundException();
+        }
+    }
+
+    public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
+        AuthCode authCode = authCodeService.getAuthCode(request.getCode());
+        validateCodeExpiration(authCode.getRefreshDate());
+        authCode.getUser().setPassword(encoder.encode(request.getPassword()));
+        userRepository.save(authCode.getUser());
+    }
+
+    private void validateCodeExpiration(Date codeDate) throws CodeExpiredException {
+        Calendar calendar = Calendar.getInstance();
+        Date now = calendar.getTime();
+        calendar.setTime(codeDate);
+        calendar.add(Calendar.MINUTE, CODE_DURATION);
+        Date validTime = calendar.getTime();
+        if(!codeDate.before(now) || !validTime.after(now)){
+            throw new CodeExpiredException();
         }
     }
 }

@@ -1,8 +1,8 @@
 package fiuba.tpp.reactorapp.controller;
 
-import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
-import fiuba.tpp.reactorapp.model.auth.exception.InvalidRegisterException;
+import fiuba.tpp.reactorapp.model.auth.exception.*;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
@@ -55,8 +55,30 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/reset/password")
+    public void resetPassword(@RequestBody ResetPasswordRequest request){
+        try{
+            validateResetPasswordRequest(request);
+            authService.resetPassword(request);
+        } catch (InvalidResetPasswordException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        } catch (CodeExpiredException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.CODE_EXPIRED.getMessage(), e);
+        } catch (CodeNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
     private void validateAuthRequest(AuthRequest request) throws InvalidRegisterException {
         if(request.getEmail() == null || request.getEmail().isEmpty() || !request.getEmail().contains("@")) throw new InvalidRegisterException();
+    }
+
+    private void validateResetPasswordRequest(ResetPasswordRequest request) throws InvalidResetPasswordException {
+        if(request.getCode() == null || request.getCode().isEmpty())  throw new InvalidResetPasswordException();
+        if(request.getPassword() == null || request.getPassword().isEmpty()) throw new InvalidResetPasswordException();
     }
 
 }
