@@ -125,7 +125,7 @@ public class BreakCurvesController {
 
 
     private void validateFile(MultipartFile file) {
-        if(file == null ||file.isEmpty()) throw new FileNotFoundException();        ;
+        if(file == null ||file.isEmpty()) throw new FileNotFoundException();
         validateExtensions(Objects.requireNonNull(FilenameUtils.getExtension(file.getOriginalFilename())));
     }
 
