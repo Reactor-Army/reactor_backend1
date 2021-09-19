@@ -25,7 +25,9 @@ public class BreakCurvesController {
     @Autowired
     private BreakCurvesService breakCurvesService;
 
-    private static final String FILE_EXTENSION = "csv";
+    private static final String CSV = "csv";
+    private static final String XLS = "xls";
+    private static final String XLSX = "xlsx";
 
     @PostMapping(value= "/thomas")
     public ThomasResponse thomas(@ModelAttribute ThomasRequest request, Errors errors){
@@ -125,7 +127,7 @@ public class BreakCurvesController {
     private void validateFile(MultipartFile file) {
         if(file == null ||file.isEmpty()) throw new FileNotFoundException();
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        if(!extension.equalsIgnoreCase(FILE_EXTENSION)) throw new InvalidFileException();
+        if(!(extension.equalsIgnoreCase(CSV) || extension.equalsIgnoreCase(XLS) || extension.equalsIgnoreCase(XLSX))) throw new InvalidFileException();
     }
 
     private void handleErrors(Errors errors){

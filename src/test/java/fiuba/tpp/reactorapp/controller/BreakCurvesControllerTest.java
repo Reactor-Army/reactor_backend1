@@ -110,12 +110,17 @@ class BreakCurvesControllerTest {
         Assert.assertEquals(ResponseMessage.INVALID_HEADER.getMessage(),e.getReason());
     }
 
-    @Test
-    void testMockResponse() {
+    @ParameterizedTest
+    @CsvSource({
+            "csv",
+            "xls",
+            "xlsx",
+    })
+    void testMockResponse(String fileExtension) {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
-                "hello.csv",
+                "hello." + fileExtension,
                 MediaType.TEXT_PLAIN_VALUE,
                 "blabla".getBytes()
         );
@@ -130,6 +135,8 @@ class BreakCurvesControllerTest {
         Assertions.assertEquals(1, result.getThomasConstant(),0.01);
         Assertions.assertEquals(1, result.getMaxConcentration(),0.01);
     }
+
+
 
     @ParameterizedTest
     @CsvSource({
