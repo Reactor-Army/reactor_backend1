@@ -27,6 +27,7 @@ public class CSVParserService {
     private static final String BLANK_SPACE = " ";
     private static final String XLS = "xls";
     private static final String XLSX = "xlsx";
+    private static final Integer EXCEL_COLUMNS= 2;
 
     public List<ChemicalObservation> parse(MultipartFile file){
         InputStream inputStream = getInputStreamCSV(file);
@@ -83,7 +84,7 @@ public class CSVParserService {
             for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
                 row = sheet.getRow(i);
                 StringBuilder builderRow = new StringBuilder();
-                for (int j = 0; j < 3; j++) {
+                for (int j = 0; j < EXCEL_COLUMNS; j++) {
                     if(row.getCell(j)==null) {
                         builderRow.append(BLANK_SPACE+ COMMA);
                     }else {
