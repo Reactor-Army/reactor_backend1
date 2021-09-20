@@ -5,7 +5,7 @@ import fiuba.tpp.reactorapp.model.math.Observation;
 
 import java.util.List;
 
-public class YoonNelsonResponse {
+public class YoonNelsonResponse extends ModelResponse {
 
     @JsonProperty("constanteYoonNelson")
     private double yoonNelsonConstant;
@@ -13,10 +13,9 @@ public class YoonNelsonResponse {
     @JsonProperty("tiempoCincuentaPorciento")
     private double timeFiftyPercent;
 
-    @JsonProperty("observaciones")
-    private List<Observation> observations;
 
     public YoonNelsonResponse(double yoonNelsonConstant, double timeFiftyPercent) {
+        super();
         this.yoonNelsonConstant = yoonNelsonConstant;
         this.timeFiftyPercent = timeFiftyPercent;
     }
@@ -37,11 +36,4 @@ public class YoonNelsonResponse {
         this.timeFiftyPercent = timeFiftyPercent;
     }
 
-    public List<Observation> getObservations() {
-        return observations;
-    }
-
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
-    }
 }
