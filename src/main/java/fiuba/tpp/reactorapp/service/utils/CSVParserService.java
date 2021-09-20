@@ -7,6 +7,8 @@ import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservationCSV;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,6 +21,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CSVParserService {
@@ -29,14 +33,19 @@ public class CSVParserService {
     private static final String XLSX = "xlsx";
     private static final Integer EXCEL_COLUMNS= 2;
 
+    private static final String REGEX_CONCENTRATION = ".*(c0|co).*";
+    private static final String HEADER_VOLUME_CONCENTRATION = "VolumenEfluente,C/C0" + System.lineSeparator();
+    private static final String HEADER_CONCENTRATION_VOLUME = "C/C0,VolumenEfluente" + System.lineSeparator();
+
     public List<ChemicalObservation> parse(MultipartFile file){
         InputStream inputStream = getInputStreamCSV(file);
+
         return parseCSV(inputStream);
     }
 
     private List<ChemicalObservation> parseCSV(InputStream input){
         List<ChemicalObservation> chemicalObservations = new ArrayList<>();
-        try (Reader reader = new BufferedReader(new InputStreamReader(input))) {
+        try (Reader reader = new BufferedReader(new StringReader(formatInputHeaders(input)))) {
 
             CsvToBean<ChemicalObservationCSV> csvToBean = new CsvToBeanBuilder<ChemicalObservationCSV>(reader)
                     .withType(ChemicalObservationCSV.class)
@@ -56,6 +65,31 @@ public class CSVParserService {
         }catch(Exception e){
             throw new InvalidCSVFormatException();
         }
+    }
+
+    private String formatInputHeaders(InputStream input){
+        String result = "";
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))){
+            String firstLine = reader.readLine();
+            String[] headers = firstLine.split(",");
+            String header ="";
+
+            if(headers[0].toLowerCase().matches(REGEX_CONCENTRATION)){
+                header = HEADER_CONCENTRATION_VOLUME;
+            }else{
+                header = HEADER_VOLUME_CONCENTRATION;
+            }
+            String values = "";
+            while(reader.ready()){
+                values = values.concat(reader.readLine()).concat(System.lineSeparator());
+            }
+
+            result = header.concat(values);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private InputStream getInputStreamCSV(MultipartFile file){

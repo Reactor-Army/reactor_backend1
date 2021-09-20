@@ -22,6 +22,8 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BreakCurvesControllerTest {
@@ -98,16 +100,27 @@ class BreakCurvesControllerTest {
                 "hello",
                 "hello.csv",
                 MediaType.TEXT_PLAIN_VALUE,
-                ("x,concentracionSalida\n" + "1,2\n" +"2,4\n").getBytes()
+                ("x,concentracionSalida\n" + "1,0.005\n" +"2,0.01\n" +"3,0.1\n").getBytes()
         );
         ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
 
         Errors errors = new BeanPropertyBindingResult(request, "request");
+        assertDoesNotThrow(() -> breakCurvesController.thomas(request, errors));
+    }
 
-        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.thomas(request, errors);
-        });
-        Assert.assertEquals(ResponseMessage.INVALID_HEADER.getMessage(),e.getReason());
+    @Test
+    void testInvalidHeaderCSV2(){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("concentracionSalida,x\n" + "0.005,1\n" +"0.01,2\n" +"0.1,3\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+        assertDoesNotThrow(() -> breakCurvesController.thomas(request, errors));
     }
 
     @ParameterizedTest
