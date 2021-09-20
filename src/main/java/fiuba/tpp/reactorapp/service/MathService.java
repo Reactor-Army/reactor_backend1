@@ -1,7 +1,6 @@
 package fiuba.tpp.reactorapp.service;
 
 import fiuba.tpp.reactorapp.entities.Process;
-import fiuba.tpp.reactorapp.model.exception.NotEnoughObservationsException;
 import fiuba.tpp.reactorapp.model.math.Observation;
 import fiuba.tpp.reactorapp.model.math.RegressionResult;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
@@ -39,8 +38,10 @@ public class MathService {
         return round(a * b * c);
     }
 
-    public RegressionResult calculateRegression(List<Observation> observations) throws NotEnoughObservationsException {
-        if(observations.size() < 2) throw new NotEnoughObservationsException();
+    public RegressionResult calculateRegression(List<Observation> observations){
+        if(observations.size() < 2){
+            return new RegressionResult(1D,1D);
+        }
 
         //Crearla con true, hace que incluya le valor de b en la regresion
         SimpleRegression regression = new SimpleRegression(true);
