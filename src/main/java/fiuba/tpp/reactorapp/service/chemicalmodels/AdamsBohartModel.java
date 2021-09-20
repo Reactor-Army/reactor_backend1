@@ -63,7 +63,10 @@ public class AdamsBohartModel {
         double kab = calculateAdamsBohartConstant(a);
         double no = calculateAdamsBohartNo(b, kab);
 
-        return new AdamsBohartResponse(kab,no);
+        AdamsBohartResponse response = new AdamsBohartResponse(kab,no);
+        response.setRms(optimum.getRMS());
+
+        return response;
     }
 
     /**

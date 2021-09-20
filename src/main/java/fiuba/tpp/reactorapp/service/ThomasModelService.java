@@ -29,6 +29,7 @@ public class ThomasModelService implements  ModelService{
         response.setThomasConstant(mathService.round(response.getThomasConstant()));
         response.setMaxConcentration(mathService.round(response.getMaxConcentration()));
         response.setObservations(observations);
+        response.setRms(mathService.round(response.getRms()));
         return response;
     }
 

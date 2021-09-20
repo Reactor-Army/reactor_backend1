@@ -55,7 +55,10 @@ public class ThomasModel {
         double kth = calculateThomasConstant(a);
         double qo = calculateThomasQo(b, kth);
 
-        return new ThomasResponse(kth,qo);
+        ThomasResponse response = new ThomasResponse(kth,qo);
+        response.setRms(optimum.getRMS());
+
+        return response;
     }
 
     /**

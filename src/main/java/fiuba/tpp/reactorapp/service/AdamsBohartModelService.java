@@ -28,6 +28,7 @@ public class AdamsBohartModelService implements ModelService{
         response.setAdamsBohartConstant(mathService.round(response.getAdamsBohartConstant()));
         response.setMaxAbsorptionCapacity(mathService.round(response.getMaxAbsorptionCapacity()));
         response.setObservations(observations);
+        response.setRms(mathService.round(response.getRms()));
         return response;
     }
 }
