@@ -41,7 +41,7 @@ public class CSVParserService {
 
     private List<ChemicalObservation> parseCSV(InputStream input){
         List<ChemicalObservation> chemicalObservations = new ArrayList<>();
-        try (Reader reader = new BufferedReader(new StringReader(formatInputHeaders(input)))) {
+        try (Reader reader = new BufferedReader(new StringReader(inferHeaders(input)))) {
 
             CsvToBean<ChemicalObservationCSV> csvToBean = new CsvToBeanBuilder<ChemicalObservationCSV>(reader)
                     .withType(ChemicalObservationCSV.class)
@@ -63,24 +63,33 @@ public class CSVParserService {
         }
     }
 
-    private String formatInputHeaders(InputStream input){
+    /**
+     * Modifica los headers del archivo de observaciones/datos para que cumplan con el formato que requiere la liberia usada
+     * Ademas si no hay headers asume que la primera columna es VolumenEfluente y la segunda C/C0
+     * Ademas verifica c0 o co para hallar la columna correcta.
+     * El objetivo de este metodo es hacer mas flexible la cantidad de archivos correctos que podemos procesar
+     * Dandole mas libertad al usuario
+     * @param input
+     * @return
+     */
+    private String inferHeaders(InputStream input){
         String result = "";
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))){
             String firstLine = reader.readLine();
             String[] headers = firstLine.split(",");
             String header ="";
-
-            if(isConcentrationHeader(headers[0])){
-                header = HEADER_CONCENTRATION_VOLUME;
-            }else{
-                header = HEADER_VOLUME_CONCENTRATION;
-            }
             String values = "";
             if(StringUtils.isNumeric(headers[0])){
                 values = values.concat(firstLine).concat(System.lineSeparator());
             }
             while(reader.ready()){
                 values = values.concat(reader.readLine()).concat(System.lineSeparator());
+            }
+
+            if(isConcentrationHeader(headers[0])){
+                header = HEADER_CONCENTRATION_VOLUME;
+            }else{
+                header = HEADER_VOLUME_CONCENTRATION;
             }
 
             result = header.concat(values);
