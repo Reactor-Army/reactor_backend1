@@ -94,10 +94,9 @@ class MathServiceTests {
     void testNotEnoughtObservations(){
         List<Observation> observations = new ArrayList<>();
         observations.add(new Observation(7,2));
-
-        Assertions.assertThrows(NotEnoughObservationsException.class , () -> {
-            mathService.calculateRegression(observations);
-        });
+        RegressionResult result = mathService.calculateRegression(observations);
+        Assertions.assertEquals(1D, result.getSlope(),0.01);
+        Assertions.assertEquals(1D, result.getIntercept(),0.01);
     }
 
     @Test
