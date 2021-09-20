@@ -124,6 +124,22 @@ class BreakCurvesControllerTest {
     }
 
     @Test
+    void testNoHeaderCSV(){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("1,0.005\n" +"2,0.01\n" +"3,0.1\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+        assertDoesNotThrow(() -> breakCurvesController.thomas(request, errors));
+    }
+
+
+    @Test
     void testInvalidHeaderCSV3(){
         MockMultipartFile file
                 = new MockMultipartFile(

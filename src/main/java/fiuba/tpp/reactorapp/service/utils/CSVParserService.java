@@ -7,6 +7,7 @@ import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservationCSV;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
@@ -75,6 +76,9 @@ public class CSVParserService {
                 header = HEADER_VOLUME_CONCENTRATION;
             }
             String values = "";
+            if(StringUtils.isNumeric(headers[0])){
+                values = values.concat(firstLine).concat(System.lineSeparator());
+            }
             while(reader.ready()){
                 values = values.concat(reader.readLine()).concat(System.lineSeparator());
             }
