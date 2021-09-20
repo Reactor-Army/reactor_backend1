@@ -10,9 +10,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -45,6 +49,26 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(0.73158, result.getObservations().get(1).getY(),0.01);
         Assertions.assertEquals(0.07350, result.getObservations().get(2).getX(),0.01);
         Assertions.assertEquals(0.76736, result.getObservations().get(2).getY(),0.01);
+
+    }
+
+    @Test
+    void testThomasXLSX() throws IOException {
+        MultipartFile file = new MockMultipartFile("filename", "thomas.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/thomas.xlsx").getInputStream());
+        ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
+
+    }
+
+    @Test
+    void testThomasXLS() throws IOException {
+        MultipartFile file = new MockMultipartFile("filename", "thomas.xls", "application/vnd.ms-excel", new ClassPathResource("testFiles/thomas.xls").getInputStream());
+        ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
 
     }
 

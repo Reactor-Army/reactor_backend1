@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/curvas-ruptura")
@@ -24,8 +28,6 @@ public class BreakCurvesController {
 
     @Autowired
     private BreakCurvesService breakCurvesService;
-
-    private static final String FILE_EXTENSION = "csv";
 
     @PostMapping(value= "/thomas")
     public ThomasResponse thomas(@ModelAttribute ThomasRequest request, Errors errors){
@@ -124,8 +126,15 @@ public class BreakCurvesController {
 
     private void validateFile(MultipartFile file) {
         if(file == null ||file.isEmpty()) throw new FileNotFoundException();
-        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        if(!extension.equalsIgnoreCase(FILE_EXTENSION)) throw new InvalidFileException();
+        validateExtensions(Objects.requireNonNull(FilenameUtils.getExtension(file.getOriginalFilename())));
+    }
+
+    private void validateExtensions(String extension){
+        List<String> validExtensions = Arrays.asList("csv", "xls", "xlsx");
+        boolean invalidExtension = !validExtensions.contains(extension.toLowerCase());
+        if(invalidExtension){
+            throw new InvalidFileException();
+        }
     }
 
     private void handleErrors(Errors errors){
