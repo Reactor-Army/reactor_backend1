@@ -7,8 +7,6 @@ import fiuba.tpp.reactorapp.model.exception.InvalidCSVFormatException;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservationCSV;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.CloseShieldInputStream;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,8 +19,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class CSVParserService {
@@ -33,7 +29,6 @@ public class CSVParserService {
     private static final String XLSX = "xlsx";
     private static final Integer EXCEL_COLUMNS= 2;
 
-    private static final String REGEX_CONCENTRATION = ".*(c0|co).*";
     private static final String HEADER_VOLUME_CONCENTRATION = "VolumenEfluente,C/C0" + System.lineSeparator();
     private static final String HEADER_CONCENTRATION_VOLUME = "C/C0,VolumenEfluente" + System.lineSeparator();
 
@@ -74,7 +69,7 @@ public class CSVParserService {
             String[] headers = firstLine.split(",");
             String header ="";
 
-            if(headers[0].toLowerCase().matches(REGEX_CONCENTRATION)){
+            if(isConcentrationHeader(headers[0])){
                 header = HEADER_CONCENTRATION_VOLUME;
             }else{
                 header = HEADER_VOLUME_CONCENTRATION;
@@ -87,9 +82,13 @@ public class CSVParserService {
             result = header.concat(values);
 
         } catch (IOException e) {
-            e.printStackTrace();
+           throw new InvalidCSVFormatException();
         }
         return result;
+    }
+
+    private boolean isConcentrationHeader(String header){
+        return header.toLowerCase().contains("co") || header.toLowerCase().contains("c0");
     }
 
     private InputStream getInputStreamCSV(MultipartFile file){
