@@ -123,6 +123,21 @@ class BreakCurvesControllerTest {
         assertDoesNotThrow(() -> breakCurvesController.thomas(request, errors));
     }
 
+    @Test
+    void testInvalidHeaderCSV3(){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("C/C0,x\n" + "0.005,1\n" +"0.01,2\n" +"0.1,3\n").getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,10d,1d);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+        assertDoesNotThrow(() -> breakCurvesController.thomas(request, errors));
+    }
+
     @ParameterizedTest
     @CsvSource({
             "csv",
