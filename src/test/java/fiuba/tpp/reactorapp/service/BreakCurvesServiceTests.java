@@ -79,6 +79,7 @@ class BreakCurvesServiceTests {
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
+        Assertions.assertEquals(0.99, result.getRms(),0.01);
     }
 
 
@@ -89,6 +90,7 @@ class BreakCurvesServiceTests {
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Assertions.assertEquals(0.1, result.getYoonNelsonConstant(),0.01);
         Assertions.assertEquals(136.314, result.getTimeFiftyPercent(),0.01);
+        Assertions.assertEquals(0.99, result.getRms(),0.01);
 
     }
 
@@ -99,6 +101,7 @@ class BreakCurvesServiceTests {
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
         Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
         Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
+        Assertions.assertEquals(0.97, result.getRms(),0.01);
 
     }
 
