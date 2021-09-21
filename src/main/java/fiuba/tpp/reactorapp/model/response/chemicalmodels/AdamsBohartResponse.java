@@ -1,9 +1,6 @@
 package fiuba.tpp.reactorapp.model.response.chemicalmodels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fiuba.tpp.reactorapp.model.math.Observation;
-
-import java.util.List;
 
 public class AdamsBohartResponse extends ModelResponse {
 

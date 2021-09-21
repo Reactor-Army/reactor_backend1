@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.model.response.chemicalmodels;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.model.math.Observation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModelResponse {
@@ -14,6 +15,7 @@ public class ModelResponse {
     private List<Observation> observations;
 
     public ModelResponse() {
+        observations = new ArrayList<>();
     }
 
     public double getRms() {

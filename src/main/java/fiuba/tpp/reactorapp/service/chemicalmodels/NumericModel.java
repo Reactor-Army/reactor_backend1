@@ -57,7 +57,10 @@ public interface NumericModel {
             double meanError = (ob.getY() - yMean);
             denominator += (meanError * meanError) ;
         }
-        return 1 - (e2/denominator);
+        if(denominator > 0){
+            return 1 - (e2/denominator);
+        }
+        return 0D;
     }
 
     default double getMeanY(List<Observation> observations){
