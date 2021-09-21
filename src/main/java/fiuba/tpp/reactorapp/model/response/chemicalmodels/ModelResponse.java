@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ModelResponse {
 
-    @JsonProperty("r2")
+    @JsonProperty("R2")
     private double rms;
 
     @JsonProperty("observaciones")
@@ -33,4 +33,5 @@ public class ModelResponse {
     public void setObservations(List<Observation> observations) {
         this.observations = observations;
     }
+
 }
