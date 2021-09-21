@@ -47,6 +47,27 @@ public interface NumericModel {
         return leastSquareResolver.getOptimum(observations,getModel(observations),optimizer, seeds);
     }
 
+    default double getR2(List<Observation> observations, double a, double b){
+        double e2 = 0D;
+        double yMean = getMeanY(observations);
+        double denominator = 0D;
+        for (Observation ob: observations) {
+            double e = (simplifiedFunction(ob.getX(),a,b) - ob.getY());
+            e2 +=  (e*e);
+            double meanError = (ob.getY() - yMean);
+            denominator += (meanError * meanError) ;
+        }
+        return 1 - (e2/denominator);
+    }
+
+    default double getMeanY(List<Observation> observations){
+        double yMean = 0D;
+        for (Observation ob:observations) {
+            yMean += ob.getY();
+        }
+        return (yMean/ observations.size());
+    }
+
     double simplifiedDerivativeB(double x, double a, double b);
 
     double simplifiedDerivativeA(double x, double a, double b);

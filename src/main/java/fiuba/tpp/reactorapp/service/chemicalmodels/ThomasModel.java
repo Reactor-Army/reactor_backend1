@@ -56,7 +56,7 @@ public class ThomasModel {
         double qo = calculateThomasQo(b, kth);
 
         ThomasResponse response = new ThomasResponse(kth,qo);
-        response.setRms(optimum.getRMS());
+        response.setRms(numericModel.getR2(observations,a,b));
 
         return response;
     }
