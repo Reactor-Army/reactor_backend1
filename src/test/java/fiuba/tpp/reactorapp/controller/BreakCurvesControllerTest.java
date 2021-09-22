@@ -15,7 +15,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -237,6 +240,12 @@ class BreakCurvesControllerTest {
         Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.adamsBohart(request, errors);
         });
+    }
+
+    @Test
+    void testDownloadFile(){
+        ResponseEntity<ByteArrayResource> fileResponse = breakCurvesController.downloadDataTemplate();
+        Assert.assertEquals(HttpStatus.OK, fileResponse.getStatusCode());
     }
 
 }

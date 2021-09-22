@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
@@ -11,7 +12,11 @@ import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -99,6 +104,30 @@ public class BreakCurvesController {
         }
 
     }
+
+    @GetMapping(value = "/download/data-template")
+    public ResponseEntity<ByteArrayResource> downloadDataTemplate() {
+        FileTemplateDTO dto;
+        try{
+            dto = breakCurvesService.getDataTemplateFile();
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+        return generateFileResponse(dto);
+    }
+
+    private ResponseEntity<ByteArrayResource> generateFileResponse(FileTemplateDTO dto){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+ dto.getFileName());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(dto.getFileSize())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(dto.getResource());
+    }
+
 
     private void validateThomasRequest(ThomasRequest request, Errors errors){
         handleErrors(errors);
