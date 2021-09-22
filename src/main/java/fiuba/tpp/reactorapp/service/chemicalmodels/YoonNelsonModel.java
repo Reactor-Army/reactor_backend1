@@ -47,7 +47,10 @@ public class YoonNelsonModel {
         double kyn = calculateYoonNelsonConstant(a);
         double t50 = calculateTimeFiftyPercent(b, kyn);
 
-        return new YoonNelsonResponse(kyn,t50);
+        YoonNelsonResponse response = new YoonNelsonResponse(kyn,t50);
+        response.setRms(numericModel.getR2(observations,a,b));
+
+        return response;
     }
 
     /**

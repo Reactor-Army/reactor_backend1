@@ -1,11 +1,8 @@
 package fiuba.tpp.reactorapp.model.response.chemicalmodels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fiuba.tpp.reactorapp.model.math.Observation;
 
-import java.util.List;
-
-public class ThomasResponse {
+public class ThomasResponse extends ModelResponse{
 
     @JsonProperty("constanteThomas")
     private double thomasConstant;
@@ -13,13 +10,8 @@ public class ThomasResponse {
     @JsonProperty("concentracionMaximaSoluto")
     private double maxConcentration;
 
-    @JsonProperty("observaciones")
-    private List<Observation> observations;
-
-    public ThomasResponse() {
-    }
-
     public ThomasResponse(double thomasConstant, double maxConcentration) {
+        super();
         this.thomasConstant = thomasConstant;
         this.maxConcentration = maxConcentration;
     }
@@ -40,11 +32,4 @@ public class ThomasResponse {
         this.maxConcentration = maxConcentration;
     }
 
-    public List<Observation> getObservations() {
-        return observations;
-    }
-
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
-    }
 }

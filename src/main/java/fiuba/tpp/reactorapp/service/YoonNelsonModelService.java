@@ -28,6 +28,7 @@ public class YoonNelsonModelService implements ModelService {
         response.setYoonNelsonConstant(mathService.round(response.getYoonNelsonConstant()));
         response.setTimeFiftyPercent(mathService.round(response.getTimeFiftyPercent()));
         response.setObservations(observations);
+        response.setRms(mathService.round(response.getRms()));
         return response;
     }
 

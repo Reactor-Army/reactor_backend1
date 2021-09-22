@@ -1,11 +1,8 @@
 package fiuba.tpp.reactorapp.model.response.chemicalmodels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fiuba.tpp.reactorapp.model.math.Observation;
 
-import java.util.List;
-
-public class AdamsBohartResponse {
+public class AdamsBohartResponse extends ModelResponse {
 
     @JsonProperty("constanteAdamsBohart")
     private double adamsBohartConstant;
@@ -13,10 +10,8 @@ public class AdamsBohartResponse {
     @JsonProperty("capacidadMaximaAbsorcion")
     private double maxAbsorptionCapacity;
 
-    @JsonProperty("observaciones")
-    private List<Observation> observations;
-
     public AdamsBohartResponse(double adamsBohartConstant, double maxAbsorptionCapacity) {
+        super();
         this.adamsBohartConstant = adamsBohartConstant;
         this.maxAbsorptionCapacity = maxAbsorptionCapacity;
     }
@@ -35,13 +30,5 @@ public class AdamsBohartResponse {
 
     public void setMaxAbsorptionCapacity(double maxAbsorptionCapacity) {
         this.maxAbsorptionCapacity = maxAbsorptionCapacity;
-    }
-
-    public List<Observation> getObservations() {
-        return observations;
-    }
-
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
     }
 }
