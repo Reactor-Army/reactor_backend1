@@ -37,7 +37,7 @@ public class BreakCurvesService {
     @Autowired
     private CSVParserService csvParserService;
 
-    private static final String FILEPATH = "classpath:dataFiles\\datos.xlsx";
+    private static final String FILEPATH = "classpath:dataFiles" + File.separator+ "datos.xlsx";
 
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
