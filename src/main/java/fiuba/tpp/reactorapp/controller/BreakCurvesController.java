@@ -105,7 +105,7 @@ public class BreakCurvesController {
 
     }
 
-    @GetMapping(value = "/download/data-template")
+    @GetMapping(value = "/ejemplo")
     public ResponseEntity<ByteArrayResource> downloadDataTemplate() {
         FileTemplateDTO dto;
         try{
