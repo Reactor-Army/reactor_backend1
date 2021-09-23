@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.service;
 
+import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
@@ -102,7 +103,13 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
         Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
         Assertions.assertEquals(0.97, result.getRms(),0.01);
+    }
 
+    @Test
+    void testGetFileDTO() throws IOException {
+        FileTemplateDTO dto = breakCurvesService.getDataTemplateFile();
+        Assertions.assertEquals("datos.xlsx", dto.getFileName());
+        Assertions.assertNotNull(dto.getResource());
     }
 
     private MockMultipartFile dataFromTesisThomas(){

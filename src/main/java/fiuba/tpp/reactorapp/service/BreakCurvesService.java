@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.service;
 
 
+import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
@@ -10,8 +11,15 @@ import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.service.utils.CSVParserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -29,6 +37,8 @@ public class BreakCurvesService {
     @Autowired
     private CSVParserService csvParserService;
 
+    private static final String FILEPATH = "classpath:dataFiles" + File.separator+ "datos.xlsx";
+
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
@@ -45,6 +55,12 @@ public class BreakCurvesService {
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
         return adamsBohartModelService.adamsBohartEvaluation(chemicalObservations,request);
+    }
+
+    public FileTemplateDTO getDataTemplateFile() throws IOException {
+        File file = ResourceUtils.getFile(FILEPATH);
+        Path path = Paths.get(file.getAbsolutePath());
+        return new FileTemplateDTO(new ByteArrayResource(Files.readAllBytes(path)),file.getName(),file.length());
     }
 
 }
