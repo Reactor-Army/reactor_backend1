@@ -128,7 +128,6 @@ public class BreakCurvesController {
                 .body(dto.getResource());
     }
 
-
     private void validateThomasRequest(ThomasRequest request, Errors errors){
         handleErrors(errors);
         if(request.getCaudalVolumetrico() == null || request.getCaudalVolumetrico() == 0) throw new InvalidRequestException();
