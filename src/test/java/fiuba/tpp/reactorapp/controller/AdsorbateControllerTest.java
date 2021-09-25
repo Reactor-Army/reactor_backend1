@@ -185,7 +185,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS");
+        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS", null);
         Assert.assertEquals(2L,adsorbatesNames.size());
         Assert.assertEquals("CARLOS (PRUEBA)", adsorbatesNames.get(0).getName());
         Assert.assertEquals("Carlos (prueba2)", adsorbatesNames.get(1).getName());
