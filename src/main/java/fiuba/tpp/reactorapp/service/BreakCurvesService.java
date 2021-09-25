@@ -64,7 +64,7 @@ public class BreakCurvesService {
         InputStream inputStream = cl.getResourceAsStream("dataFiles/datos.xlsx");
         byte[] bytes = IOUtils.toByteArray(inputStream);
 
-        return new FileTemplateDTO(new ByteArrayResource(bytes),"ejemplo.xlsx", bytes.length);
+        return new FileTemplateDTO(new ByteArrayResource(bytes),"datos.xlsx", bytes.length);
     }
 
 }
