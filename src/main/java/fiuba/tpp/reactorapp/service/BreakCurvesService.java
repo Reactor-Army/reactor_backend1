@@ -10,6 +10,7 @@ import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.service.utils.CSVParserService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -58,9 +60,11 @@ public class BreakCurvesService {
     }
 
     public FileTemplateDTO getDataTemplateFile() throws IOException {
-        File file = ResourceUtils.getFile(FILEPATH);
-        Path path = Paths.get(file.getAbsolutePath());
-        return new FileTemplateDTO(new ByteArrayResource(Files.readAllBytes(path)),file.getName(),file.length());
+        ClassLoader cl = this.getClass().getClassLoader();
+        InputStream inputStream = cl.getResourceAsStream("dataFiles/datos.xlsx");
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+
+        return new FileTemplateDTO(new ByteArrayResource(bytes),"ejemplo.xlsx", bytes.length);
     }
 
 }
