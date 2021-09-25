@@ -16,13 +16,14 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
     @Autowired
     EntityManager em;
 
+    private static final String ADSORBATE = "adsorbate";
+    private static final String ADSORBENT = "adsorbent";
 
     @Override
     public List<Adsorbate> getAll(AdsorbateFilter filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Adsorbate> cq = cb.createQuery(Adsorbate.class);
         Root<Adsorbate> adsorbate = cq.from(Adsorbate.class);
-
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -37,9 +38,9 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
         }
 
         if(filter.getAdsorbentId() != null){
-            Subquery sub = cq.subquery(Long.class);
-            Root process = sub.from(Process.class);
-            sub.select(process.get("adsorbate").get("id")).where(cb.equal(process.get("adsorbent").get("id"), filter.getAdsorbentId()));
+            Subquery<Long> sub = cq.subquery(Long.class);
+            Root<Process> process = sub.from(Process.class);
+            sub.select(process.get(ADSORBATE).get("id")).where(cb.equal(process.get(ADSORBENT).get("id"), filter.getAdsorbentId()));
             predicates.add(cb.in(sub));
         }
 
