@@ -111,6 +111,7 @@ public class BreakCurvesController {
         try{
             dto = breakCurvesService.getDataTemplateFile();
         }catch (Exception e){
+            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
