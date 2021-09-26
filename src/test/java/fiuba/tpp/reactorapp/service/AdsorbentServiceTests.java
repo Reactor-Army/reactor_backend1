@@ -149,4 +149,14 @@ class AdsorbentServiceTests {
 
         Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.updateAdsorbent(2L,requestUpdate));
     }
+
+    @Test
+    void testSearchIdAdsorbarte() {
+        AdsorbentRequest request = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
+        adsorbentService.createAdsorbent(request);
+        adsorbentService.createAdsorbent(request2);
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos",1L));
+        Assert.assertEquals(0L, adsorbents.size());
+    }
 }

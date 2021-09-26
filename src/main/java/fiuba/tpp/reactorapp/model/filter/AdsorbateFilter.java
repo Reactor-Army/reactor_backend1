@@ -4,6 +4,7 @@ public class AdsorbateFilter {
 
     private String name;
     private Integer ionCharge;
+    private Long adsorbentId;
 
     public AdsorbateFilter(String name, Integer ionCharge) {
         this.name = name;
@@ -14,6 +15,10 @@ public class AdsorbateFilter {
         this.name = name;
     }
 
+    public AdsorbateFilter(String name, Long adsorbentId) {
+        this.name = name;
+        this.adsorbentId = adsorbentId;
+    }
 
     public String getName() {
         return name;
@@ -29,5 +34,13 @@ public class AdsorbateFilter {
 
     public void setIonCharge(Integer ionCharge) {
         this.ionCharge = ionCharge;
+    }
+
+    public Long getAdsorbentId() {
+        return adsorbentId;
+    }
+
+    public void setAdsorbentId(Long adsorbentId) {
+        this.adsorbentId = adsorbentId;
     }
 }

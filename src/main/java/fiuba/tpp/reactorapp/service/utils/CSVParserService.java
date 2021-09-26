@@ -82,8 +82,13 @@ public class CSVParserService {
             if(StringUtils.isNumeric(headers[0])){
                 values = values.concat(firstLine).concat(System.lineSeparator());
             }
-            while(reader.ready()){
-                values = values.concat(reader.readLine()).concat(System.lineSeparator());
+            boolean foundEmptyLine = false;
+            while(reader.ready() && !foundEmptyLine){
+                String line = reader.readLine();
+                foundEmptyLine = emptyLine(line);
+                if(!foundEmptyLine){
+                    values = values.concat(line).concat(System.lineSeparator());
+                }
             }
 
             if(isConcentrationHeader(headers[0])){
@@ -98,6 +103,10 @@ public class CSVParserService {
            throw new InvalidCSVFormatException();
         }
         return result;
+    }
+
+    private boolean emptyLine(String line){
+        return line.replace(" ","").replace(",","").isEmpty();
     }
 
     private boolean isConcentrationHeader(String header){

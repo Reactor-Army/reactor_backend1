@@ -1,15 +1,13 @@
 package fiuba.tpp.reactorapp.repository;
 
 import fiuba.tpp.reactorapp.entities.Adsorbate;
+import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +16,15 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
     @Autowired
     EntityManager em;
 
+    private static final String ADSORBATE = "adsorbate";
+    private static final String ADSORBENT = "adsorbent";
 
     @Override
     public List<Adsorbate> getAll(AdsorbateFilter filter) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Adsorbate> cq = cb.createQuery(Adsorbate.class);
-
         Root<Adsorbate> adsorbate = cq.from(Adsorbate.class);
+
         List<Predicate> predicates = new ArrayList<>();
 
         if (filter.getName() != null && !filter.getName().isEmpty()) {
@@ -35,6 +35,13 @@ public class AdsorbateRepositoryCustomImpl implements AdsorbateRepositoryCustom 
 
         if(filter.getIonCharge() != null){
             predicates.add(cb.equal(adsorbate.get("ionCharge"), filter.getIonCharge()));
+        }
+
+        if(filter.getAdsorbentId() != null){
+            Subquery<Long> sub = cq.subquery(Long.class);
+            Root<Process> process = sub.from(Process.class);
+            sub.select(process.get(ADSORBATE).get("id")).where(cb.equal(process.get(ADSORBENT).get("id"), filter.getAdsorbentId()));
+            predicates.add(cb.in(sub));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));

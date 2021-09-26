@@ -59,7 +59,7 @@ public class AdsorbateService {
     }
 
     public List<Adsorbate> getAll(){
-        List<Adsorbate> adsorbates = (List<Adsorbate>) adsorbateRepository.findAll();
+        List<Adsorbate> adsorbates = adsorbateRepository.findAll();
         adsorbates.sort(Comparator.comparing(Adsorbate::getIonName));
         return adsorbates;
     }

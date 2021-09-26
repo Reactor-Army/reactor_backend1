@@ -102,9 +102,9 @@ public class AdsorbateController {
     }
 
     @GetMapping(value = "/buscar/nombre")
-    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name){
+    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="idAdsorbente",required = false) Long adsorbentId){
         List<AdsorbateNameResponse> adsorbatesName = new ArrayList<>();
-        AdsorbateFilter filter = new AdsorbateFilter(name);
+        AdsorbateFilter filter = new AdsorbateFilter(name, adsorbentId);
         for (Adsorbate adsorbate : adsorbateService.search(filter)) {
             adsorbatesName.add(new AdsorbateNameResponse(adsorbate));
         }
