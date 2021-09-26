@@ -218,4 +218,14 @@ class AdsorbateServiceTests {
         });
     }
 
+    @Test
+    void testSearchIdAdsorbent() {
+        AdsorbateRequest request = new AdsorbateRequest("prueba","cárlos",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("cárlos","prueba",1,1f,10f);
+        adsorbateService.createAdsorbate(request);
+        adsorbateService.createAdsorbate(request2);
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", 1L));
+        Assert.assertEquals(0L, adsorbates.size());
+    }
+
 }
