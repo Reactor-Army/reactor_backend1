@@ -152,7 +152,7 @@ public class ProcessController {
         if(isAnonymous){
             List<Process> response = new ArrayList<>();
             for (Process process: processes) {
-                if(process.isFree()){
+                if(Boolean.TRUE.equals(process.isFree())){
                     response.add(process);
                 }
             }
@@ -163,7 +163,7 @@ public class ProcessController {
 
         private Process filter(Process process, boolean isAnonymous) throws InformationNotFreeException {
         if(isAnonymous){
-            if(process.isFree()){
+            if(Boolean.TRUE.equals(process.isFree())){
                 return process;
             }
             throw new InformationNotFreeException();

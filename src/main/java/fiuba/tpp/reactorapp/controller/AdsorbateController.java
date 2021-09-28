@@ -136,7 +136,7 @@ public class AdsorbateController {
         if(isAnonymous){
             List<Adsorbate> response = new ArrayList<>();
             for (Adsorbate adsorbate: adsorbates) {
-                if(adsorbate.isFree()){
+                if(Boolean.TRUE.equals(adsorbate.isFree())){
                     response.add(adsorbate);
                 }
             }
@@ -147,7 +147,7 @@ public class AdsorbateController {
 
     private Adsorbate filter(Adsorbate adsorbate, boolean isAnonymous) throws InformationNotFreeException {
         if(isAnonymous){
-            if(adsorbate.isFree()){
+            if(Boolean.TRUE.equals(adsorbate.isFree())){
                 return adsorbate;
             }
             throw new InformationNotFreeException();
