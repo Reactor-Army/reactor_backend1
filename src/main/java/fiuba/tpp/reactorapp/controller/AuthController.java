@@ -6,11 +6,14 @@ import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -70,6 +73,11 @@ public class AuthController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
+    }
+
+    @GetMapping("/roles")
+    public List<RoleResponse> getRoles(){
+        return authService.getRoles();
     }
 
     private void validateAuthRequest(AuthRequest request) throws InvalidRegisterException {

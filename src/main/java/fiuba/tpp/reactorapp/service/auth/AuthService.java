@@ -11,6 +11,7 @@ import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
+import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
@@ -23,10 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -86,6 +84,15 @@ public class AuthService {
         }else{
             throw new UserNotFoundException();
         }
+    }
+
+    public List<RoleResponse> getRoles(){
+        List<RoleResponse> roles = new ArrayList<>();
+        for (ERole role :ERole.values()) {
+            roles.add(new RoleResponse(role.name(),role.getDescription()));
+        }
+        return roles;
+
     }
 
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
