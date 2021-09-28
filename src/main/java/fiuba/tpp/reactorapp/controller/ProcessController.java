@@ -11,6 +11,7 @@ import fiuba.tpp.reactorapp.model.response.ProcessResponse;
 import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
+import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class ProcessController {
 
     @Autowired
     private ProcessService processService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping(value= "")
     public ProcessResponse createProcess(@RequestBody ProcessRequest request) {
@@ -89,19 +93,19 @@ public class ProcessController {
     }
 
     @GetMapping(value = "")
-    public List<ProcessResponse> getProcesses(){
+    public List<ProcessResponse> getProcesses(@RequestHeader("Authorization") String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
-        for (Process process : processService.getAll()) {
+        for (Process process : filterResponse(processService.getAll(),jwtUtils.isAnonymous(authHeader))) {
             processes.add(new ProcessResponse(process));
         }
         return processes;
     }
 
     @GetMapping(value = "/buscar")
-    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId){
+    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId, @RequestHeader("Authorization") String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
         ProcessFilter filter = new ProcessFilter(adsorbateId,adsorbentId);
-        for (Process process : processService.search(filter)) {
+        for (Process process : filterResponse(processService.search(filter),jwtUtils.isAnonymous(authHeader))){
             processes.add(new ProcessResponse(process));
         }
         return processes;
@@ -117,10 +121,10 @@ public class ProcessController {
     }
 
     @GetMapping(value = "/{id}")
-    public ProcessResponse getProcess(@PathVariable Long id) {
+    public ProcessResponse getProcess(@PathVariable Long id,@RequestHeader("Authorization") String authHeader) {
         try {
-            return new ProcessResponse(processService.getById(id));
-        } catch (ComponentNotFoundException e) {
+            return new ProcessResponse(filter(processService.getById(id),jwtUtils.isAnonymous(authHeader)));
+        } catch (ComponentNotFoundException | InformationNotFreeException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
         }
@@ -142,6 +146,29 @@ public class ProcessController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_KINECT_INFORMATION.getMessage(), e);
         }
+    }
+
+    private List<Process> filterResponse(List<Process> processes, boolean isAnonymous){
+        if(isAnonymous){
+            List<Process> response = new ArrayList<>();
+            for (Process process: processes) {
+                if(process.isFree()){
+                    response.add(process);
+                }
+            }
+            return response;
+        }
+        return processes;
+    }
+
+        private Process filter(Process process, boolean isAnonymous) throws InformationNotFreeException {
+        if(isAnonymous){
+            if(process.isFree()){
+                return process;
+            }
+            throw new InformationNotFreeException();
+        }
+        return process;
     }
 
 
