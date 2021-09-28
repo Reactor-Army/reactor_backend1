@@ -58,22 +58,26 @@ public class AdsorbateService {
 
     }
 
-    public List<Adsorbate> getAll(){
-        List<Adsorbate> adsorbates = adsorbateRepository.findAll();
+    public List<Adsorbate> getAdsorbates(Boolean isAnonymous){
+        List<Adsorbate> adsorbates = getAllAdsorbates(isAnonymous);
         adsorbates.sort(Comparator.comparing(Adsorbate::getIonName));
         return adsorbates;
     }
 
-    public List<Adsorbate> search(AdsorbateFilter filter){
-        return adsorbateRepository.getAll(filter);
+    public List<Adsorbate> search(AdsorbateFilter filter, Boolean isAnonymous){
+        return adsorbateRepository.getAdsorbates(filter, isAnonymous);
     }
 
-    public Adsorbate getById(Long id) throws ComponentNotFoundException {
-        Optional<Adsorbate> adsorbate = adsorbateRepository.findById(id);
-        if(adsorbate.isPresent()){
-            return adsorbate.get();
+    public Adsorbate getById(Long id, Boolean isAnonymous) throws ComponentNotFoundException {
+        try{
+            return adsorbateRepository.getAdsorbate(id, isAnonymous);
+        }catch(Exception e){
+            throw new ComponentNotFoundException();
         }
-        throw new ComponentNotFoundException();
+    }
+
+    private List<Adsorbate> getAllAdsorbates(Boolean isAnonymous){
+        return adsorbateRepository.getAdsorbates(new AdsorbateFilter(), isAnonymous);
     }
 
     public Long getAdsorbateProcessCount(Long id){

@@ -1,5 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.request.*;
 import fiuba.tpp.reactorapp.model.response.*;
 import fiuba.tpp.reactorapp.service.ProcessService;
@@ -38,6 +40,8 @@ class ProcessControllerTest {
     @InjectMocks
     ProcessController processMockController = new ProcessController();
 
+    @Autowired
+    private AuthController authController;
 
     @Test
     void testCreateProcessController() {
@@ -81,8 +85,30 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbente.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.getProcesses();
+        List<ProcessResponse> processes = processController.getProcesses(getToken());
         Assert.assertEquals(1L,processes.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'Bearer 12345'",
+            "null",
+            "''"
+    })
+    void testGetProcessesNoToken(String token){
+        AdsorbentRequest requestAdsorbente = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbente = adsorbentController.createAdsorbent(requestAdsorbente);
+
+        AdsorbateRequest requestAdsorbato = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbato = adsorbateController.createAdsorbate(requestAdsorbato);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbato.getId());
+        request.setIdAdsorbent(adsorbente.getId());
+        processController.createProcess(request);
+
+        List<ProcessResponse> processes = processController.getProcesses(token);
+        Assert.assertEquals(0L,processes.size());
     }
 
     @Test
@@ -144,7 +170,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
         processController.deleteProcess(1L);
-        Assert.assertTrue(processController.getProcesses().isEmpty());
+        Assert.assertTrue(processController.getProcesses(getToken()).isEmpty());
     }
 
     @Test
@@ -167,9 +193,32 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(1L,1L);
+        List<ProcessResponse> processes = processController.searchProcesses(1L,1L, getToken());
 
         Assert.assertEquals(1L, processes.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'Bearer 12345'",
+            "null",
+            "''"
+    })
+    void testSearchProcessNoToken(String  token){
+        AdsorbentRequest requestAdsorbent = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(requestAdsorbent);
+
+        AdsorbateRequest requestAdsorbate = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateResponse adsorbate = adsorbateController.createAdsorbate(requestAdsorbate);
+
+        ProcessRequest request = new ProcessRequest(0.65f,1f,1f,1f,true,true,true);
+        request.setIdAdsorbate(adsorbate.getId());
+        request.setIdAdsorbent(adsorbent.getId());
+        processController.createProcess(request);
+
+        List<ProcessResponse> processes = processController.searchProcesses(1L,1L, token);
+
+        Assert.assertEquals(0L, processes.size());
     }
 
     @Test
@@ -185,7 +234,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(1L,null);
+        List<ProcessResponse> processes = processController.searchProcesses(1L,null, getToken());
 
         Assert.assertEquals(1L,processes.size());
     }
@@ -203,7 +252,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(null,1L);
+        List<ProcessResponse> processes = processController.searchProcesses(null,1L, getToken());
 
         Assert.assertEquals(1L,processes.size());
     }
@@ -221,7 +270,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         ProcessResponse process = processController.createProcess(request);
 
-        ProcessResponse processResponse = processController.getProcess(process.getId());
+        ProcessResponse processResponse = processController.getProcess(process.getId(), getToken());
 
         Assertions.assertEquals(processResponse.getId(), process.getId());
         Assertions.assertEquals(processResponse.getQmax(), process.getQmax());
@@ -243,7 +292,7 @@ class ProcessControllerTest {
         List<Long> ids = new ArrayList<>();
         ids.add(adsorbate.getId());
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids),getToken());
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertTrue(searchResult.get(0).isRemovesAllAdsorbates());
@@ -271,7 +320,7 @@ class ProcessControllerTest {
         ids.add(adsorbate.getId());
         ids.add(2L);
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken());
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
@@ -301,7 +350,7 @@ class ProcessControllerTest {
         ids.add(adsorbate.getId());
         ids.add(2L);
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken());
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
@@ -313,8 +362,9 @@ class ProcessControllerTest {
 
     @Test
     void testGetProcessByIdNotFound(){
+        String token = getToken();
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            processController.getProcess(20L);
+            processController.getProcess(20L, token);
         });
     }
 
@@ -527,6 +577,12 @@ class ProcessControllerTest {
         request.setIdAdsorbate(adsorbate.getId());
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
+    }
+
+    private String getToken(){
+        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
+        LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
+        return  "Bearer " + response.getAccessToken();
     }
 
 }

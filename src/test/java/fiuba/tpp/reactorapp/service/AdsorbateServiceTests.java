@@ -66,7 +66,7 @@ class AdsorbateServiceTests {
     void testFindAll() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbateService.createAdsorbate(request);
-        List<Adsorbate> adsorbates = adsorbateService.getAll();
+        List<Adsorbate> adsorbates = adsorbateService.getAdsorbates(false);
         Assert.assertEquals(1L, adsorbates.size());
     }
 
@@ -97,7 +97,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.deleteAdsorbate(1l);
-        Assert.assertTrue(adsorbateService.getAll().isEmpty());
+        Assert.assertTrue(adsorbateService.getAdsorbates(false).isEmpty());
 
     }
 
@@ -114,7 +114,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter(null, (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter(null, (Integer) null),false);
         Assert.assertEquals(2L, adsorbates.size());
     }
 
@@ -124,7 +124,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("IUPAC2", (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("IUPAC2", (Integer) null),false);
         Assert.assertEquals(1L, adsorbates.size());
     }
 
@@ -140,7 +140,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter(filter,1));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter(filter,1), false);
         Assert.assertEquals(size, adsorbates.size());
     }
 
@@ -151,7 +151,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("prueba", (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("prueba", (Integer) null), false);
         Assert.assertEquals(2L, adsorbates.size());
     }
 
@@ -161,7 +161,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", (Integer) null), false);
         Assert.assertEquals(2L, adsorbates.size());
     }
 
@@ -171,7 +171,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("cárlos", (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("cárlos", (Integer) null), false);
         Assert.assertEquals(2L, adsorbates.size());
     }
 
@@ -181,7 +181,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("cárlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", (Integer) null), false);
         Assert.assertEquals(2L, adsorbates.size());
     }
 
@@ -191,7 +191,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("Analía","IUPAC",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("ANALIA", (Integer) null));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("ANALIA", (Integer) null), false);
         Assert.assertEquals(2L, adsorbates.size());
     }
 
@@ -224,7 +224,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request2 = new AdsorbateRequest("cárlos","prueba",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
-        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", 1L));
+        List<Adsorbate> adsorbates = adsorbateService.search(new AdsorbateFilter("carlos", 1L), false);
         Assert.assertEquals(0L, adsorbates.size());
     }
 

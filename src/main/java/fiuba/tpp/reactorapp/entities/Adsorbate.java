@@ -25,6 +25,8 @@ public class Adsorbate {
     private String formula;
     private Float molarMass;
     private Boolean regulated;
+    @Column(columnDefinition = "boolean default false")
+    private Boolean free;
 
     public Adsorbate() {
     }
@@ -152,6 +154,15 @@ public class Adsorbate {
 
     public void setMolarMass(Float molarMass) {
         this.molarMass = molarMass;
+    }
+
+
+    public Boolean isFree() {
+        return free;
+    }
+
+    public void setFree(Boolean free) {
+        this.free = free;
     }
 
     @PreUpdate
