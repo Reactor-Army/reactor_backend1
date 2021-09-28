@@ -1,11 +1,13 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -37,6 +39,9 @@ class AdsorbentControllerTest {
 
     @Autowired
     private AuthController authController;
+
+    @Autowired
+    private AdsorbentRepository adsorbentRepository;
 
 
     @Test
@@ -127,12 +132,13 @@ class AdsorbentControllerTest {
             "''"
     })
     void testSearchAdsorbentsNoFilterNoToken(String token) {
+        addFreeAdsorbent();
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentController.createAdsorbent(request);
         adsorbentController.createAdsorbent(request2);
         List<AdsorbentResponse> adsorbentes = adsorbentController.searchAdsorbents(null, token);
-        Assert.assertEquals(0L,adsorbentes.size());
+        Assert.assertEquals(1L,adsorbentes.size());
     }
 
 
@@ -256,6 +262,12 @@ class AdsorbentControllerTest {
             adsorbentMockController.deleteAdsorbent(1L);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+    }
+
+    private void addFreeAdsorbent(){
+        Adsorbent adsorbent = new Adsorbent("PRUEBA", "Prueba", 1f, 1f,1f);
+        adsorbent.setFree(true);
+        adsorbentRepository.save(adsorbent);
     }
 
     private String getToken(){

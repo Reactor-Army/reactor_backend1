@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name ="ADSORBATE")
-public class Adsorbate extends Information {
+public class Adsorbate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +25,14 @@ public class Adsorbate extends Information {
     private String formula;
     private Float molarMass;
     private Boolean regulated;
+    private Boolean free;
 
     public Adsorbate() {
-        super();
+        this.free = false;
     }
 
     public Adsorbate(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit) {
-        super();
+        this.free = false;
         this.ionName = ionName;
         this.nameIUPAC = nameIUPAC;
         this.ionCharge = ionCharge;
@@ -40,7 +41,7 @@ public class Adsorbate extends Information {
     }
 
     public Adsorbate(AdsorbateRequest adsorbate) {
-        super();
+        this.free = false;
         copyData(adsorbate);
     }
 
@@ -155,6 +156,15 @@ public class Adsorbate extends Information {
 
     public void setMolarMass(Float molarMass) {
         this.molarMass = molarMass;
+    }
+
+
+    public Boolean isFree() {
+        return free;
+    }
+
+    public void setFree(Boolean free) {
+        this.free = free;
     }
 
     @PreUpdate

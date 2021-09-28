@@ -1,11 +1,13 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -37,6 +39,9 @@ class AdsorbateControllerTest {
 
     @Autowired
     private AuthController authController;
+
+    @Autowired
+    private AdsorbateRepository adsorbateRepository;
 
 
     @Test
@@ -126,10 +131,11 @@ class AdsorbateControllerTest {
             "''"
     })
     void testGetAllAdsorbatesWithNoToken(String token) {
+        addFreeAdsorbate();
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbateController.createAdsorbate(request);
         List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates(token);
-        Assert.assertEquals(0L,adsorbates.size());
+        Assert.assertEquals(1L,adsorbates.size());
     }
 
     @Test
@@ -317,6 +323,12 @@ class AdsorbateControllerTest {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","IUPAC2",1,10f,100f);
         AdsorbateResponse response = adsorbateController.createAdsorbate(request);
         Assertions.assertFalse(response.getRegulated());
+    }
+
+    private void addFreeAdsorbate(){
+        Adsorbate adsorbate = new Adsorbate("Prueba","IUPAC2",1,10f,100f);
+        adsorbate.setFree(true);
+        adsorbateRepository.save(adsorbate);
     }
 
     private String getToken(){

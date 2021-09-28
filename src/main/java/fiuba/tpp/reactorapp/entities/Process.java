@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name ="PROCESS")
-public class Process extends Information{
+public class Process {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,14 +48,16 @@ public class Process extends Information{
     @Range(min = 1, max = 2)
     private Integer reactionOrder;
 
+    private Boolean free;
+
 
     public Process() {
-        super();
+        this.free = false;
     }
 
 
     public Process(Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
-        super();
+        this.free = false;
         copyData(adsorbate, adsorbent,request);
     }
 
@@ -190,6 +192,14 @@ public class Process extends Information{
 
     public void setReactionOrder(Integer reactionOrder) {
         this.reactionOrder = reactionOrder;
+    }
+
+    public Boolean isFree() {
+        return free;
+    }
+
+    public void setFree(Boolean free) {
+        this.free = free;
     }
 
     @Override
