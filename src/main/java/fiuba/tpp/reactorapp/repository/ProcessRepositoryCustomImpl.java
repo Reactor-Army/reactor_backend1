@@ -19,43 +19,68 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
     private static final String ADSORBENT = "adsorbent";
 
     @Override
-    public List<Process> getAll(ProcessFilter filter) {
+    public List<Process> getAll(ProcessFilter filter, Boolean isAnonymous) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Process> cq = cb.createQuery(Process.class);
 
-        Root<Process> processRoot = cq.from(Process.class);
+        Root<Process> process = cq.from(Process.class);
         List<Predicate> predicates = new ArrayList<>();
 
+        if(Boolean.TRUE.equals(isAnonymous)){
+            predicates.add(cb.equal(process.get("free"),true));
+        }
+
         if (filter.getIdAdsorbate() != null) {
-            predicates.add(cb.equal(processRoot.get(ADSORBATE).get("id"), filter.getIdAdsorbate()));
+            predicates.add(cb.equal(process.get(ADSORBATE).get("id"), filter.getIdAdsorbate()));
         }
 
         if(filter.getIdAdsorbent() != null){
-            predicates.add(cb.equal(processRoot.get(ADSORBENT).get("id"),filter.getIdAdsorbent()));
+            predicates.add(cb.equal(process.get(ADSORBENT).get("id"),filter.getIdAdsorbent()));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(cb.desc(processRoot.get("qmax")));
+        cq.orderBy(cb.desc(process.get("qmax")));
 
         return em.createQuery(cq).getResultList();
     }
 
     @Override
-    public List<Process> getByAdsorbates(List<Long> adsorbatesIds) {
+    public List<Process> getByAdsorbates(List<Long> adsorbatesIds, Boolean isAnonymous) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Process> cq = cb.createQuery(Process.class);
 
-        Root<Process> processRoot = cq.from(Process.class);
+        Root<Process> process = cq.from(Process.class);
         List<Predicate> predicates = new ArrayList<>();
 
+        if(Boolean.TRUE.equals(isAnonymous)){
+            predicates.add(cb.equal(process.get("free"),true));
+        }
+
         if(adsorbatesIds != null && !adsorbatesIds.isEmpty()){
-            predicates.add(processRoot.get(ADSORBATE).get("id").in(adsorbatesIds));
+            predicates.add(process.get(ADSORBATE).get("id").in(adsorbatesIds));
         }
 
         cq.where(predicates.toArray(new Predicate[0]));
-        cq.orderBy(cb.desc(processRoot.get("qmax")));
+        cq.orderBy(cb.desc(process.get("qmax")));
 
         return em.createQuery(cq).getResultList();
+
+    }
+
+    @Override
+    public Process getProcess(Long id, Boolean isAnonymous) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Process> cq = cb.createQuery(Process.class);
+        Root<Process> process = cq.from(Process.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(cb.equal(process.get("id"),id));
+
+        if(Boolean.TRUE.equals(isAnonymous)){
+            predicates.add(cb.equal(process.get("free"),true));
+        }
+        cq.where(predicates.toArray(new Predicate[0]));
+        return em.createQuery(cq).getSingleResult();
 
     }
 

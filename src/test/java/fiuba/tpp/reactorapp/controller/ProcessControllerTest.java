@@ -292,7 +292,7 @@ class ProcessControllerTest {
         List<Long> ids = new ArrayList<>();
         ids.add(adsorbate.getId());
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids),getToken());
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertTrue(searchResult.get(0).isRemovesAllAdsorbates());
@@ -320,7 +320,7 @@ class ProcessControllerTest {
         ids.add(adsorbate.getId());
         ids.add(2L);
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken());
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
@@ -350,7 +350,7 @@ class ProcessControllerTest {
         ids.add(adsorbate.getId());
         ids.add(2L);
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken());
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());

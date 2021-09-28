@@ -6,6 +6,8 @@ public class AdsorbentFilter {
 
     private Long adsorbateId;
 
+    public AdsorbentFilter(){}
+
     public AdsorbentFilter(String name) {
         this.name = name;
     }

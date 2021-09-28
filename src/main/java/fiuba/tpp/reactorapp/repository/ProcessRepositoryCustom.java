@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface ProcessRepositoryCustom {
 
-    List<Process> getAll(ProcessFilter filter);
+    List<Process> getAll(ProcessFilter filter, Boolean isAnonymous);
 
-    List<Process> getByAdsorbates(List<Long> adsorbatesIds);
+    List<Process> getByAdsorbates(List<Long> adsorbatesIds, Boolean isAnonymous);
+
+    Process getProcess(Long id, Boolean isAnonymous);
 
     Long getAdsorbateProcessCount(Long adsorbateId);
 

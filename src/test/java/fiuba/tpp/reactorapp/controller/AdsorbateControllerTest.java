@@ -251,6 +251,16 @@ class AdsorbateControllerTest {
     }
 
     @Test
+    void testFindByIdNoToken(){
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","carlos IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            adsorbateController.getAdsorbate(1L, null);
+        });
+        Assert.assertEquals(ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(),e.getReason());
+    }
+
+    @Test
     void testGetAdsorbateByIdNotFound(){
         String token = getToken();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {

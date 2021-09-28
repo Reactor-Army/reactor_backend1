@@ -205,6 +205,14 @@ class AdsorbentControllerTest {
     }
 
     @Test
+    void testFindByIdNoToken(){
+        AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "60", 1f, 1f,1f);
+        adsorbentController.createAdsorbent(request);
+        Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.getAdsorbent(1L, null));
+    }
+
+
+    @Test
     void testGetAdsorbentByIdNotFound(){
         String token = getToken();
         Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.getAdsorbent(20L, token));

@@ -40,7 +40,7 @@ class AdsorbentServiceTests {
     void testFindAll() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
-        List<Adsorbent> adsorbents = adsorbentService.getAll();
+        List<Adsorbent> adsorbents = adsorbentService.getAll(false);
         Assert.assertEquals(1L, adsorbents.size());
     }
 
@@ -86,7 +86,7 @@ class AdsorbentServiceTests {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.deleteAdsorbent(1L);
-        Assert.assertTrue(adsorbentService.getAll().isEmpty());
+        Assert.assertTrue(adsorbentService.getAll(false).isEmpty());
 
     }
 
@@ -106,7 +106,7 @@ class AdsorbentServiceTests {
         AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.createAdsorbent(request2);
-        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter(filter));
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter(filter), false);
         Assert.assertEquals(size, adsorbents.size());
     }
 
@@ -117,7 +117,7 @@ class AdsorbentServiceTests {
         AdsorbentRequest request2 = new AdsorbentRequest("prueba", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.createAdsorbent(request2);
-        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("prueba"));
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("prueba"), false);
         Assert.assertEquals(2L, adsorbents.size());
     }
 
@@ -127,7 +127,7 @@ class AdsorbentServiceTests {
         AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.createAdsorbent(request2);
-        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos"));
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos"), false);
         Assert.assertEquals(2L, adsorbents.size());
     }
 
@@ -156,7 +156,7 @@ class AdsorbentServiceTests {
         AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.createAdsorbent(request2);
-        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos",1L));
+        List<Adsorbent> adsorbents = adsorbentService.search(new AdsorbentFilter("cárlos",1L), false);
         Assert.assertEquals(0L, adsorbents.size());
     }
 }

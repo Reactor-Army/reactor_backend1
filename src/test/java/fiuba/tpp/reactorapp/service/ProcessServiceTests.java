@@ -78,7 +78,7 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
-        List<Process> processes = processService.getAll();
+        List<Process> processes = processService.getAll(false);
         Assert.assertEquals(1L,processes.size());
     }
 
@@ -100,7 +100,7 @@ class ProcessServiceTests {
         request2.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request2);
 
-        List<Process> processes = processService.getAll();
+        List<Process> processes = processService.getAll(false);
         Process firstProcess = processes.get(0);
         Assert.assertEquals(2.30f, firstProcess.getQmax(), 0.1);
     }
@@ -164,7 +164,7 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
         processService.deleteProcess(1L);
-        Assert.assertTrue(processService.getAll().isEmpty());
+        Assert.assertTrue(processService.getAll(false).isEmpty());
     }
 
     @Test
@@ -194,7 +194,7 @@ class ProcessServiceTests {
         processService.createProcess(request);
 
 
-        List<Process> reactores = processService.search(new ProcessFilter(null, 1L));
+        List<Process> reactores = processService.search(new ProcessFilter(null, 1L), false);
         Assert.assertEquals(2L, reactores.size());
 
     }
@@ -221,7 +221,7 @@ class ProcessServiceTests {
         processService.createProcess(request2);
 
 
-        List<Process> reactores = processService.search(new ProcessFilter(null, 1L));
+        List<Process> reactores = processService.search(new ProcessFilter(null, 1L), false);
         Assert.assertEquals(2L, reactores.size());
         Assert.assertEquals(2.65f, reactores.get(0).getQmax(), 0.0);
 
@@ -246,7 +246,7 @@ class ProcessServiceTests {
         request.setIdAdsorbate(adsorbate2.getId());
         processService.createProcess(request);
 
-        List<Process> processes = processService.search(new ProcessFilter(1L, 1L));
+        List<Process> processes = processService.search(new ProcessFilter(1L, 1L), false);
         Assert.assertEquals(1L, processes.size());
 
     }
@@ -256,14 +256,14 @@ class ProcessServiceTests {
         Process process = createProcess();
 
         Long id = process.getId();
-        Process foundProcess = processService.getById(id);
+        Process foundProcess = processService.getById(id, false);
         Assertions.assertEquals(process.getQmax(), foundProcess.getQmax());
     }
 
     @Test
     void testGetProcessByIdNotFound() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-                processService.getById(20L);
+                processService.getById(20L, false);
         });
     }
 
@@ -272,7 +272,7 @@ class ProcessServiceTests {
     void testDeleteAdsorbateWithProcess() {
         createProcess();
         adsorbateService.deleteAdsorbate(1L);
-        List<Process> processes = processService.getAll();
+        List<Process> processes = processService.getAll(false);
 
         Assertions.assertTrue(processes.isEmpty());
     }
@@ -281,7 +281,7 @@ class ProcessServiceTests {
     void testDeleteAdsorbentWithProcess() {
         createProcess();
         adsorbentService.deleteAdsorbent(1L);
-        List<Process> processes = processService.getAll();
+        List<Process> processes = processService.getAll(false);
         Assertions.assertTrue(processes.isEmpty());
     }
 

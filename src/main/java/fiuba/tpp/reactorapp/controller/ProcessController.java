@@ -95,7 +95,7 @@ public class ProcessController {
     @GetMapping(value = "")
     public List<ProcessResponse> getProcesses(@RequestHeader("Authorization") String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
-        for (Process process : filterResponse(processService.getAll(),jwtUtils.isAnonymous(authHeader))) {
+        for (Process process : processService.getAll(jwtUtils.isAnonymous(authHeader))) {
             processes.add(new ProcessResponse(process));
         }
         return processes;
@@ -105,16 +105,16 @@ public class ProcessController {
     public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId, @RequestHeader("Authorization") String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
         ProcessFilter filter = new ProcessFilter(adsorbateId,adsorbentId);
-        for (Process process : filterResponse(processService.search(filter),jwtUtils.isAnonymous(authHeader))){
+        for (Process process : processService.search(filter,jwtUtils.isAnonymous(authHeader))){
             processes.add(new ProcessResponse(process));
         }
         return processes;
     }
 
     @PostMapping(value = "/adsorbato")
-    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request){
+    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request,@RequestHeader("Authorization") String authHeader){
         List<SearchByAdsorbateResponse> searchResults = new ArrayList<>();
-        for (SearchByAdsorbateDTO result: processService.searchByAdsorbate(request)) {
+        for (SearchByAdsorbateDTO result: processService.searchByAdsorbate(request,jwtUtils.isAnonymous(authHeader))) {
             searchResults.add(new SearchByAdsorbateResponse(result,request.getAdsorbatesIds().size()));
         }
         return searchResults;
@@ -123,8 +123,8 @@ public class ProcessController {
     @GetMapping(value = "/{id}")
     public ProcessResponse getProcess(@PathVariable Long id,@RequestHeader("Authorization") String authHeader) {
         try {
-            return new ProcessResponse(filter(processService.getById(id),jwtUtils.isAnonymous(authHeader)));
-        } catch (ComponentNotFoundException | InformationNotFreeException e) {
+            return new ProcessResponse(processService.getById(id,jwtUtils.isAnonymous(authHeader)));
+        } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
         }
@@ -147,30 +147,6 @@ public class ProcessController {
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_KINECT_INFORMATION.getMessage(), e);
         }
     }
-
-    private List<Process> filterResponse(List<Process> processes, boolean isAnonymous){
-        if(isAnonymous){
-            List<Process> response = new ArrayList<>();
-            for (Process process: processes) {
-                if(Boolean.TRUE.equals(process.isFree())){
-                    response.add(process);
-                }
-            }
-            return response;
-        }
-        return processes;
-    }
-
-        private Process filter(Process process, boolean isAnonymous) throws InformationNotFreeException {
-        if(isAnonymous){
-            if(Boolean.TRUE.equals(process.isFree())){
-                return process;
-            }
-            throw new InformationNotFreeException();
-        }
-        return process;
-    }
-
 
     private void validateProcess(ProcessRequest request) throws InvalidRequestException {
         if(request.getIdAdsorbate() == null ) throw new InvalidRequestException();

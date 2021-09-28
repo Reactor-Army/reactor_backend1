@@ -3,7 +3,6 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
-import fiuba.tpp.reactorapp.model.exception.InformationNotFreeException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
@@ -90,7 +89,7 @@ public class AdsorbateController {
     @GetMapping(value = "")
     public List<AdsorbateResponse> getAdsorbates(@RequestHeader("Authorization") String authHeader){
         List<AdsorbateResponse> response = new ArrayList<>();
-        for (Adsorbate adsorbate: filterResponse(adsorbateService.getAll(), jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate: adsorbateService.getAll(jwtUtils.isAnonymous(authHeader))) {
             response.add(new AdsorbateResponse(adsorbate));
         }
         return response;
@@ -100,7 +99,7 @@ public class AdsorbateController {
     public List<AdsorbateResponse> searchAdsorbates(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="cargaIon",required = false) Integer ionCharge, @RequestHeader("Authorization") String authHeader){
         AdsorbateFilter filter = new AdsorbateFilter(name, ionCharge);
         List<AdsorbateResponse> response = new ArrayList<>();
-        for (Adsorbate adsorbate: filterResponse(adsorbateService.search(filter),jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate: adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader))) {
             response.add(new AdsorbateResponse(adsorbate));
         }
         return response;
@@ -111,7 +110,7 @@ public class AdsorbateController {
     public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="idAdsorbente",required = false) Long adsorbentId, @RequestHeader("Authorization") String authHeader){
         List<AdsorbateNameResponse> adsorbatesName = new ArrayList<>();
         AdsorbateFilter filter = new AdsorbateFilter(name, adsorbentId);
-        for (Adsorbate adsorbate : filterResponse(adsorbateService.search(filter),jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate : adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader))) {
             adsorbatesName.add(new AdsorbateNameResponse(adsorbate));
         }
         return adsorbatesName;
@@ -120,8 +119,8 @@ public class AdsorbateController {
     @GetMapping(value = "/{id}")
     public AdsorbateResponse getAdsorbate(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
         try {
-            return new AdsorbateResponse(filter(adsorbateService.getById(id), jwtUtils.isAnonymous(authHeader)));
-        } catch (ComponentNotFoundException | InformationNotFreeException e) {
+            return new AdsorbateResponse(adsorbateService.getById(id,jwtUtils.isAnonymous(authHeader)));
+        } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(), e);
         }
@@ -131,30 +130,6 @@ public class AdsorbateController {
     public ProcessCountResponse getAdsorbateProcessCount(@PathVariable Long id) {
         return new ProcessCountResponse(adsorbateService.getAdsorbateProcessCount(id));
     }
-
-    private List<Adsorbate> filterResponse(List<Adsorbate> adsorbates, boolean isAnonymous){
-        if(isAnonymous){
-            List<Adsorbate> response = new ArrayList<>();
-            for (Adsorbate adsorbate: adsorbates) {
-                if(Boolean.TRUE.equals(adsorbate.isFree())){
-                    response.add(adsorbate);
-                }
-            }
-            return response;
-        }
-        return adsorbates;
-    }
-
-    private Adsorbate filter(Adsorbate adsorbate, boolean isAnonymous) throws InformationNotFreeException {
-        if(isAnonymous){
-            if(Boolean.TRUE.equals(adsorbate.isFree())){
-                return adsorbate;
-            }
-            throw new InformationNotFreeException();
-        }
-        return adsorbate;
-    }
-
 
     private void validateAdsorbate(AdsorbateRequest request) throws InvalidRequestException {
         if(request.getIonName() == null || request.getIonName().isEmpty()) throw new InvalidRequestException();
