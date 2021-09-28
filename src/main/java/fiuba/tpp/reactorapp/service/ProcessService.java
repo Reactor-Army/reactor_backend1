@@ -63,8 +63,8 @@ public class ProcessService {
         throw new ComponentNotFoundException();
     }
 
-    public List<SearchByAdsorbateDTO> searchByAdsorbate(SearchByAdsorbateRequest request){
-        List<Process> processes = processRepository.getByAdsorbates(request.getAdsorbatesIds());
+    public List<SearchByAdsorbateDTO> searchByAdsorbate(SearchByAdsorbateRequest request, Boolean isAnonymous){
+        List<Process> processes = processRepository.getByAdsorbates(request.getAdsorbatesIds(), isAnonymous);
         HashMap<Long, SearchByAdsorbateDTO> result = new HashMap<>();
         for (Process process: processes) {
             Long idAdsorbent = process.getAdsorbent().getId();
@@ -87,22 +87,22 @@ public class ProcessService {
     }
 
 
-    public List<Process> getAll(){
-        return processRepository.getAll(new ProcessFilter());
+    public List<Process> getProcesses(Boolean isAnonymous){
+        return processRepository.getProcesses(new ProcessFilter(),isAnonymous);
     }
 
-    public Process getById(Long id) throws ComponentNotFoundException {
-        Optional<Process> process = processRepository.findById(id);
-        if(process.isPresent()){
-            return process.get();
+    public Process getById(Long id, Boolean isAnonymous) throws ComponentNotFoundException {
+        try{
+            return processRepository.getProcess(id,isAnonymous);
+        }catch(Exception e){
+            throw new ComponentNotFoundException();
         }
-        throw new ComponentNotFoundException();
     }
 
-    public List<Process> search(ProcessFilter filter){ return processRepository.getAll(filter);}
+    public List<Process> search(ProcessFilter filter,Boolean isAnonymous){ return processRepository.getProcesses(filter, isAnonymous);}
 
     public ReactorVolumeResponse calculateVolume(Long id, ReactorVolumeRequest request) throws ComponentNotFoundException , InvalidProcessException{
-        Process process = getById(id);
+        Process process = getById(id,false);
         validateProcessKineticInformation(process);
 
         double reactorVolume;

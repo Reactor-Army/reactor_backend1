@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface AdsorbateRepositoryCustom {
 
-    List<Adsorbate> getAll(AdsorbateFilter filter);
+    List<Adsorbate> getAdsorbates(AdsorbateFilter filter, Boolean isAnonymous);
+
+    Adsorbate getAdsorbate(Long id, Boolean isAnonymous);
 }

@@ -1,13 +1,19 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.Adsorbate;
+import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,6 +38,13 @@ class AdsorbateControllerTest {
 
     @InjectMocks
     private AdsorbateController adsorbateMockController = new AdsorbateController();
+
+    @Autowired
+    private AuthController authController;
+
+    @Autowired
+    private AdsorbateRepository adsorbateRepository;
+
 
     @Test
     void testCreateAdsorbate(){
@@ -95,7 +108,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.deleteAdsorbate(1L);
-        Assert.assertTrue(adsorbateController.getAdsorbates().isEmpty());
+        Assert.assertTrue(adsorbateController.getAdsorbates(getToken()).isEmpty());
     }
 
     @Test
@@ -109,7 +122,21 @@ class AdsorbateControllerTest {
     void testGetAllAdsorbates() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbateController.createAdsorbate(request);
-        List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates();
+        List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates(getToken());
+        Assert.assertEquals(1L,adsorbates.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'Bearer 12345'",
+            "null",
+            "''"
+    })
+    void testGetAllAdsorbatesWithNoToken(String token) {
+        addFreeAdsorbate();
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates(token);
         Assert.assertEquals(1L,adsorbates.size());
     }
 
@@ -117,7 +144,7 @@ class AdsorbateControllerTest {
     void testGetAllAdsorbatesCharge() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbateController.createAdsorbate(request);
-        List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates();
+        List<AdsorbateResponse> adsorbates = adsorbateController.getAdsorbates(getToken());
         Assert.assertEquals("1-",adsorbates.get(0).getIonChargeFormula());
     }
 
@@ -127,8 +154,23 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates(null,null);
+        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates(null,null, getToken());
         Assert.assertEquals(2L,adsorbatos.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'Bearer 12345'",
+            "null",
+            "''"
+    })
+    void testSearchAdsorbatesNoFilterToken(String token) {
+        AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
+        AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
+        adsorbateController.createAdsorbate(request2);
+        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates(null,null, token);
+        Assert.assertEquals(0L,adsorbatos.size());
     }
 
     @Test
@@ -137,7 +179,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateResponse> adsorbates = adsorbateController.searchAdsorbates("IUPAC2",null);
+        List<AdsorbateResponse> adsorbates = adsorbateController.searchAdsorbates("IUPAC2",null, getToken());
         Assert.assertEquals(1L,adsorbates.size());
     }
 
@@ -147,7 +189,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("IUPAC2",1);
+        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("IUPAC2",1, getToken());
         Assert.assertEquals(1L,adsorbatos.size());
     }
 
@@ -157,7 +199,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba2","PruebaIUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates(null,1);
+        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates(null,1, getToken());
         Assert.assertEquals(2L,adsorbatos.size());
     }
 
@@ -167,7 +209,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("PRUEBA",null);
+        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("PRUEBA",null, getToken());
         Assert.assertEquals(2L,adsorbatos.size());
     }
 
@@ -177,7 +219,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("CARLOS",null);
+        List<AdsorbateResponse> adsorbatos = adsorbateController.searchAdsorbates("CARLOS",null, getToken());
         Assert.assertEquals(2L,adsorbatos.size());
     }
 
@@ -187,7 +229,7 @@ class AdsorbateControllerTest {
         AdsorbateRequest request2 = new AdsorbateRequest("carlos","prueba2",1,1f,10f);
         adsorbateController.createAdsorbate(request);
         adsorbateController.createAdsorbate(request2);
-        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS", null);
+        List<AdsorbateNameResponse> adsorbatesNames = adsorbateController.searchAdsorbatesName("CARLOS", null, getToken());
         Assert.assertEquals(2L,adsorbatesNames.size());
         Assert.assertEquals("CARLOS (PRUEBA)", adsorbatesNames.get(0).getName());
         Assert.assertEquals("Carlos (prueba2)", adsorbatesNames.get(1).getName());
@@ -205,15 +247,26 @@ class AdsorbateControllerTest {
     void testFindById(){
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","carlos IUPAC",1,1f,10f);
         adsorbateController.createAdsorbate(request);
-        AdsorbateResponse adsorbate = adsorbateController.getAdsorbate(1L);
+        AdsorbateResponse adsorbate = adsorbateController.getAdsorbate(1L, getToken());
         Assert.assertEquals("CARLOS", adsorbate.getIonName());
         Assert.assertEquals("carlos IUPAC", adsorbate.getNameIUPAC());
     }
 
     @Test
-    void testGetAdsorbateByIdNotFound(){
+    void testFindByIdNoToken(){
+        AdsorbateRequest request = new AdsorbateRequest("CARLOS","carlos IUPAC",1,1f,10f);
+        adsorbateController.createAdsorbate(request);
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-           adsorbateController.getAdsorbate(20L);
+            adsorbateController.getAdsorbate(1L, null);
+        });
+        Assert.assertEquals(ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testGetAdsorbateByIdNotFound(){
+        String token = getToken();
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+           adsorbateController.getAdsorbate(20L, token);
         });
         Assert.assertEquals(ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(),e.getReason());
     }
@@ -282,6 +335,18 @@ class AdsorbateControllerTest {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","IUPAC2",1,10f,100f);
         AdsorbateResponse response = adsorbateController.createAdsorbate(request);
         Assertions.assertFalse(response.getRegulated());
+    }
+
+    private void addFreeAdsorbate(){
+        Adsorbate adsorbate = new Adsorbate("Prueba","IUPAC2",1,10f,100f);
+        adsorbate.setFree(true);
+        adsorbateRepository.save(adsorbate);
+    }
+
+    private String getToken(){
+        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
+        LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
+        return  "Bearer " + response.getAccessToken();
     }
 
 }

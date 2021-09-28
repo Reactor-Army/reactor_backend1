@@ -6,6 +6,9 @@ public class AdsorbateFilter {
     private Integer ionCharge;
     private Long adsorbentId;
 
+    public AdsorbateFilter() {
+    }
+
     public AdsorbateFilter(String name, Integer ionCharge) {
         this.name = name;
         this.ionCharge = ionCharge;

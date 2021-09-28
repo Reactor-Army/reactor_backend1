@@ -34,13 +34,15 @@ public class Adsorbent {
 
     private String speciesName;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean free;
+
     @Column(length = 2000)
     @Size(max = 2000)
     private String observations;
 
 
-    public Adsorbent() {
-    }
+    public Adsorbent() {}
 
     public Adsorbent(String name, String particleSize, Float sBet, Float vBet, Float pHZeroCharge) {
         this.name = name;
@@ -166,6 +168,14 @@ public class Adsorbent {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public Boolean isFree() {
+        return free;
+    }
+
+    public void setFree(Boolean free) {
+        this.free = free;
     }
 
     @PreUpdate

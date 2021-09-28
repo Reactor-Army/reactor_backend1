@@ -48,9 +48,11 @@ public class Process {
     @Range(min = 1, max = 2)
     private Integer reactionOrder;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean free;
 
-    public Process() {
-    }
+
+    public Process() {}
 
 
     public Process(Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
@@ -188,6 +190,14 @@ public class Process {
 
     public void setReactionOrder(Integer reactionOrder) {
         this.reactionOrder = reactionOrder;
+    }
+
+    public Boolean isFree() {
+        return free;
+    }
+
+    public void setFree(Boolean free) {
+        this.free = free;
     }
 
     @Override

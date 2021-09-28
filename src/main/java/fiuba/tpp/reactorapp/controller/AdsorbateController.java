@@ -10,6 +10,7 @@ import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.ProcessCountResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class AdsorbateController {
 
     @Autowired
     private AdsorbateService adsorbateService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value= "")
@@ -83,42 +87,42 @@ public class AdsorbateController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
-
     }
 
     @GetMapping(value = "")
-    public List<AdsorbateResponse> getAdsorbates(){
-        List<AdsorbateResponse> adsorbates = new ArrayList<>();
-        for (Adsorbate adsorbate : adsorbateService.getAll()) {
-            adsorbates.add(new AdsorbateResponse(adsorbate));
+    public List<AdsorbateResponse> getAdsorbates(@RequestHeader("Authorization") String authHeader){
+        List<AdsorbateResponse> response = new ArrayList<>();
+        for (Adsorbate adsorbate: adsorbateService.getAdsorbates(jwtUtils.isAnonymous(authHeader))) {
+            response.add(new AdsorbateResponse(adsorbate));
         }
-        return adsorbates;
+        return response;
     }
 
     @GetMapping(value = "/buscar")
-    public List<AdsorbateResponse> searchAdsorbates(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="cargaIon",required = false) Integer ionCharge){
-        List<AdsorbateResponse> adsorbates = new ArrayList<>();
+    public List<AdsorbateResponse> searchAdsorbates(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="cargaIon",required = false) Integer ionCharge, @RequestHeader("Authorization") String authHeader){
         AdsorbateFilter filter = new AdsorbateFilter(name, ionCharge);
-        for (Adsorbate adsorbate : adsorbateService.search(filter)) {
-            adsorbates.add(new AdsorbateResponse(adsorbate));
+        List<AdsorbateResponse> response = new ArrayList<>();
+        for (Adsorbate adsorbate: adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader))) {
+            response.add(new AdsorbateResponse(adsorbate));
         }
-        return adsorbates;
+        return response;
+
     }
 
     @GetMapping(value = "/buscar/nombre")
-    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="idAdsorbente",required = false) Long adsorbentId){
+    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="idAdsorbente",required = false) Long adsorbentId, @RequestHeader("Authorization") String authHeader){
         List<AdsorbateNameResponse> adsorbatesName = new ArrayList<>();
         AdsorbateFilter filter = new AdsorbateFilter(name, adsorbentId);
-        for (Adsorbate adsorbate : adsorbateService.search(filter)) {
+        for (Adsorbate adsorbate : adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader))) {
             adsorbatesName.add(new AdsorbateNameResponse(adsorbate));
         }
         return adsorbatesName;
     }
 
     @GetMapping(value = "/{id}")
-    public AdsorbateResponse getAdsorbate(@PathVariable Long id) {
+    public AdsorbateResponse getAdsorbate(@PathVariable Long id, @RequestHeader("Authorization") String authHeader) {
         try {
-            return new AdsorbateResponse((adsorbateService.getById(id)));
+            return new AdsorbateResponse(adsorbateService.getById(id,jwtUtils.isAnonymous(authHeader)));
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(), e);

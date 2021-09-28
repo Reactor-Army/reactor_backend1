@@ -20,12 +20,16 @@ public class AdsorbentRepositoryCustomImpl implements AdsorbentRepositoryCustom 
     private static final String ADSORBENT = "adsorbent";
 
     @Override
-    public List<Adsorbent> getAll(AdsorbentFilter filter) {
+    public List<Adsorbent> getAdsorbents(AdsorbentFilter filter, Boolean isAnonymous) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Adsorbent> cq = cb.createQuery(Adsorbent.class);
 
         Root<Adsorbent> adsorbent = cq.from(Adsorbent.class);
         List<Predicate> predicates = new ArrayList<>();
+
+        if(Boolean.TRUE.equals(isAnonymous)){
+            predicates.add(cb.equal(adsorbent.get("free"),true));
+        }
 
         if (filter.getName() != null && !filter.getName().isEmpty()) {
             String nombreFilter = StringUtils.stripAccents(filter.getName().toLowerCase());
@@ -44,5 +48,23 @@ public class AdsorbentRepositoryCustomImpl implements AdsorbentRepositoryCustom 
         return em.createQuery(cq).getResultList();
 
 
+    }
+
+    @Override
+    public Adsorbent getAdsorbent(Long id, Boolean isAnonymous) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Adsorbent> cq = cb.createQuery(Adsorbent.class);
+        Root<Adsorbent> adsorbent = cq.from(Adsorbent.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(cb.equal(adsorbent.get("id"),id));
+
+        if(Boolean.TRUE.equals(isAnonymous)){
+            predicates.add(cb.equal(adsorbent.get("free"),true));
+        }
+
+        cq.where(predicates.toArray(new Predicate[0]));
+
+        return em.createQuery(cq).getSingleResult();
     }
 }
