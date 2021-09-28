@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name ="ADSORBATE")
-public class Adsorbate {
+public class Adsorbate extends Information {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,11 @@ public class Adsorbate {
     private Boolean regulated;
 
     public Adsorbate() {
+        super();
     }
 
     public Adsorbate(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit) {
+        super();
         this.ionName = ionName;
         this.nameIUPAC = nameIUPAC;
         this.ionCharge = ionCharge;
@@ -38,6 +40,7 @@ public class Adsorbate {
     }
 
     public Adsorbate(AdsorbateRequest adsorbate) {
+        super();
         copyData(adsorbate);
     }
 

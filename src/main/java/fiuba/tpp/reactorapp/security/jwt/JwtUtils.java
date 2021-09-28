@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
@@ -20,6 +22,8 @@ public class JwtUtils {
 
     @Value("${reactor.app.jwtExpirationMs}")
     private int jwtExpirationMs;
+
+    private static final int TOKEN_PREFIX_LENGTH = 7;
 
     public String generateJwtToken(Authentication authentication) {
 
@@ -53,5 +57,24 @@ public class JwtUtils {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
+    }
+
+    public String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        return parseJwtHeader(headerAuth);
+    }
+
+    private String parseJwtHeader(String headerAuth){
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(TOKEN_PREFIX_LENGTH, headerAuth.length());
+        }
+        return null;
+    }
+
+    public boolean isAnonymous(String token){
+        if(token == null || token.isEmpty()) return true;
+        String authToken = parseJwtHeader(token);
+        if(authToken == null || authToken.isEmpty()) return true;
+        return !validateJwtToken(authToken);
     }
 }

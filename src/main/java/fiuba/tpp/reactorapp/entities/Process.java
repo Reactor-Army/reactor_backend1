@@ -10,7 +10,7 @@ import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name ="PROCESS")
-public class Process {
+public class Process extends Information{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,10 +50,12 @@ public class Process {
 
 
     public Process() {
+        super();
     }
 
 
     public Process(Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
+        super();
         copyData(adsorbate, adsorbent,request);
     }
 

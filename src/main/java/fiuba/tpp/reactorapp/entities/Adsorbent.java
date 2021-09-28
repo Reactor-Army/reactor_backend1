@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name ="ADSORBENT")
-public class Adsorbent {
+public class Adsorbent extends Information {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +40,11 @@ public class Adsorbent {
 
 
     public Adsorbent() {
+        super();
     }
 
     public Adsorbent(String name, String particleSize, Float sBet, Float vBet, Float pHZeroCharge) {
+        super();
         this.name = name;
         this.particleSize = particleSize;
         this.sBet = sBet;
@@ -51,6 +53,7 @@ public class Adsorbent {
     }
 
     public Adsorbent(AdsorbentRequest request){
+        super();
         copyData(request);
     }
 
