@@ -8,6 +8,7 @@ import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
@@ -27,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -180,6 +182,14 @@ class AuthControllerTest {
         createCode(Calendar.getInstance().getTime());
         ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
         assertDoesNotThrow(()->authController.resetPassword(request));
+    }
+
+    @Test
+    void testGetRoles(){
+        List<RoleResponse> roles = authController.getRoles();
+        Assert.assertEquals(2L, roles.size());
+        Assert.assertEquals("ROLE_USER", roles.get(0).getName());
+        Assert.assertEquals("ROLE_ADMIN", roles.get(1).getName());
     }
 
     private AuthCode createCode(Date date){
