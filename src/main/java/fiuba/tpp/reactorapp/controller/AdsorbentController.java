@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
+import fiuba.tpp.reactorapp.model.exception.InformationNotFreeException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
@@ -10,6 +11,7 @@ import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ProcessCountResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class AdsorbentController {
 
     @Autowired
     private AdsorbentService adsorbentService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @PostMapping(value= "")
     public AdsorbentResponse createAdsorbent(@RequestBody AdsorbentRequest request) {
@@ -78,39 +83,39 @@ public class AdsorbentController {
     }
 
     @GetMapping(value = "")
-    public List<AdsorbentResponse> getAdsorbents(){
+    public List<AdsorbentResponse> getAdsorbents(@RequestHeader("Authorization") String authHeader){
         List<AdsorbentResponse> adsorbents = new ArrayList<>();
-        for (Adsorbent adsorbent : adsorbentService.getAll()) {
+        for (Adsorbent adsorbent : filterResponse(adsorbentService.getAll(),jwtUtils.isAnonymous(authHeader))) {
             adsorbents.add(new AdsorbentResponse(adsorbent));
         }
         return adsorbents;
     }
 
     @GetMapping(value = "/buscar")
-    public List<AdsorbentResponse> searchAdsorbents(@RequestParam(name="nombre",required = false) String name){
+    public List<AdsorbentResponse> searchAdsorbents(@RequestParam(name="nombre",required = false) String name,@RequestHeader("Authorization") String authHeader){
         List<AdsorbentResponse> adsorbents = new ArrayList<>();
         AdsorbentFilter filter = new AdsorbentFilter(name);
-        for (Adsorbent adsorbent : adsorbentService.search(filter)) {
+        for (Adsorbent adsorbent : filterResponse(adsorbentService.search(filter),jwtUtils.isAnonymous(authHeader))) {
             adsorbents.add(new AdsorbentResponse(adsorbent));
         }
         return adsorbents;
     }
 
     @GetMapping(value = "/buscar/nombre")
-    public List<AdsorbentNameResponse> searchAdsorbentsName(@RequestParam(name="nombre",required = false) String name,@RequestParam(name="idAdsorbato",required = false) Long adsorbateId){
+    public List<AdsorbentNameResponse> searchAdsorbentsName(@RequestParam(name="nombre",required = false) String name,@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestHeader("Authorization") String authHeader){
         List<AdsorbentNameResponse> adsorbentsNames = new ArrayList<>();
         AdsorbentFilter filter = new AdsorbentFilter(name, adsorbateId);
-        for (Adsorbent adsorbent : adsorbentService.search(filter)) {
+        for (Adsorbent adsorbent : filterResponse(adsorbentService.search(filter),jwtUtils.isAnonymous(authHeader))) {
             adsorbentsNames.add(new AdsorbentNameResponse(adsorbent));
         }
         return adsorbentsNames;
     }
 
     @GetMapping(value = "/{id}")
-    public AdsorbentResponse getAdsorbent(@PathVariable Long id) {
+    public AdsorbentResponse getAdsorbent(@PathVariable Long id,@RequestHeader("Authorization") String authHeader) {
         try {
-            return new AdsorbentResponse(adsorbentService.getById(id));
-        } catch (ComponentNotFoundException e) {
+            return new AdsorbentResponse(filter(adsorbentService.getById(id),jwtUtils.isAnonymous(authHeader)));
+        } catch (ComponentNotFoundException | InformationNotFreeException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.ADSORBENT_NOT_FOUND.getMessage(), e);
         }
@@ -120,6 +125,30 @@ public class AdsorbentController {
     public ProcessCountResponse getAdsorbentProcessCount(@PathVariable Long id) {
         return new ProcessCountResponse(adsorbentService.getAdsorbentProcessCount(id));
     }
+
+    private List<Adsorbent> filterResponse(List<Adsorbent> adsorbents, boolean isAnonymous){
+        if(isAnonymous){
+            List<Adsorbent> response = new ArrayList<>();
+            for (Adsorbent adsorbent: adsorbents) {
+                if(adsorbent.isFree()){
+                    response.add(adsorbent);
+                }
+            }
+            return response;
+        }
+        return adsorbents;
+    }
+
+    private Adsorbent filter(Adsorbent adsorbent, boolean isAnonymous) throws InformationNotFreeException {
+        if(isAnonymous){
+            if(adsorbent.isFree()){
+                return adsorbent;
+            }
+            throw new InformationNotFreeException();
+        }
+        return adsorbent;
+    }
+
 
     private void validateAdsorbent(AdsorbentRequest request) throws InvalidRequestException {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();

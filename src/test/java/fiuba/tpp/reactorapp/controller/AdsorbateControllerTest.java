@@ -246,8 +246,9 @@ class AdsorbateControllerTest {
 
     @Test
     void testGetAdsorbateByIdNotFound(){
+        String token = getToken();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-           adsorbateController.getAdsorbate(20L, getToken());
+           adsorbateController.getAdsorbate(20L, token);
         });
         Assert.assertEquals(ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(),e.getReason());
     }

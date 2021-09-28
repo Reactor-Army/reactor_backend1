@@ -14,14 +14,9 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -39,7 +34,6 @@ public class BreakCurvesService {
     @Autowired
     private CSVParserService csvParserService;
 
-    private static final String FILEPATH = "classpath:dataFiles" + File.separator+ "datos.xlsx";
 
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
