@@ -88,7 +88,7 @@ public class ProcessService {
 
 
     public List<Process> getAll(Boolean isAnonymous){
-        return processRepository.getAll(new ProcessFilter(),isAnonymous);
+        return processRepository.getProcesses(new ProcessFilter(),isAnonymous);
     }
 
     public Process getById(Long id, Boolean isAnonymous) throws ComponentNotFoundException {
@@ -99,7 +99,7 @@ public class ProcessService {
         }
     }
 
-    public List<Process> search(ProcessFilter filter,Boolean isAnonymous){ return processRepository.getAll(filter, isAnonymous);}
+    public List<Process> search(ProcessFilter filter,Boolean isAnonymous){ return processRepository.getProcesses(filter, isAnonymous);}
 
     public ReactorVolumeResponse calculateVolume(Long id, ReactorVolumeRequest request) throws ComponentNotFoundException , InvalidProcessException{
         Process process = getById(id,false);

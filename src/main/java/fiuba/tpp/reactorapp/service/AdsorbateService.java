@@ -65,7 +65,7 @@ public class AdsorbateService {
     }
 
     public List<Adsorbate> search(AdsorbateFilter filter, Boolean isAnonymous){
-        return adsorbateRepository.getAll(filter, isAnonymous);
+        return adsorbateRepository.getAdsorbates(filter, isAnonymous);
     }
 
     public Adsorbate getById(Long id, Boolean isAnonymous) throws ComponentNotFoundException {
@@ -77,7 +77,7 @@ public class AdsorbateService {
     }
 
     private List<Adsorbate> getAllAdsorbates(Boolean isAnonymous){
-        return adsorbateRepository.getAll(new AdsorbateFilter(), isAnonymous);
+        return adsorbateRepository.getAdsorbates(new AdsorbateFilter(), isAnonymous);
     }
 
     public Long getAdsorbateProcessCount(Long id){

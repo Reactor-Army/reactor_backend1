@@ -19,7 +19,7 @@ public class ProcessRepositoryCustomImpl implements ProcessRepositoryCustom {
     private static final String ADSORBENT = "adsorbent";
 
     @Override
-    public List<Process> getAll(ProcessFilter filter, Boolean isAnonymous) {
+    public List<Process> getProcesses(ProcessFilter filter, Boolean isAnonymous) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Process> cq = cb.createQuery(Process.class);
 

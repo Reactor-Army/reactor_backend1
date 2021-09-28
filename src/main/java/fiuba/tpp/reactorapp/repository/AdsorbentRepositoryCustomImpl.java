@@ -20,7 +20,7 @@ public class AdsorbentRepositoryCustomImpl implements AdsorbentRepositoryCustom 
     private static final String ADSORBENT = "adsorbent";
 
     @Override
-    public List<Adsorbent> getAll(AdsorbentFilter filter, Boolean isAnonymous) {
+    public List<Adsorbent> getAdsorbents(AdsorbentFilter filter, Boolean isAnonymous) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Adsorbent> cq = cb.createQuery(Adsorbent.class);
 
