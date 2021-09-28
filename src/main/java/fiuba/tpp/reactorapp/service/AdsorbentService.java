@@ -54,7 +54,7 @@ public class AdsorbentService {
 
     }
 
-    public List<Adsorbent> getAll(Boolean isAnonymous){
+    public List<Adsorbent> getAdsorbents(Boolean isAnonymous){
         List<Adsorbent> adsorbents = getAllAdsorbents(isAnonymous);
         adsorbents.sort(Comparator.comparing(Adsorbent::getName));
         return adsorbents;

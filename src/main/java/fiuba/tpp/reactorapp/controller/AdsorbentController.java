@@ -84,7 +84,7 @@ public class AdsorbentController {
     @GetMapping(value = "")
     public List<AdsorbentResponse> getAdsorbents(@RequestHeader("Authorization") String authHeader){
         List<AdsorbentResponse> adsorbents = new ArrayList<>();
-        for (Adsorbent adsorbent : adsorbentService.getAll(jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbent adsorbent : adsorbentService.getAdsorbents(jwtUtils.isAnonymous(authHeader))) {
             adsorbents.add(new AdsorbentResponse(adsorbent));
         }
         return adsorbents;

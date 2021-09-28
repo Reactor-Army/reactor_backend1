@@ -4,8 +4,6 @@ import fiuba.tpp.reactorapp.entities.Adsorbate;
 import fiuba.tpp.reactorapp.entities.Adsorbent;
 import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
-import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
-import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.exception.InvalidProcessException;
 import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
@@ -78,7 +76,7 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
 
-        List<Process> processes = processService.getAll(false);
+        List<Process> processes = processService.getProcesses(false);
         Assert.assertEquals(1L,processes.size());
     }
 
@@ -100,7 +98,7 @@ class ProcessServiceTests {
         request2.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request2);
 
-        List<Process> processes = processService.getAll(false);
+        List<Process> processes = processService.getProcesses(false);
         Process firstProcess = processes.get(0);
         Assert.assertEquals(2.30f, firstProcess.getQmax(), 0.1);
     }
@@ -164,7 +162,7 @@ class ProcessServiceTests {
         request.setIdAdsorbent(adsorbent.getId());
         processService.createProcess(request);
         processService.deleteProcess(1L);
-        Assert.assertTrue(processService.getAll(false).isEmpty());
+        Assert.assertTrue(processService.getProcesses(false).isEmpty());
     }
 
     @Test
@@ -272,7 +270,7 @@ class ProcessServiceTests {
     void testDeleteAdsorbateWithProcess() {
         createProcess();
         adsorbateService.deleteAdsorbate(1L);
-        List<Process> processes = processService.getAll(false);
+        List<Process> processes = processService.getProcesses(false);
 
         Assertions.assertTrue(processes.isEmpty());
     }
@@ -281,7 +279,7 @@ class ProcessServiceTests {
     void testDeleteAdsorbentWithProcess() {
         createProcess();
         adsorbentService.deleteAdsorbent(1L);
-        List<Process> processes = processService.getAll(false);
+        List<Process> processes = processService.getProcesses(false);
         Assertions.assertTrue(processes.isEmpty());
     }
 

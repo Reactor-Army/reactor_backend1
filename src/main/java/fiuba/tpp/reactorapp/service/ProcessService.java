@@ -87,7 +87,7 @@ public class ProcessService {
     }
 
 
-    public List<Process> getAll(Boolean isAnonymous){
+    public List<Process> getProcesses(Boolean isAnonymous){
         return processRepository.getProcesses(new ProcessFilter(),isAnonymous);
     }
 

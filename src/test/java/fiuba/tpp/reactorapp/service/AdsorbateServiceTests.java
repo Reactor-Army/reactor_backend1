@@ -66,7 +66,7 @@ class AdsorbateServiceTests {
     void testFindAll() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",-1,1f,10f);
         adsorbateService.createAdsorbate(request);
-        List<Adsorbate> adsorbates = adsorbateService.getAll(false);
+        List<Adsorbate> adsorbates = adsorbateService.getAdsorbates(false);
         Assert.assertEquals(1L, adsorbates.size());
     }
 
@@ -97,7 +97,7 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         adsorbateService.createAdsorbate(request);
         adsorbateService.deleteAdsorbate(1l);
-        Assert.assertTrue(adsorbateService.getAll(false).isEmpty());
+        Assert.assertTrue(adsorbateService.getAdsorbates(false).isEmpty());
 
     }
 

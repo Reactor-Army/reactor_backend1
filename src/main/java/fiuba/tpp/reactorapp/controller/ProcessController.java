@@ -95,7 +95,7 @@ public class ProcessController {
     @GetMapping(value = "")
     public List<ProcessResponse> getProcesses(@RequestHeader("Authorization") String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
-        for (Process process : processService.getAll(jwtUtils.isAnonymous(authHeader))) {
+        for (Process process : processService.getProcesses(jwtUtils.isAnonymous(authHeader))) {
             processes.add(new ProcessResponse(process));
         }
         return processes;

@@ -40,7 +40,7 @@ class AdsorbentServiceTests {
     void testFindAll() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
-        List<Adsorbent> adsorbents = adsorbentService.getAll(false);
+        List<Adsorbent> adsorbents = adsorbentService.getAdsorbents(false);
         Assert.assertEquals(1L, adsorbents.size());
     }
 
@@ -86,7 +86,7 @@ class AdsorbentServiceTests {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
         adsorbentService.deleteAdsorbent(1L);
-        Assert.assertTrue(adsorbentService.getAll(false).isEmpty());
+        Assert.assertTrue(adsorbentService.getAdsorbents(false).isEmpty());
 
     }
 

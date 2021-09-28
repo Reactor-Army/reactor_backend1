@@ -89,7 +89,7 @@ public class AdsorbateController {
     @GetMapping(value = "")
     public List<AdsorbateResponse> getAdsorbates(@RequestHeader("Authorization") String authHeader){
         List<AdsorbateResponse> response = new ArrayList<>();
-        for (Adsorbate adsorbate: adsorbateService.getAll(jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate: adsorbateService.getAdsorbates(jwtUtils.isAnonymous(authHeader))) {
             response.add(new AdsorbateResponse(adsorbate));
         }
         return response;
