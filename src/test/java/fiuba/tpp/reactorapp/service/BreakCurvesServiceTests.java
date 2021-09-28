@@ -106,6 +106,38 @@ class BreakCurvesServiceTests {
     }
 
     @Test
+    void testThomasWithJuancho(){
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        Assertions.assertEquals(0.01974, result.getThomasConstant(),0.0001);
+        Assertions.assertEquals(16.57392, result.getMaxConcentration(),0.0001);
+        Assertions.assertEquals(0.96, result.getRms(),0.01);
+    }
+
+
+    @Test
+    void testYoonNelsonWithJuancho(){
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        Assertions.assertEquals(0.1564, result.getYoonNelsonConstant(),0.0001);
+        Assertions.assertEquals(44.033, result.getTimeFiftyPercent(),0.001);
+        Assertions.assertEquals(0.96, result.getRms(),0.01);
+
+    }
+
+    @Test
+    void testAdamsBohartWithJuancho(){
+        MockMultipartFile file = dataFromJuancho();
+        AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
+        AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
+        Assertions.assertEquals(0.00299, result.getAdamsBohartConstant(),0.00001);
+        Assertions.assertEquals(31.299, result.getMaxAbsorptionCapacity(),0.001);
+        Assertions.assertEquals(0.72, result.getRms(),0.02);
+    }
+
+    @Test
     void testGetFileDTO() throws IOException {
         FileTemplateDTO dto = breakCurvesService.getDataTemplateFile();
         Assertions.assertEquals("datos.xlsx", dto.getFileName());
@@ -118,6 +150,10 @@ class BreakCurvesServiceTests {
 
     private MockMultipartFile dataFromTesisAdams(){
         return new MockMultipartFile("adams","adams.csv",MediaType.TEXT_PLAIN_VALUE,tesisDataAdams().getBytes());
+    }
+
+    private MockMultipartFile dataFromJuancho(){
+        return new MockMultipartFile("juancho","juancho.csv",MediaType.TEXT_PLAIN_VALUE,datosJuancho().getBytes());
     }
 
     private String tesisData(){
@@ -265,7 +301,39 @@ class BreakCurvesServiceTests {
                 "0.06900,0.57381\n" +
                 "0.07050,0.64700\n" +
                 "0.07200,0.73158\n";
+    }
 
+    private String datosJuancho(){
+        return "volumenEfluente,C/C0\n"+
+                "2.823,0\n"+
+                "5.646,0\n"+
+                "8.469,0\n"+
+                "11.292,0\n"+
+                "14.115,0\n"+
+                "16.938,0\n"+
+                "19.761,0\n"+
+                "22.584,0\n"+
+                "25.407,0\n"+
+                "28.23,0\n"+
+                "31.053,0\n"+
+                "33.876,0.285\n"+
+                "39.522,0.498\n"+
+                "42.345,0.536\n"+
+                "45.168,0.752\n"+
+                "47.991,0.798\n"+
+                "50.814,0.822\n"+
+                "53.637,0.833\n"+
+                "56.46,0.805\n"+
+                "59.283,0.836\n"+
+                "62.106,0.898\n"+
+                "64.929,0.903\n"+
+                "67.752,0.878\n"+
+                "70.575,0.876\n"+
+                "73.398,0.903\n"+
+                "76.221,0.86\n"+
+                "79.044,0.93\n"+
+                "81.867,0.931\n"+
+                "84.69,0.938\n";
     }
 
 }

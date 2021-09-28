@@ -34,7 +34,6 @@ public class BreakCurvesService {
     @Autowired
     private CSVParserService csvParserService;
 
-
     public ThomasResponse calculateByThomas(ThomasRequest request){
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
