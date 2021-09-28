@@ -15,6 +15,7 @@ import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +33,7 @@ public class ProcessController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value= "")
     public ProcessResponse createProcess(@RequestBody ProcessRequest request) {
         ProcessResponse response = null;
@@ -57,6 +59,7 @@ public class ProcessController {
         return response;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value= "/{id}")
     public ProcessResponse updateProcess(@PathVariable Long id, @RequestBody ProcessRequest request) {
         ProcessResponse response = null;
@@ -79,6 +82,7 @@ public class ProcessController {
         return response;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value= "/{id}")
     public void deleteProcess(@PathVariable Long id){
         try {

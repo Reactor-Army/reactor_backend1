@@ -14,6 +14,7 @@ import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,7 +32,7 @@ public class AdsorbateController {
     @Autowired
     private JwtUtils jwtUtils;
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value= "")
     public AdsorbateResponse createAdsorbate(@RequestBody AdsorbateRequest request) {
         AdsorbateResponse response = null;
@@ -51,6 +52,7 @@ public class AdsorbateController {
         return response;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value= "/{id}")
     public AdsorbateResponse updateAdsorbate(@PathVariable Long id, @RequestBody AdsorbateRequest request) {
         AdsorbateResponse response = null;
@@ -73,6 +75,7 @@ public class AdsorbateController {
         return response;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value= "/{id}")
     public void deleteAdsorbate(@PathVariable Long id){
         try {
