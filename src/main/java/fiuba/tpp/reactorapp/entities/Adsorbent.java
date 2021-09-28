@@ -34,6 +34,7 @@ public class Adsorbent {
 
     private String speciesName;
 
+    @Column(columnDefinition = "boolean default false")
     private Boolean free;
 
     @Column(length = 2000)
@@ -41,9 +42,7 @@ public class Adsorbent {
     private String observations;
 
 
-    public Adsorbent() {
-        this.free = false;
-    }
+    public Adsorbent() {}
 
     public Adsorbent(String name, String particleSize, Float sBet, Float vBet, Float pHZeroCharge) {
         this.name = name;
@@ -51,11 +50,9 @@ public class Adsorbent {
         this.sBet = sBet;
         this.vBet = vBet;
         this.pHZeroCharge = pHZeroCharge;
-        this.free = false;
     }
 
     public Adsorbent(AdsorbentRequest request){
-        this.free = false;
         copyData(request);
     }
 

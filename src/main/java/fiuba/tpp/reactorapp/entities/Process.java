@@ -48,16 +48,14 @@ public class Process {
     @Range(min = 1, max = 2)
     private Integer reactionOrder;
 
+    @Column(columnDefinition = "boolean default false")
     private Boolean free;
 
 
-    public Process() {
-        this.free = false;
-    }
+    public Process() {}
 
 
     public Process(Adsorbate adsorbate, Adsorbent adsorbent, ProcessRequest request){
-        this.free = false;
         copyData(adsorbate, adsorbent,request);
     }
 

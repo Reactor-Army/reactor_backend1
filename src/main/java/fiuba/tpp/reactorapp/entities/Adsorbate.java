@@ -25,14 +25,13 @@ public class Adsorbate {
     private String formula;
     private Float molarMass;
     private Boolean regulated;
+    @Column(columnDefinition = "boolean default false")
     private Boolean free;
 
     public Adsorbate() {
-        this.free = false;
     }
 
     public Adsorbate(String ionName, String nameIUPAC, Integer ionCharge, Float ionRadius, Float dischargeLimit) {
-        this.free = false;
         this.ionName = ionName;
         this.nameIUPAC = nameIUPAC;
         this.ionCharge = ionCharge;
@@ -41,7 +40,6 @@ public class Adsorbate {
     }
 
     public Adsorbate(AdsorbateRequest adsorbate) {
-        this.free = false;
         copyData(adsorbate);
     }
 
