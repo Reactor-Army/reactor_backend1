@@ -38,9 +38,6 @@ public class AuthService {
     UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
     JwtUtils jwtUtils;
 
     @Autowired
@@ -53,7 +50,7 @@ public class AuthService {
             throw new EmailAlreadyExistException();
         }
 
-        User user = new User(request.getEmail(),encoder.encode(request.getPassword()));
+        User user = new User(request.getEmail(),Base64.getEncoder().encodeToString(request.getPassword().getBytes()));
 
         user.setRole(ERole.ROLE_USER);
         userRepository.save(user);
@@ -116,7 +113,7 @@ public class AuthService {
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
         AuthCode authCode = authCodeService.getAuthCode(request.getCode());
         validateCodeExpiration(authCode.getRefreshDate());
-        authCode.getUser().setPassword(encoder.encode(request.getPassword()));
+        authCode.getUser().setPassword(Base64.getEncoder().encodeToString(request.getPassword().getBytes()));
         userRepository.save(authCode.getUser());
     }
 
