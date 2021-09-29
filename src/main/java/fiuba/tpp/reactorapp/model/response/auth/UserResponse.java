@@ -3,16 +3,12 @@ package fiuba.tpp.reactorapp.model.response.auth;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.auth.User;
 
-import java.util.Arrays;
-import java.util.Base64;
 
 public class UserResponse {
 
     private Long id;
 
     private String email;
-
-    private String password;
 
     @JsonProperty("nombre")
     private String name;
@@ -33,7 +29,6 @@ public class UserResponse {
     private void copyData(User user){
         this.id = user.getId();
         this.email = user.getEmail();
-        this.password = new String(Base64.getDecoder().decode(user.getPassword()));
         this.name = user.getName();
         this.surname = user.getSurname();
         this.description = user.getDescription();
@@ -54,14 +49,6 @@ public class UserResponse {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getName() {
