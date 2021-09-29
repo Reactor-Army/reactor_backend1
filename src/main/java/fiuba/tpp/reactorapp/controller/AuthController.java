@@ -11,6 +11,7 @@ import fiuba.tpp.reactorapp.model.response.auth.UserResponse;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -76,11 +77,13 @@ public class AuthController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users")
     public List<UserResponse> getUsers(){
         return authService.getUsers();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/users/{id}")
     public UserResponse getUser(@PathVariable Long id){
         try{

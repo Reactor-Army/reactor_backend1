@@ -23,6 +23,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@WithMockUser(username="admin",roles={"ADMIN"})
 class AuthControllerTest {
 
     @Autowired
@@ -207,7 +209,7 @@ class AuthControllerTest {
     void getUser(){
         createUser();
         UserResponse user= authController.getUser(1L);
-        Assert.assertEquals("mati@gmail.com ", user.getEmail());
+        Assert.assertEquals("mati@gmail.com", user.getEmail());
         Assert.assertEquals("ROLE_ADMIN", user.getRole().getName());
     }
 
