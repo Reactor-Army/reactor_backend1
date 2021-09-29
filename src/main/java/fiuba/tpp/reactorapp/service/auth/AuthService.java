@@ -12,6 +12,7 @@ import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
+import fiuba.tpp.reactorapp.model.response.auth.UserResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
@@ -93,6 +94,23 @@ public class AuthService {
         }
         return roles;
 
+    }
+
+    public List<UserResponse> getUsers(){
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (User user: userRepository.findAll()) {
+            UserResponse response = new UserResponse(user);
+            userResponses.add(response);
+        }
+        return userResponses;
+    }
+
+    public UserResponse getUser(Long id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            return new UserResponse(user.get());
+        }
+        throw new UserNotFoundException();
     }
 
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {

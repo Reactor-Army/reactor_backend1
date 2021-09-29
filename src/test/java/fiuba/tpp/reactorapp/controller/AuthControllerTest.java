@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.entities.auth.AuthCode;
+import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
@@ -9,6 +10,7 @@ import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
+import fiuba.tpp.reactorapp.model.response.auth.UserResponse;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
@@ -21,6 +23,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -35,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@WithMockUser(username="admin",roles={"ADMIN"})
 class AuthControllerTest {
 
     @Autowired
@@ -192,6 +196,32 @@ class AuthControllerTest {
         Assert.assertEquals("ROLE_ADMIN", roles.get(1).getName());
     }
 
+    @Test
+    void getUsers(){
+        createUser();
+        List<UserResponse> users = authController.getUsers();
+        Assert.assertEquals(1L, users.size());
+        Assert.assertEquals("Matias", users.get(0).getName());
+        Assert.assertEquals("Reimondo", users.get(0).getSurname());
+    }
+
+    @Test
+    void getUser(){
+        createUser();
+        UserResponse user= authController.getUser(1L);
+        Assert.assertEquals("mati@gmail.com", user.getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.getRole().getName());
+    }
+
+    @Test
+    void getUserNotExist(){
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.getUser(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
     private AuthCode createCode(Date date){
         authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
         Optional<User> user = userRepository.findByEmail("mati@gmail.com");
@@ -201,7 +231,18 @@ class AuthControllerTest {
         authCode.setRefreshDate(date);
         authCodeRepository.save(authCode);
         return authCode;
+    }
 
+    private User createUser(){
+        User user = new User();
+        user.setName("Matias");
+        user.setSurname("Reimondo");
+        user.setEmail("mati@gmail.com");
+        user.setPassword("Prueba123");
+        user.setRole(ERole.ROLE_ADMIN);
+        user.setDescription("Es un usuario de prueba");
+        userRepository.save(user);
+        return user;
     }
 
 }
