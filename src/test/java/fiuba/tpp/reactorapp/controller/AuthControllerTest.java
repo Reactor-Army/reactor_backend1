@@ -301,6 +301,47 @@ class AuthControllerTest {
         Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
     }
 
+    @Test
+    void testUpdateUser(){
+        authController.createUser(createUserRequest("mati"));
+        authController.updateUser(1L, createUserRequest("lucas"));
+
+        Optional<User> user = userRepository.findById(1L);
+
+        Assert.assertEquals("lucas@gmail.com", user.get().getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
+        Assert.assertEquals("lucas", user.get().getName());
+    }
+
+    @Test
+    void testUpdateNotExistentUser() {
+        UserRequest request = createUserRequest("mati");
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.updateUser(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @Test
+    void testDeleteUser(){
+        authController.createUser(createUserRequest("mati"));
+        authController.deleteUser(1L);
+
+        Optional<User> user = userRepository.findById(1L);
+
+        Assert.assertFalse(user.isPresent());
+    }
+
+    @Test
+    void testDeleteNotExistentUser() {
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.deleteUser(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
 
 
     @Test

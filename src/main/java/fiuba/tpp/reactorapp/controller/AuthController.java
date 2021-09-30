@@ -121,6 +121,41 @@ public class AuthController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/users/{id}")
+    public UserResponse updateUser(@PathVariable Long id,@RequestBody UserRequest userRequest){
+        try{
+            validateUserRequest(userRequest);
+            return authService.updateUser(id,userRequest);
+        } catch (InvalidUserException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_USER.getMessage(), e);
+        }catch (EmailAlreadyExistException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_EMAIL.getMessage(), e);
+        }catch (UserNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Long id){
+        try{
+            authService.deleteUser(id);
+        }catch (UserNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
 
     /**
      * Validamos que los campos email nombre apellido password no sean nulos

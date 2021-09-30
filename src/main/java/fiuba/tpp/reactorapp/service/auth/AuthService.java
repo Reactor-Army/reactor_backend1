@@ -128,6 +128,30 @@ public class AuthService {
         return new UserResponse(user);
     }
 
+    public UserResponse updateUser(Long id,UserRequest request) throws EmailAlreadyExistException, UserNotFoundException {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
+            throw new EmailAlreadyExistException();
+        }
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            User userUpdated = user.get().update(request);
+            userUpdated.setPassword(encoder.encode(request.getPassword()));
+            userUpdated.setRole(EnumUtils.getEnum(ERole.class,request.getRole()));
+            userRepository.save(userUpdated);
+            return new UserResponse(userUpdated);
+        }
+        throw new UserNotFoundException();
+    }
+
+    public void deleteUser(Long id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            userRepository.delete(user.get());
+        }else{
+            throw new UserNotFoundException();
+        }
+    }
+
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
         AuthCode authCode = authCodeService.getAuthCode(request.getCode());
         validateCodeExpiration(authCode.getRefreshDate());

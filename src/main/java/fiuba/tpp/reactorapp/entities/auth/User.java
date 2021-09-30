@@ -50,6 +50,11 @@ public class User {
         copyData(request);
     }
 
+    public User update(UserRequest request){
+        copyData(request);
+        return this;
+    }
+
     public Long getId() {
         return id;
     }
