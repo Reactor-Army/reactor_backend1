@@ -1,14 +1,17 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.model.auth.exception.*;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
+import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
-import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
-import fiuba.tpp.reactorapp.model.response.auth.UserResponse;
+import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
+import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -94,9 +97,44 @@ public class AuthController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/roles")
     public List<RoleResponse> getRoles(){
         return authService.getRoles();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/users")
+    public UserResponse createUser(@RequestBody UserRequest userRequest){
+        try{
+            validateUserRequest(userRequest);
+            return authService.createUser(userRequest);
+        } catch (InvalidUserException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_USER.getMessage(), e);
+        }catch (EmailAlreadyExistException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_EMAIL.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
+
+    /**
+     * Validamos que los campos email nombre apellido password no sean nulos
+     * Ademas el rol debe existir entre los roles posibles
+     * @param request
+     * @throws InvalidUserException
+     */
+    private void validateUserRequest(UserRequest request) throws InvalidUserException {
+        if(request.getEmail() == null || request.getEmail().isEmpty() || !request.getEmail().contains("@")) throw new InvalidUserException();
+        if(request.getName() == null || request.getName().isEmpty()) throw new InvalidUserException();
+        if(request.getSurname() == null || request.getSurname().isEmpty()) throw new InvalidUserException();
+        if(request.getPassword() == null || request.getPassword().isEmpty()) throw new InvalidUserException();
+        if(!EnumUtils.isValidEnum(ERole.class, request.getRole())) throw new InvalidUserException();
+
     }
 
     private void validateAuthRequest(AuthRequest request) throws InvalidRegisterException {

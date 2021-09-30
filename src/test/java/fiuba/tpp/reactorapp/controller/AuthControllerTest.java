@@ -6,11 +6,12 @@ import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
+import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
-import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
-import fiuba.tpp.reactorapp.model.response.auth.UserResponse;
+import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
+import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
@@ -214,6 +215,95 @@ class AuthControllerTest {
     }
 
     @Test
+    void testCreateUser(){
+        UserResponse response = authController.createUser(createUserRequest("mati"));
+        Optional<User> user = userRepository.findById(1L);
+
+        Assert.assertEquals("mati@gmail.com", user.get().getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
+        Assert.assertEquals("mati@gmail.com", response.getEmail());
+    }
+
+    @Test
+    void testCreaterUserInternalErrror() {
+        UserRequest request = createUserRequest("mati");
+        Mockito.when(authService.createUser(request)).thenThrow(RuntimeException.class);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authMockController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+    }
+
+    @Test
+    void testCreateDuplicateUser(){
+        UserRequest request = createUserRequest("mati");
+        authController.createUser(request);
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
+            authController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.DUPLICATE_EMAIL.getMessage(), e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "'mati.com'",
+            "null",
+            "''"
+    }, nullValues = {"null"})
+    void testCreaterUserInvalidMail(String email) {
+        UserRequest request = createUserRequest("mati");
+        request.setEmail(email);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "''",
+            "null"
+    }, nullValues = {"null"})
+    void testCreaterUserInvalidName(String name) {
+        UserRequest request = createUserRequest("mati");
+        request.setName(name);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "''",
+            "null"
+    }, nullValues = {"null"})
+    void testCreaterSurnameInvalidName(String surname) {
+        UserRequest request = createUserRequest("mati");
+        request.setSurname(surname);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "''",
+            "null"
+    }, nullValues = {"null"})
+    void testCreateUserInvalidPassword(String pass) {
+        UserRequest request = createUserRequest("mati");
+        request.setPassword(pass);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+    }
+
+
+
+    @Test
     void getUserNotExist(){
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             authController.getUser(1L);
@@ -242,6 +332,17 @@ class AuthControllerTest {
         user.setRole(ERole.ROLE_ADMIN);
         user.setDescription("Es un usuario de prueba");
         userRepository.save(user);
+        return user;
+    }
+
+    private UserRequest createUserRequest(String placeholder){
+        UserRequest user = new UserRequest();
+        user.setName(placeholder);
+        user.setSurname("Reimondo");
+        user.setEmail(placeholder+"@gmail.com");
+        user.setPassword("Prueba123");
+        user.setRole(ERole.ROLE_ADMIN.name());
+        user.setDescription("Es un usuario de prueba");
         return user;
     }
 

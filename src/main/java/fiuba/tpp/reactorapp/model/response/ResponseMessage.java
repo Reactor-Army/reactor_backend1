@@ -26,6 +26,7 @@ public enum ResponseMessage {
     INVALID_BOHART("Se requiere el caudal volumétrico, la concentración inicial del adsorbato, la velocidad lineal, la altura del lecho del reactor, y las observaciones"),
     INVALID_FIELDS("Recordá que los campos deben ser numéricos"),
     CODE_EXPIRED("Tu código ya ha expirado, intentá reiniciar la contraseña nuevamente"),
+    INVALID_USER("Para crear un usuario se requiere un nombre y apellido, un email válido, unas password y uno de los roles permitidos"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
     private final String message;
