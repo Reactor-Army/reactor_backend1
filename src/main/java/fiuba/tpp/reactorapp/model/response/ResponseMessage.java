@@ -27,6 +27,7 @@ public enum ResponseMessage {
     INVALID_FIELDS("Recordá que los campos deben ser numéricos"),
     CODE_EXPIRED("Tu código ya ha expirado, intentá reiniciar la contraseña nuevamente"),
     INVALID_USER("Para crear un usuario se requiere un nombre y apellido, un email válido, unas password y uno de los roles permitidos"),
+    UNAUTHORIZED("Para realizar esta operación debes ser administrador del sistema"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
     private final String message;

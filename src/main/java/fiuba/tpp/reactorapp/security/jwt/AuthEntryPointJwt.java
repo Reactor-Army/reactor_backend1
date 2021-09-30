@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.security.jwt;
 
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
@@ -20,7 +21,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         logger.error("Unauthorized error: {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Credenciales inválidas. Verifica tu email y password");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ResponseMessage.UNAUTHORIZED.getMessage());
     }
 
 }
