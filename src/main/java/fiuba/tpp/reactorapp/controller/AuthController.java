@@ -19,11 +19,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/auth")
 public class AuthController {
+
+    private static final String EMAIL_PATTERN =
+            "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                    + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
     @Autowired
     AuthService authService;
@@ -164,12 +172,17 @@ public class AuthController {
      * @throws InvalidUserException
      */
     private void validateUserRequest(UserRequest request) throws InvalidUserException {
-        if(request.getEmail() == null || request.getEmail().isEmpty() || !request.getEmail().contains("@")) throw new InvalidUserException();
+        if(request.getEmail() == null || request.getEmail().isEmpty() || !isValidEmail(request.getEmail())) throw new InvalidUserException();
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidUserException();
         if(request.getSurname() == null || request.getSurname().isEmpty()) throw new InvalidUserException();
         if(request.getPassword() == null || request.getPassword().isEmpty()) throw new InvalidUserException();
         if(!EnumUtils.isValidEnum(ERole.class, request.getRole())) throw new InvalidUserException();
 
+    }
+
+    private boolean isValidEmail(String email){
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     private void validateAuthRequest(AuthRequest request) throws InvalidRegisterException {

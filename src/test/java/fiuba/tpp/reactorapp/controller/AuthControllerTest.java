@@ -247,10 +247,13 @@ class AuthControllerTest {
     @ParameterizedTest
     @CsvSource(value = {
             "'mati.com'",
+            "'cac@'",
+            "cac@.com",
+            "@gmail.com",
             "null",
             "''"
     }, nullValues = {"null"})
-    void testCreaterUserInvalidMail(String email) {
+    void testCreaterUserInvalidEmail(String email) {
         UserRequest request = createUserRequest("mati");
         request.setEmail(email);
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
@@ -278,7 +281,7 @@ class AuthControllerTest {
             "''",
             "null"
     }, nullValues = {"null"})
-    void testCreaterSurnameInvalidName(String surname) {
+    void testCreateUserInvalidSurname(String surname) {
         UserRequest request = createUserRequest("mati");
         request.setSurname(surname);
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
