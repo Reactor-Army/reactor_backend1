@@ -9,13 +9,15 @@ import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
+import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
-import fiuba.tpp.reactorapp.model.response.auth.RoleResponse;
-import fiuba.tpp.reactorapp.model.response.auth.UserResponse;
+import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
+import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -111,6 +113,43 @@ public class AuthService {
             return new UserResponse(user.get());
         }
         throw new UserNotFoundException();
+    }
+
+    public UserResponse createUser(UserRequest request) throws EmailAlreadyExistException {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
+            throw new EmailAlreadyExistException();
+        }
+        User user = new User(request);
+        user.setPassword(encoder.encode(request.getPassword()));
+        user.setRole(EnumUtils.getEnum(ERole.class,request.getRole()));
+
+        userRepository.save(user);
+
+        return new UserResponse(user);
+    }
+
+    public UserResponse updateUser(Long id,UserRequest request) throws EmailAlreadyExistException, UserNotFoundException {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
+            throw new EmailAlreadyExistException();
+        }
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            User userUpdated = user.get().update(request);
+            userUpdated.setPassword(encoder.encode(request.getPassword()));
+            userUpdated.setRole(EnumUtils.getEnum(ERole.class,request.getRole()));
+            userRepository.save(userUpdated);
+            return new UserResponse(userUpdated);
+        }
+        throw new UserNotFoundException();
+    }
+
+    public void deleteUser(Long id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            userRepository.delete(user.get());
+        }else{
+            throw new UserNotFoundException();
+        }
     }
 
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {

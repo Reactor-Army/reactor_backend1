@@ -1,4 +1,4 @@
-package fiuba.tpp.reactorapp.model.response.auth;
+package fiuba.tpp.reactorapp.model.auth.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

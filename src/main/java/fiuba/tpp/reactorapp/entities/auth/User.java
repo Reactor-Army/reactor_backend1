@@ -1,5 +1,7 @@
 package fiuba.tpp.reactorapp.entities.auth;
 
+import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
+
 import javax.persistence.*;
 
 import javax.validation.constraints.Email;
@@ -42,6 +44,15 @@ public class User {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public User(UserRequest request){
+        copyData(request);
+    }
+
+    public User update(UserRequest request){
+        copyData(request);
+        return this;
     }
 
     public Long getId() {
@@ -98,5 +109,12 @@ public class User {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    private void copyData(UserRequest userRequest){
+        this.email = userRequest.getEmail();
+        this.name = userRequest.getName();
+        this.surname = userRequest.getSurname();
+        this.description = userRequest.getDescription();
     }
 }
