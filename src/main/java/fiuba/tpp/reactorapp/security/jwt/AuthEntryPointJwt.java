@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.security.jwt;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,12 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         logger.error("Unauthorized error: {}", authException.getMessage());
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ResponseMessage.UNAUTHORIZED.getMessage());
+        if(authException instanceof BadCredentialsException){
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ResponseMessage.BAD_CREDENTIALS.getMessage());
+        }else{
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, ResponseMessage.UNAUTHORIZED.getMessage());
+        }
+
     }
 
 }
