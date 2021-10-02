@@ -63,8 +63,8 @@ class AuthControllerTest {
     void testRegisterUserAndLogin(){
         authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
         LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
-        Assert.assertEquals("mati@gmail.com", response.getEmail());
-        Assert.assertEquals("ROLE_USER", response.getRoles().get(0));
+        Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
+        Assert.assertEquals("ROLE_USER", response.getUser().getRole().getName());
     }
 
     @Test
@@ -94,6 +94,16 @@ class AuthControllerTest {
         Assert.assertThrows(BadCredentialsException.class, () ->{
             authController.authenticateUser(request);
         });
+    }
+
+    @Test
+    void testLoginInternalErrror() throws UserNotFoundException {
+        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
+        Mockito.when(authService.login(request)).thenThrow(UserNotFoundException.class);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authMockController.authenticateUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
     }
 
     @Test
