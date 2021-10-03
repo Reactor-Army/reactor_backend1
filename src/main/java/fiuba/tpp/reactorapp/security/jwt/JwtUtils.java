@@ -1,16 +1,21 @@
 package fiuba.tpp.reactorapp.security.jwt;
 
+import fiuba.tpp.reactorapp.entities.auth.Token;
+import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtUtils {
@@ -25,25 +30,28 @@ public class JwtUtils {
 
     private static final int TOKEN_PREFIX_LENGTH = 7;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
     public String generateJwtToken(Authentication authentication) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+
+        saveToken(token);
+
+        return token;
     }
 
-    public String invalidateJwtToken(String email) {
-        return Jwts.builder()
-                .setSubject((email))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + 1))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+    public void invalidateJwtToken(String token) {
+        Optional<Token> tokenDeleted = tokenRepository.findByHashToken(token);
+        tokenDeleted.ifPresent(t -> tokenRepository.delete(t));
     }
 
     public String getUserNameFromJwtToken(String token) {
@@ -53,7 +61,9 @@ public class JwtUtils {
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
-            return true;
+            if(tokenRepository.findByHashToken(authToken).isPresent()){
+                return true;
+            }
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
@@ -85,5 +95,9 @@ public class JwtUtils {
         String authToken = parseJwtHeader(token);
         if(authToken == null || authToken.isEmpty()) return true;
         return !validateJwtToken(authToken);
+    }
+
+    private void saveToken(String token){
+        tokenRepository.save(new Token(token, Calendar.getInstance().getTime()));
     }
 }

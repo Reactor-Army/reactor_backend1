@@ -79,7 +79,7 @@ public class AuthService {
     }
 
     public void logout(String authHeader){
-        jwtUtils.invalidateJwtToken(jwtUtils.getUserNameFromJwtToken(jwtUtils.parseJwtHeader(authHeader)));
+        jwtUtils.invalidateJwtToken(jwtUtils.parseJwtHeader(authHeader));
     }
 
     public void resetPasswordGenerateCode(AuthRequest request) throws UserNotFoundException {
