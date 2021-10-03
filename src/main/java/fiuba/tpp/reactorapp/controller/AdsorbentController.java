@@ -105,7 +105,7 @@ public class AdsorbentController {
     }
 
     @GetMapping(value = "/buscar/nombre")
-    public List<AdsorbentNameResponse> searchAdsorbentsName(@RequestParam(name="nombre",required = false) String name,@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestHeader("Authorization") String authHeader){
+    public List<AdsorbentNameResponse> searchAdsorbentsName(@RequestParam(name="nombre",required = false) String name,@RequestParam(name="idAdsorbato",required = false) Long adsorbateId,@RequestHeader(name ="Authorization", required = false) String authHeader){
         List<AdsorbentNameResponse> adsorbentsNames = new ArrayList<>();
         AdsorbentFilter filter = new AdsorbentFilter(name, adsorbateId);
         for (Adsorbent adsorbent : adsorbentService.search(filter, jwtUtils.isAnonymous(authHeader))) {
