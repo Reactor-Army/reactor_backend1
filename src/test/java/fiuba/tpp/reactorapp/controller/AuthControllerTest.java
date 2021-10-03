@@ -9,6 +9,8 @@ import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
+import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
 import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
@@ -23,7 +25,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.junit.Assert;
@@ -57,6 +61,12 @@ class AuthControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private AdsorbentController adsorbentController;
+
 
 
     @Test
@@ -65,6 +75,24 @@ class AuthControllerTest {
         LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
         Assert.assertEquals("ROLE_USER", response.getUser().getRole().getName());
+    }
+
+    @Test
+    void testLoginAndLogout(){
+        createUser();
+
+        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        adsorbentController.createAdsorbent(request);
+
+        LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
+        String token = "Bearer " + response.getAccessToken();
+
+        List<AdsorbentResponse> oldList = adsorbentController.getAdsorbents(token);
+        authController.logout(token);
+
+        Assert.assertEquals(1L,oldList.size());
+
+        Assert.assertEquals(0L,adsorbentController.getAdsorbents(token).size());
     }
 
     @Test
@@ -382,7 +410,7 @@ class AuthControllerTest {
         user.setName("Matias");
         user.setSurname("Reimondo");
         user.setEmail("mati@gmail.com");
-        user.setPassword("Prueba123");
+        user.setPassword(encoder.encode("Prueba123"));
         user.setRole(ERole.ROLE_ADMIN);
         user.setDescription("Es un usuario de prueba");
         userRepository.save(user);
@@ -394,7 +422,7 @@ class AuthControllerTest {
         user.setName(placeholder);
         user.setSurname("Reimondo");
         user.setEmail(placeholder+"@gmail.com");
-        user.setPassword("Prueba123");
+        user.setPassword(encoder.encode("Prueba123"));
         user.setRole(ERole.ROLE_ADMIN.name());
         user.setDescription("Es un usuario de prueba");
         return user;

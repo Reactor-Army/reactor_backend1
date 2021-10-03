@@ -46,6 +46,11 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/logout")
+    public void logout(@RequestHeader("Authorization") String authHeader) {
+        authService.logout(authHeader);
+    }
+
     @PostMapping("/register")
     public RegisterResponse registerUser(@RequestBody AuthRequest registerRequest) {
         try{
