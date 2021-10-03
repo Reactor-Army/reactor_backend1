@@ -1,20 +1,15 @@
 package fiuba.tpp.reactorapp.model.auth.response;
 
-import java.util.List;
-
 public class LoginResponse {
 
     private String token;
     private String type = "Bearer";
-    private Long id;
-    private String email;
-    private List<String> roles;
+    private UserResponse user;
 
-    public LoginResponse(String accessToken, Long id, String email, List<String> roles) {
-        this.token = accessToken;
-        this.id = id;
-        this.email = email;
-        this.roles = roles;
+
+    public LoginResponse(String token, UserResponse user) {
+        this.token = token;
+        this.user = user;
     }
 
     public String getAccessToken() {
@@ -33,23 +28,11 @@ public class LoginResponse {
         this.type = tokenType;
     }
 
-    public Long getId() {
-        return id;
+    public UserResponse getUser() {
+        return user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<String> getRoles() {
-        return roles;
+    public void setUser(UserResponse user) {
+        this.user = user;
     }
 }

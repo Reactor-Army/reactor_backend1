@@ -22,13 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -64,7 +62,7 @@ public class AuthService {
 
     }
 
-    public LoginResponse login(AuthRequest request){
+    public LoginResponse login(AuthRequest request) throws UserNotFoundException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
@@ -72,12 +70,12 @@ public class AuthService {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
 
-        return new LoginResponse(jwt, userDetails.getId(), userDetails.getEmail(), roles);
+        Optional<User> user = userRepository.findByEmail(userDetails.getEmail());
 
+        if(!user.isPresent()) throw new UserNotFoundException();
+
+        return new LoginResponse(jwt, new UserResponse(user.get()));
     }
 
     public void resetPasswordGenerateCode(AuthRequest request) throws UserNotFoundException {

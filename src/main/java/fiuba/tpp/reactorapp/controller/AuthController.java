@@ -38,7 +38,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse authenticateUser(@RequestBody AuthRequest authRequest) {
-        return authService.login(authRequest);
+        try {
+            return authService.login(authRequest);
+        } catch (UserNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
     }
 
     @PostMapping("/register")
