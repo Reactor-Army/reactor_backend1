@@ -86,7 +86,7 @@ public class AdsorbentController {
     }
 
     @GetMapping(value = "")
-    public List<AdsorbentResponse> getAdsorbents(@RequestHeader("Authorization") String authHeader){
+    public List<AdsorbentResponse> getAdsorbents(@RequestHeader(name ="Authorization", required = false) String authHeader){
         List<AdsorbentResponse> adsorbents = new ArrayList<>();
         for (Adsorbent adsorbent : adsorbentService.getAdsorbents(jwtUtils.isAnonymous(authHeader))) {
             adsorbents.add(new AdsorbentResponse(adsorbent));
@@ -95,7 +95,7 @@ public class AdsorbentController {
     }
 
     @GetMapping(value = "/buscar")
-    public List<AdsorbentResponse> searchAdsorbents(@RequestParam(name="nombre",required = false) String name,@RequestHeader("Authorization") String authHeader){
+    public List<AdsorbentResponse> searchAdsorbents(@RequestParam(name="nombre",required = false) String name,@RequestHeader(name ="Authorization", required = false) String authHeader){
         List<AdsorbentResponse> adsorbents = new ArrayList<>();
         AdsorbentFilter filter = new AdsorbentFilter(name);
         for (Adsorbent adsorbent : adsorbentService.search(filter, jwtUtils.isAnonymous(authHeader))) {
@@ -115,7 +115,7 @@ public class AdsorbentController {
     }
 
     @GetMapping(value = "/{id}")
-    public AdsorbentResponse getAdsorbent(@PathVariable Long id,@RequestHeader("Authorization") String authHeader) {
+    public AdsorbentResponse getAdsorbent(@PathVariable Long id,@RequestHeader(name ="Authorization", required = false) String authHeader) {
         try {
             return new AdsorbentResponse(adsorbentService.getById(id,jwtUtils.isAnonymous(authHeader)));
         } catch (ComponentNotFoundException e) {
