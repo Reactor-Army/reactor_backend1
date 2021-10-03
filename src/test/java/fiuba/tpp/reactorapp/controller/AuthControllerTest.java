@@ -369,6 +369,17 @@ class AuthControllerTest {
     }
 
     @Test
+    void testUpdateUserSameEmailOther(){
+        authController.createUser(createUserRequest("lucas"));
+        authController.createUser(createUserRequest("mati"));
+        UserRequest req = createUserRequest("lucas");
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.updateUser(2L, req);
+        });
+        Assert.assertEquals(ResponseMessage.DUPLICATE_EMAIL.getMessage(),e.getReason());
+    }
+
+    @Test
     void testUpdateNotExistentUser() {
         UserRequest request = createUserRequest("mati");
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
