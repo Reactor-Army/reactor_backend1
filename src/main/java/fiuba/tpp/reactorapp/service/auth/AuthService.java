@@ -132,7 +132,7 @@ public class AuthService {
     }
 
     public UserResponse updateUser(Long id,UserRequest request) throws EmailAlreadyExistException, UserNotFoundException {
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
+        if (Boolean.TRUE.equals(userRepository.findByEmailAndIdNot(request.getEmail(),id).isPresent())) {
             throw new EmailAlreadyExistException();
         }
         Optional<User> user = userRepository.findById(id);

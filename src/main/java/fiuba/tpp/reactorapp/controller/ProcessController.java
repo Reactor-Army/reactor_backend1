@@ -97,7 +97,7 @@ public class ProcessController {
     }
 
     @GetMapping(value = "")
-    public List<ProcessResponse> getProcesses(@RequestHeader("Authorization") String authHeader){
+    public List<ProcessResponse> getProcesses(@RequestHeader(name ="Authorization", required = false) String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
         for (Process process : processService.getProcesses(jwtUtils.isAnonymous(authHeader))) {
             processes.add(new ProcessResponse(process));
@@ -106,7 +106,7 @@ public class ProcessController {
     }
 
     @GetMapping(value = "/buscar")
-    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId, @RequestHeader("Authorization") String authHeader){
+    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId, @RequestHeader(name ="Authorization", required = false) String authHeader){
         List<ProcessResponse> processes = new ArrayList<>();
         ProcessFilter filter = new ProcessFilter(adsorbateId,adsorbentId);
         for (Process process : processService.search(filter,jwtUtils.isAnonymous(authHeader))){
@@ -116,7 +116,7 @@ public class ProcessController {
     }
 
     @PostMapping(value = "/adsorbato")
-    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request,@RequestHeader("Authorization") String authHeader){
+    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request,@RequestHeader(name ="Authorization", required = false) String authHeader){
         List<SearchByAdsorbateResponse> searchResults = new ArrayList<>();
         for (SearchByAdsorbateDTO result: processService.searchByAdsorbate(request,jwtUtils.isAnonymous(authHeader))) {
             searchResults.add(new SearchByAdsorbateResponse(result,request.getAdsorbatesIds().size()));
@@ -125,7 +125,7 @@ public class ProcessController {
     }
 
     @GetMapping(value = "/{id}")
-    public ProcessResponse getProcess(@PathVariable Long id,@RequestHeader("Authorization") String authHeader) {
+    public ProcessResponse getProcess(@PathVariable Long id,@RequestHeader(name ="Authorization", required = false) String authHeader) {
         try {
             return new ProcessResponse(processService.getById(id,jwtUtils.isAnonymous(authHeader)));
         } catch (ComponentNotFoundException e) {
