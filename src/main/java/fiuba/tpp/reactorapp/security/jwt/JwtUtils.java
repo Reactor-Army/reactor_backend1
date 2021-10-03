@@ -1,7 +1,9 @@
 package fiuba.tpp.reactorapp.security.jwt;
 
 import fiuba.tpp.reactorapp.entities.auth.Token;
+import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
+import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -31,9 +33,12 @@ public class JwtUtils {
     private static final int TOKEN_PREFIX_LENGTH = 7;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private TokenRepository tokenRepository;
 
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(Authentication authentication, User user) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -44,14 +49,17 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
 
-        saveToken(token);
+        saveToken(token, user);
 
         return token;
     }
 
     public void invalidateJwtToken(String token) {
-        Optional<Token> tokenDeleted = tokenRepository.findByHashToken(token);
-        tokenDeleted.ifPresent(t -> tokenRepository.delete(t));
+        Optional<User> user = userRepository.findByEmail(getUserNameFromJwtToken(token));
+        if(user.isPresent()){
+            Optional<Token> tokenDeleted = tokenRepository.findByUser(user.get());
+            tokenDeleted.ifPresent(t -> tokenRepository.delete(t));
+        }
     }
 
     public String getUserNameFromJwtToken(String token) {
@@ -61,8 +69,12 @@ public class JwtUtils {
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
-            if(tokenRepository.findByHashToken(authToken).isPresent()){
-                return true;
+            Optional<User> user = userRepository.findByEmail(getUserNameFromJwtToken(authToken));
+            if(user.isPresent()){
+                Optional<Token> t = tokenRepository.findByUser(user.get());
+                if(t.isPresent()){
+                    return t.get().getHashToken().equals(authToken);
+                }
             }
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
@@ -97,7 +109,18 @@ public class JwtUtils {
         return !validateJwtToken(authToken);
     }
 
-    private void saveToken(String token){
-        tokenRepository.save(new Token(token, Calendar.getInstance().getTime()));
+    private void saveToken(String token, User user){
+        Token generated;
+        Date date = Calendar.getInstance().getTime();
+        Optional<Token> tokenGenerated = tokenRepository.findByUser(user);
+        if(tokenGenerated.isPresent()){
+            generated = tokenGenerated.get();
+            generated.setHashToken(token);
+            generated.setCreatedAt(date);
+        }else{
+            generated = new Token(user,token, Calendar.getInstance().getTime());
+        }
+        tokenRepository.save(generated);
+
     }
 }

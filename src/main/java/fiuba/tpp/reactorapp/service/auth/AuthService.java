@@ -67,13 +67,14 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         Optional<User> user = userRepository.findByEmail(userDetails.getEmail());
-
         if(!user.isPresent()) throw new UserNotFoundException();
+
+        String jwt = jwtUtils.generateJwtToken(authentication, user.get());
+
 
         return new LoginResponse(jwt, new UserResponse(user.get()));
     }

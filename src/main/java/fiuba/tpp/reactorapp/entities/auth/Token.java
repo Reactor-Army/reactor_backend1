@@ -6,13 +6,17 @@ import java.util.Date;
 @Entity
 @Table(	name = "\"Token\"",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "hashToken")
+                @UniqueConstraint(columnNames = "user_id")
         })
 public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     private String hashToken;
 
@@ -21,7 +25,8 @@ public class Token {
     public Token() {
     }
 
-    public Token(String hashToken, Date createdAt) {
+    public Token(User user, String hashToken, Date createdAt) {
+        this.user = user;
         this.hashToken = hashToken;
         this.createdAt = createdAt;
     }
@@ -48,5 +53,13 @@ public class Token {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
