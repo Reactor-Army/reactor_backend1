@@ -37,6 +37,15 @@ public class JwtUtils {
                 .compact();
     }
 
+    public String invalidateJwtToken(String email) {
+        return Jwts.builder()
+                .setSubject((email))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + 1))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
@@ -64,7 +73,7 @@ public class JwtUtils {
         return parseJwtHeader(headerAuth);
     }
 
-    private String parseJwtHeader(String headerAuth){
+    public String parseJwtHeader(String headerAuth){
         if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(TOKEN_PREFIX_LENGTH, headerAuth.length());
         }

@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -65,6 +66,16 @@ class AuthControllerTest {
         LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
         Assert.assertEquals("ROLE_USER", response.getUser().getRole().getName());
+    }
+
+    @Test
+    void testLoginAndLogout(){
+        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
+        LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
+        authController.logout("Bearer " + response.getAccessToken());
+        AccessDeniedException e = Assertions.assertThrows(AccessDeniedException.class, () -> {
+            authController.deleteUser(2L);
+        });
     }
 
     @Test

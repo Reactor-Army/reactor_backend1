@@ -78,6 +78,10 @@ public class AuthService {
         return new LoginResponse(jwt, new UserResponse(user.get()));
     }
 
+    public void logout(String authHeader){
+        jwtUtils.invalidateJwtToken(jwtUtils.getUserNameFromJwtToken(jwtUtils.parseJwtHeader(authHeader)));
+    }
+
     public void resetPasswordGenerateCode(AuthRequest request) throws UserNotFoundException {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
         if(user.isPresent()){
