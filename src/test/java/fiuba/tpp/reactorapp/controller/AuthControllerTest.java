@@ -33,6 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Calendar;
@@ -192,6 +193,7 @@ class AuthControllerTest {
         assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void testResetPassword() {
         ResetPasswordRequest request = new ResetPasswordRequest("487657","Prueba123");
@@ -217,6 +219,7 @@ class AuthControllerTest {
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void testResetPasswordOldCode(){
         Calendar calendar = Calendar.getInstance();
@@ -230,6 +233,7 @@ class AuthControllerTest {
         Assert.assertEquals(ResponseMessage.CODE_EXPIRED.getMessage(), e.getReason());
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void testHappyPath(){
         createCode(Calendar.getInstance().getTime(), "prueba@gmail.com");
