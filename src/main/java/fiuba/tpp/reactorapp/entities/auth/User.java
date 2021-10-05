@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(	name = "\"User\"",
@@ -37,6 +38,8 @@ public class User {
 
 
     private ERole role;
+
+    private Date lastLogin;
 
     public User() {
     }
@@ -109,6 +112,14 @@ public class User {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     private void copyData(UserRequest userRequest){

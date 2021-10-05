@@ -3,6 +3,8 @@ package fiuba.tpp.reactorapp.model.auth.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.auth.User;
 
+import java.util.Date;
+
 
 public class UserResponse {
 
@@ -22,6 +24,9 @@ public class UserResponse {
     @JsonProperty("rol")
     private RoleResponse role;
 
+    @JsonProperty("ultimoLogin")
+    private Date lastLogin;
+
     public UserResponse(User user) {
         copyData(user);
     }
@@ -32,7 +37,8 @@ public class UserResponse {
         this.name = user.getName();
         this.surname = user.getSurname();
         this.description = user.getDescription();
-        this.role = new RoleResponse(user.getRole().name(),user.getRole().getDescription());
+        this.role = new RoleResponse(user.getRole().getRoleName(),user.getRole().getDescription());
+        this.lastLogin = user.getLastLogin();
     }
 
     public Long getId() {
@@ -81,5 +87,13 @@ public class UserResponse {
 
     public void setRole(RoleResponse role) {
         this.role = role;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 }

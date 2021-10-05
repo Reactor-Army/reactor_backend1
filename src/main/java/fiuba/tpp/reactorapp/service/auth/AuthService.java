@@ -76,7 +76,13 @@ public class AuthService {
         String jwt = jwtUtils.generateJwtToken(authentication, user.get());
 
 
-        return new LoginResponse(jwt, new UserResponse(user.get()));
+        return new LoginResponse(jwt, new UserResponse(updateLastLogin(user.get())));
+    }
+
+    private User updateLastLogin(User user){
+        user.setLastLogin(Calendar.getInstance().getTime());
+        userRepository.save(user);
+        return user;
     }
 
     public void logout(String authHeader){
