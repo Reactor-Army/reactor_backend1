@@ -75,7 +75,7 @@ class AuthControllerTest {
         LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
         Assert.assertEquals("Usuario", response.getUser().getRole().getName());
-        Assert.assertTrue(response.getUser().getLastLogin() != null);
+        Assert.assertNotNull(response.getUser().getLastLogin());
     }
 
     @Test
