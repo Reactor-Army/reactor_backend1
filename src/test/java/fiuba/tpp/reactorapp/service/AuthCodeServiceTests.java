@@ -10,6 +10,7 @@ import fiuba.tpp.reactorapp.service.auth.AuthCodeService;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import fiuba.tpp.reactorapp.service.utils.EmailService;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthCodeServiceTests {
 
     @Mock
@@ -48,8 +48,10 @@ class AuthCodeServiceTests {
     private AuthCodeRepository authCodeRepository;
 
     @BeforeEach
-    void setup() {
+    void resetDatabase(){
         MockitoAnnotations.initMocks(this);
+        authCodeRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     private User registerUser(){
@@ -76,7 +78,7 @@ class AuthCodeServiceTests {
         Mockito.doNothing().when(emailService).sendSimpleMessage(anyString(),anyString(),anyString());
         authCodeMockService.generateAuthCode(user);
         Date now = Calendar.getInstance().getTime();
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(1);
         authCodeMockService.generateAuthCode(user);
 
         Optional<AuthCode> code = authCodeRepository.findByUser(user);

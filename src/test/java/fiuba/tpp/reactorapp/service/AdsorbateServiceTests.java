@@ -5,6 +5,8 @@ import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.DuplicateIUPACNameException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbateFilter;
 import fiuba.tpp.reactorapp.model.request.AdsorbateRequest;
+import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.Assert;
@@ -16,11 +18,18 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AdsorbateServiceTests {
 
     @Autowired
     private AdsorbateService adsorbateService;
+
+    @Autowired
+    private AdsorbateRepository adsorbateRepository;
+
+    @AfterEach
+    void resetDatabase(){
+        adsorbateRepository.deleteAll();
+    }
 
 
     @Test
@@ -74,8 +83,8 @@ class AdsorbateServiceTests {
     void testUpdateAdsorbate() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
-        adsorbateService.createAdsorbate(request);
-        Adsorbate updated = adsorbateService.updateAdsorbate(1l, requestUpdate);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
+        Adsorbate updated = adsorbateService.updateAdsorbate(adsorbate.getId(), requestUpdate);
 
         Assert.assertEquals(updated.getIonName(), requestUpdate.getIonName());
         Assert.assertEquals(updated.getIonCharge(), requestUpdate.getIonCharge());
@@ -95,8 +104,8 @@ class AdsorbateServiceTests {
     @Test
     void testDeleteAdsorbato() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        adsorbateService.createAdsorbate(request);
-        adsorbateService.deleteAdsorbate(1l);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
+        adsorbateService.deleteAdsorbate(adsorbate.getId());
         Assert.assertTrue(adsorbateService.getAdsorbates(false).isEmpty());
 
     }
@@ -210,11 +219,13 @@ class AdsorbateServiceTests {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest request2 = new AdsorbateRequest("Prueba","PruebaIUPAC2",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC2",12,10f,100f);
-        adsorbateService.createAdsorbate(request);
+        Adsorbate adsorbate = adsorbateService.createAdsorbate(request);
         adsorbateService.createAdsorbate(request2);
 
+        Long adsorbateId = adsorbate.getId();
+
         Assertions.assertThrows(DuplicateIUPACNameException.class, () -> {
-            adsorbateService.updateAdsorbate(1L, requestUpdate);
+            adsorbateService.updateAdsorbate(adsorbateId, requestUpdate);
         });
     }
 

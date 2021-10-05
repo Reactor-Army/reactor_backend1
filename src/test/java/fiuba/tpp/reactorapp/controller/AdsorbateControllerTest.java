@@ -8,8 +8,11 @@ import fiuba.tpp.reactorapp.model.response.AdsorbateNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbateResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
+import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
+import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.AdsorbateService;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +29,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin",roles={"ADMIN"})
 class AdsorbateControllerTest {
 
@@ -45,6 +47,19 @@ class AdsorbateControllerTest {
     @Autowired
     private AdsorbateRepository adsorbateRepository;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
+    void resetDatabase(){
+        adsorbateRepository.deleteAll();
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
 
     @Test
     void testCreateAdsorbate(){
@@ -55,7 +70,6 @@ class AdsorbateControllerTest {
         Assert.assertEquals(adsorbate.getIonName(), request.getIonName());
         Assert.assertEquals(adsorbate.getIonCharge(), request.getIonCharge());
         Assert.assertEquals(adsorbate.getIonRadius(), request.getIonRadius());
-        Assert.assertEquals(1L, (long) adsorbate.getId());
     }
 
     @Test
@@ -72,8 +86,8 @@ class AdsorbateControllerTest {
     void testUpdateAdsorbate(){
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
-        adsorbateController.createAdsorbate(request);
-        AdsorbateResponse updated = adsorbateController.updateAdsorbate(1L, requestUpdate);
+        AdsorbateResponse response = adsorbateController.createAdsorbate(request);
+        AdsorbateResponse updated = adsorbateController.updateAdsorbate(response.getId(), requestUpdate);
 
         Assert.assertEquals(updated.getIonName(), requestUpdate.getIonName());
         Assert.assertEquals(updated.getIonCharge(), requestUpdate.getIonCharge());
@@ -85,8 +99,8 @@ class AdsorbateControllerTest {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","PruebaIUPAC",12,10f,100f);
         requestUpdate.setMolarMass(2f);
-        adsorbateController.createAdsorbate(request);
-        AdsorbateResponse updated = adsorbateController.updateAdsorbate(1L, requestUpdate);
+        AdsorbateResponse response = adsorbateController.createAdsorbate(request);
+        AdsorbateResponse updated = adsorbateController.updateAdsorbate(response.getId(), requestUpdate);
 
         Assert.assertEquals(updated.getMolarMass(), requestUpdate.getMolarMass());
     }
@@ -106,8 +120,8 @@ class AdsorbateControllerTest {
     @Test
     void testDeleteAdsorbate() {
         AdsorbateRequest request = new AdsorbateRequest("Prueba","PruebaIUPAC",1,1f,10f);
-        adsorbateController.createAdsorbate(request);
-        adsorbateController.deleteAdsorbate(1L);
+        AdsorbateResponse response = adsorbateController.createAdsorbate(request);
+        adsorbateController.deleteAdsorbate(response.getId());
         Assert.assertTrue(adsorbateController.getAdsorbates(getToken()).isEmpty());
     }
 
@@ -246,8 +260,8 @@ class AdsorbateControllerTest {
     @Test
     void testFindById(){
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","carlos IUPAC",1,1f,10f);
-        adsorbateController.createAdsorbate(request);
-        AdsorbateResponse adsorbate = adsorbateController.getAdsorbate(1L, getToken());
+        AdsorbateResponse response = adsorbateController.createAdsorbate(request);
+        AdsorbateResponse adsorbate = adsorbateController.getAdsorbate(response.getId(), getToken());
         Assert.assertEquals("CARLOS", adsorbate.getIonName());
         Assert.assertEquals("carlos IUPAC", adsorbate.getNameIUPAC());
     }
@@ -284,13 +298,14 @@ class AdsorbateControllerTest {
     @Test
     void testUpdateAdsorbateNameIUPACDuplicate() {
         AdsorbateRequest request = new AdsorbateRequest("CARLOS","IUPAC",1,1f,10f);
-        adsorbateController.createAdsorbate(request);
+        AdsorbateResponse response = adsorbateController.createAdsorbate(request);
         AdsorbateRequest request2 = new AdsorbateRequest("CARLOS","IUPAC2",1,1f,10f);
         adsorbateController.createAdsorbate(request2);
 
         AdsorbateRequest requestUpdate = new AdsorbateRequest("Prueba2","IUPAC2",1,10f,100f);
+        Long adsorbateId = response.getId();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            adsorbateController.updateAdsorbate(1L, requestUpdate);
+            adsorbateController.updateAdsorbate(adsorbateId, requestUpdate);
         });
         Assert.assertEquals(ResponseMessage.DUPLICATE_ADSORBATE.getMessage(),e.getReason());
 

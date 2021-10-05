@@ -8,8 +8,11 @@ import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
+import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
+import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.AdsorbentService;
 import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,7 +29,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin",roles={"ADMIN"})
 class AdsorbentControllerTest {
 
@@ -44,6 +46,19 @@ class AdsorbentControllerTest {
 
     @Autowired
     private AdsorbentRepository adsorbentRepository;
+
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
+    void resetDatabase(){
+        adsorbentRepository.deleteAll();
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
 
     @Test
@@ -106,8 +121,8 @@ class AdsorbentControllerTest {
     @Test
     void testDeleteAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        adsorbentController.createAdsorbent(request);
-        adsorbentController.deleteAdsorbent(1L);
+        AdsorbentResponse response = adsorbentController.createAdsorbent(request);
+        adsorbentController.deleteAdsorbent(response.getId());
         Assert.assertTrue(adsorbentController.getAdsorbents(getToken()).isEmpty());
     }
 
@@ -200,8 +215,8 @@ class AdsorbentControllerTest {
     @Test
     void testFindById(){
         AdsorbentRequest request = new AdsorbentRequest("PRUEBA", "60", 1f, 1f,1f);
-        adsorbentController.createAdsorbent(request);
-        AdsorbentResponse adsorbent = adsorbentController.getAdsorbent(1L, getToken());
+        AdsorbentResponse response = adsorbentController.createAdsorbent(request);
+        AdsorbentResponse adsorbent = adsorbentController.getAdsorbent(response.getId(), getToken());
         Assert.assertEquals("PRUEBA", adsorbent.getName());
         Assert.assertEquals("60", adsorbent.getParticleSize());
     }

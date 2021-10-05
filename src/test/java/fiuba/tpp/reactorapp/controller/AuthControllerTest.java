@@ -15,9 +15,12 @@ import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
 import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
+import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
@@ -25,13 +28,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Calendar;
@@ -42,7 +44,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin",roles={"ADMIN"})
 class AuthControllerTest {
 
@@ -66,6 +67,16 @@ class AuthControllerTest {
 
     @Autowired
     private AdsorbentController adsorbentController;
+
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @BeforeEach
+    void resetDatabase(){
+        tokenRepository.deleteAll();
+        authCodeRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
 
 
@@ -182,9 +193,10 @@ class AuthControllerTest {
         assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void testResetPassword() {
-        ResetPasswordRequest request = new ResetPasswordRequest("123456","Prueba123");
+        ResetPasswordRequest request = new ResetPasswordRequest("487657","Prueba123");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             authController.resetPassword(request);
         });
@@ -207,12 +219,13 @@ class AuthControllerTest {
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void testResetPasswordOldCode(){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -10);
 
-        createCode(calendar.getTime());
+        createCode(calendar.getTime(), "prueba2@gmail.com");
         ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
             authController.resetPassword(request);
@@ -220,9 +233,10 @@ class AuthControllerTest {
         Assert.assertEquals(ResponseMessage.CODE_EXPIRED.getMessage(), e.getReason());
     }
 
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void testHappyPath(){
-        createCode(Calendar.getInstance().getTime());
+        createCode(Calendar.getInstance().getTime(), "prueba@gmail.com");
         ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
         assertDoesNotThrow(()->authController.resetPassword(request));
     }
@@ -246,8 +260,8 @@ class AuthControllerTest {
 
     @Test
     void getUser(){
-        createUser();
-        UserResponse user= authController.getUser(1L);
+        User userCreated = createUser();
+        UserResponse user= authController.getUser(userCreated.getId());
         Assert.assertEquals("mati@gmail.com", user.getEmail());
         Assert.assertEquals("ROLE_ADMIN", user.getRole().getName());
     }
@@ -255,7 +269,7 @@ class AuthControllerTest {
     @Test
     void testCreateUser(){
         UserResponse response = authController.createUser(createUserRequest("mati"));
-        Optional<User> user = userRepository.findById(1L);
+        Optional<User> user = userRepository.findById(response.getId());
 
         Assert.assertEquals("mati@gmail.com", user.get().getEmail());
         Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
@@ -344,10 +358,10 @@ class AuthControllerTest {
 
     @Test
     void testUpdateUser(){
-        authController.createUser(createUserRequest("mati"));
-        authController.updateUser(1L, createUserRequest("lucas"));
+        UserResponse response = authController.createUser(createUserRequest("mati"));
+        authController.updateUser(response.getId(), createUserRequest("lucas"));
 
-        Optional<User> user = userRepository.findById(1L);
+        Optional<User> user = userRepository.findById(response.getId());
 
         Assert.assertEquals("lucas@gmail.com", user.get().getEmail());
         Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
@@ -356,12 +370,12 @@ class AuthControllerTest {
 
     @Test
     void testUpdateUserSameEmail(){
-        authController.createUser(createUserRequest("mati"));
+        UserResponse response = authController.createUser(createUserRequest("mati"));
         UserRequest req = createUserRequest("lucas");
         req.setEmail("mati@gmail.com");
-        authController.updateUser(1L, req);
+        authController.updateUser(response.getId(), req);
 
-        Optional<User> user = userRepository.findById(1L);
+        Optional<User> user = userRepository.findById(response.getId());
 
         Assert.assertEquals("mati@gmail.com", user.get().getEmail());
         Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
@@ -391,10 +405,10 @@ class AuthControllerTest {
 
     @Test
     void testDeleteUser(){
-        authController.createUser(createUserRequest("mati"));
-        authController.deleteUser(1L);
+        UserResponse response = authController.createUser(createUserRequest("mati"));
+        authController.deleteUser(response.getId());
 
-        Optional<User> user = userRepository.findById(1L);
+        Optional<User> user = userRepository.findById(response.getId());
 
         Assert.assertFalse(user.isPresent());
     }
@@ -419,9 +433,9 @@ class AuthControllerTest {
         Assert.assertTrue(e.getStatus().is4xxClientError());
     }
 
-    private AuthCode createCode(Date date){
-        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
-        Optional<User> user = userRepository.findByEmail("mati@gmail.com");
+    private AuthCode createCode(Date date, String email){
+        authController.registerUser(new AuthRequest(email,"Prueba123"));
+        Optional<User> user = userRepository.findByEmail(email);
         AuthCode authCode = new AuthCode();
         authCode.setCode("123456");
         authCode.setUser(user.get());
