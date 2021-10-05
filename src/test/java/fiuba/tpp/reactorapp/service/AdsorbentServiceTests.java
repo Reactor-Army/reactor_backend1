@@ -5,8 +5,11 @@ import fiuba.tpp.reactorapp.model.exception.DuplicateAdsorbentException;
 import fiuba.tpp.reactorapp.model.filter.AdsorbentFilter;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
+import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
+import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
 import org.junit.Assert;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,11 +22,18 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.util.List;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AdsorbentServiceTests {
 
     @Autowired
     private AdsorbentService adsorbentService;
+
+    @Autowired
+    private AdsorbentRepository adsorbentRepository;
+
+    @AfterEach
+    void resetDatabase(){
+        adsorbentRepository.deleteAll();
+    }
 
 
     @Test
@@ -48,8 +58,8 @@ class AdsorbentServiceTests {
     void testUpdateAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
-        adsorbentService.createAdsorbent(request);
-        Adsorbent updated = adsorbentService.updateAdsorbent(1L, requestUpdate);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
+        Adsorbent updated = adsorbentService.updateAdsorbent(adsorbent.getId(), requestUpdate);
 
         Assert.assertEquals(updated.getName(), requestUpdate.getName());
         Assert.assertEquals(updated.getParticleSize(), requestUpdate.getParticleSize());
@@ -64,8 +74,8 @@ class AdsorbentServiceTests {
         requestUpdate.setImpurities("Pedazos de algo");
         request.setSampleOrigin("Timbuctu");
         request.setSpeciesName("FloraCarbono");
-        adsorbentService.createAdsorbent(request);
-        Adsorbent updated = adsorbentService.updateAdsorbent(1L, requestUpdate);
+        Adsorbent response = adsorbentService.createAdsorbent(request);
+        Adsorbent updated = adsorbentService.updateAdsorbent(response.getId(), requestUpdate);
 
         Assert.assertEquals(updated.getSampleOrigin(), requestUpdate.getSampleOrigin());
         Assert.assertEquals(updated.getFormula(), requestUpdate.getFormula());
@@ -84,8 +94,8 @@ class AdsorbentServiceTests {
     @Test
     void testDeleteAdsorbent() {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        adsorbentService.createAdsorbent(request);
-        adsorbentService.deleteAdsorbent(1L);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(request);
+        adsorbentService.deleteAdsorbent(adsorbent.getId());
         Assert.assertTrue(adsorbentService.getAdsorbents(false).isEmpty());
 
     }
@@ -145,9 +155,10 @@ class AdsorbentServiceTests {
         AdsorbentRequest request2 = new AdsorbentRequest("CARLOS", "Prueba2", 10f, 10f,10f);
         AdsorbentRequest requestUpdate = new AdsorbentRequest("carlos", "Prueba", 1f, 1f,1f);
         adsorbentService.createAdsorbent(request);
-        adsorbentService.createAdsorbent(request2);
+        Adsorbent adsorbent = adsorbentService.createAdsorbent(request2);
 
-        Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.updateAdsorbent(2L,requestUpdate));
+        Long adsorbentId = adsorbent.getId();
+        Assertions.assertThrows(DuplicateAdsorbentException.class, () -> adsorbentService.updateAdsorbent(adsorbentId,requestUpdate));
     }
 
     @Test
