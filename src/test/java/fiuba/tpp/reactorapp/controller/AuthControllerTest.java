@@ -20,6 +20,7 @@ import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
@@ -69,7 +70,7 @@ class AuthControllerTest {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @AfterEach
+    @BeforeEach
     void resetDatabase(){
         tokenRepository.deleteAll();
         authCodeRepository.deleteAll();

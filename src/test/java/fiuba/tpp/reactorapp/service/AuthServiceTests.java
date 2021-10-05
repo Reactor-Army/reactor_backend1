@@ -3,6 +3,8 @@ package fiuba.tpp.reactorapp.service;
 import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
+import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthCodeService;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +30,19 @@ class AuthServiceTests {
     @InjectMocks
     AuthService authMockService = new AuthService();
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthCodeRepository authCodeRepository;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
+        authCodeRepository.deleteAll();
+        userRepository.deleteAll();
     }
+
 
     @Test
     void testAuthCode(){

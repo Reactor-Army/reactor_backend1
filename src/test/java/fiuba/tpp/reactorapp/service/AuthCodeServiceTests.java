@@ -48,12 +48,8 @@ class AuthCodeServiceTests {
     private AuthCodeRepository authCodeRepository;
 
     @BeforeEach
-    void setup() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @AfterEach
     void resetDatabase(){
+        MockitoAnnotations.initMocks(this);
         authCodeRepository.deleteAll();
         userRepository.deleteAll();
     }
