@@ -193,7 +193,7 @@ class AuthControllerTest {
 
     @Test
     void testResetPassword() {
-        ResetPasswordRequest request = new ResetPasswordRequest("123456","Prueba123");
+        ResetPasswordRequest request = new ResetPasswordRequest("487657","Prueba123");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             authController.resetPassword(request);
         });
@@ -221,7 +221,7 @@ class AuthControllerTest {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -10);
 
-        createCode(calendar.getTime());
+        createCode(calendar.getTime(), "prueba2@gmail.com");
         ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
             authController.resetPassword(request);
@@ -231,7 +231,7 @@ class AuthControllerTest {
 
     @Test
     void testHappyPath(){
-        createCode(Calendar.getInstance().getTime());
+        createCode(Calendar.getInstance().getTime(), "prueba@gmail.com");
         ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
         assertDoesNotThrow(()->authController.resetPassword(request));
     }
@@ -428,9 +428,9 @@ class AuthControllerTest {
         Assert.assertTrue(e.getStatus().is4xxClientError());
     }
 
-    private AuthCode createCode(Date date){
-        authController.registerUser(new AuthRequest("mati3@gmail.com","Prueba123"));
-        Optional<User> user = userRepository.findByEmail("mati3@gmail.com");
+    private AuthCode createCode(Date date, String email){
+        authController.registerUser(new AuthRequest(email,"Prueba123"));
+        Optional<User> user = userRepository.findByEmail(email);
         AuthCode authCode = new AuthCode();
         authCode.setCode("123456");
         authCode.setUser(user.get());
