@@ -429,8 +429,8 @@ class AuthControllerTest {
     }
 
     private AuthCode createCode(Date date){
-        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
-        Optional<User> user = userRepository.findByEmail("mati@gmail.com");
+        authController.registerUser(new AuthRequest("mati3@gmail.com","Prueba123"));
+        Optional<User> user = userRepository.findByEmail("mati3@gmail.com");
         AuthCode authCode = new AuthCode();
         authCode.setCode("123456");
         authCode.setUser(user.get());
