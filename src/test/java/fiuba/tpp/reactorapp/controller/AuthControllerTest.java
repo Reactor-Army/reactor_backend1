@@ -74,7 +74,8 @@ class AuthControllerTest {
         authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
         LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
-        Assert.assertEquals("ROLE_USER", response.getUser().getRole().getName());
+        Assert.assertEquals("Usuario", response.getUser().getRole().getName());
+        Assert.assertTrue(response.getUser().getLastLogin() != null);
     }
 
     @Test
@@ -249,7 +250,7 @@ class AuthControllerTest {
         createUser();
         UserResponse user= authController.getUser(1L);
         Assert.assertEquals("mati@gmail.com", user.getEmail());
-        Assert.assertEquals("ROLE_ADMIN", user.getRole().getName());
+        Assert.assertEquals("Administrador", user.getRole().getName());
     }
 
     @Test
