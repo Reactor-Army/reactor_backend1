@@ -7,6 +7,9 @@ public class RoleResponse {
     @JsonProperty("nombre")
     private String name;
 
+    @JsonProperty("nombreVerbose")
+    private String rolename;
+
     @JsonProperty("descripcion")
     private String description;
 
@@ -28,6 +31,20 @@ public class RoleResponse {
     }
 
     public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getRolename() {
+        return rolename;
+    }
+
+    public void setRolename(String rolename) {
+        this.rolename = rolename;
+    }
+
+    public RoleResponse(String name, String rolename, String description) {
+        this.name = name;
+        this.rolename = rolename;
         this.description = description;
     }
 }

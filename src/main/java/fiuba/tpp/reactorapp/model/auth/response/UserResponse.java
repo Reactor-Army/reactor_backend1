@@ -37,7 +37,7 @@ public class UserResponse {
         this.name = user.getName();
         this.surname = user.getSurname();
         this.description = user.getDescription();
-        this.role = new RoleResponse(user.getRole().getRoleName(),user.getRole().getDescription());
+        this.role = new RoleResponse(user.getRole().name(),user.getRole().getRoleName(),user.getRole().getDescription());
         this.lastLogin = user.getLastLogin();
     }
 
