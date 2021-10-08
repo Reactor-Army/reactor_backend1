@@ -15,16 +15,23 @@ import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
 import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
 import fiuba.tpp.reactorapp.repository.auth.AuthCodeRepository;
+import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.service.auth.AuthService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +39,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Calendar;
@@ -42,7 +52,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @WithMockUser(username="admin",roles={"ADMIN"})
 class AuthControllerTest {
 
@@ -62,10 +71,20 @@ class AuthControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TokenRepository tokenRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
     private AdsorbentController adsorbentController;
+
+    void tearDown(){
+        authCodeRepository.deleteAll();
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+
+    }
 
 
 
@@ -76,6 +95,7 @@ class AuthControllerTest {
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
         Assert.assertEquals("Usuario", response.getUser().getRole().getName());
         Assert.assertNotNull(response.getUser().getLastLogin());
+        tearDown();
     }
 
     @Test
@@ -94,6 +114,7 @@ class AuthControllerTest {
         Assert.assertEquals(1L,oldList.size());
 
         Assert.assertEquals(0L,adsorbentController.getAdsorbents(token).size());
+        tearDown();
     }
 
     @Test
@@ -101,6 +122,247 @@ class AuthControllerTest {
         RegisterResponse response = authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
         Assert.assertEquals("mati@gmail.com", response.getEmail());
         Assert.assertEquals("ROLE_USER", response.getRoles().get(0));
+        tearDown();
+    }
+
+    @Test
+    void testInvalidLogin(){
+        authController.registerUser(new AuthRequest("matias@gmail.com" ,"Prueba123"));
+        AuthRequest request = new AuthRequest("matiTest2", "Prueba123");
+        Assert.assertThrows(BadCredentialsException.class, () ->{
+            authController.authenticateUser(request);
+        });
+        tearDown();
+    }
+
+    @Test
+    void testLoginInternalErrror() throws UserNotFoundException {
+        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
+        Mockito.when(authService.login(request)).thenThrow(UserNotFoundException.class);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authMockController.authenticateUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        tearDown();
+    }
+
+    @Test
+    void testInvalidRegisterDuplicateEmail(){
+        AuthRequest request = new AuthRequest("mati@gmail.com" ,"Prueba123");
+        authController.registerUser(request);
+        AuthRequest request2 = new AuthRequest("mati@gmail.com" ,"Prueba123");
+        Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.registerUser(request2);
+        });
+        tearDown();
+    }
+
+    @Test
+    void testRegisterUserInternalErrror() {
+        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
+        Mockito.when(authService.register(request)).thenThrow(RuntimeException.class);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authMockController.registerUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        tearDown();
+    }
+
+    @Test
+    void testAuthCodeEmailNotFound(){
+        AuthRequest request = new AuthRequest("lucas@gmail.com","");
+        assertDoesNotThrow(() -> authController.generateCodeResetPassword(request));
+    }
+
+
+
+    @Test
+    void testAuthCode() throws UserNotFoundException {
+        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
+        Mockito.doNothing().when(authService).resetPasswordGenerateCode(request);
+        authController.registerUser(request);
+        assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
+        tearDown();
+    }
+
+    @Test
+    void testResetPassword() {
+        ResetPasswordRequest request = new ResetPasswordRequest("123456","Prueba123");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.resetPassword(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+        tearDown();
+    }
+
+    @Test
+    void testResetPasswordOldCode(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -10);
+
+        createCode(calendar.getTime());
+        ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
+            authController.resetPassword(request);
+        });
+        Assert.assertEquals(ResponseMessage.CODE_EXPIRED.getMessage(), e.getReason());
+        tearDown();
+    }
+
+    @Test
+    void testHappyPath(){
+        createCode(Calendar.getInstance().getTime());
+        ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
+        assertDoesNotThrow(()->authController.resetPassword(request));
+        tearDown();
+    }
+
+    @Test
+    void testGetRoles(){
+        List<RoleResponse> roles = authController.getRoles();
+        Assert.assertEquals(2L, roles.size());
+        Assert.assertEquals("ROLE_USER", roles.get(0).getName());
+        Assert.assertEquals("ROLE_ADMIN", roles.get(1).getName());
+        tearDown();
+    }
+
+    @Test
+    void testGetUsers(){
+        createUser();
+        List<UserResponse> users = authController.getUsers();
+        Assert.assertEquals(1L, users.size());
+        Assert.assertEquals("Matias", users.get(0).getName());
+        Assert.assertEquals("Reimondo", users.get(0).getSurname());
+        tearDown();
+    }
+
+    @Test
+    void testGetUser(){
+        createUser();
+        UserResponse user= authController.getUser(1L);
+        Assert.assertEquals("mati@gmail.com", user.getEmail());
+        Assert.assertEquals("Administrador", user.getRole().getName());
+        tearDown();
+    }
+
+    @Test
+    void testCreateUser(){
+        UserResponse response = authController.createUser(createUserRequest("mati"));
+        Optional<User> user = userRepository.findById(1L);
+
+        Assert.assertEquals("mati@gmail.com", user.get().getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
+        Assert.assertEquals("mati@gmail.com", response.getEmail());
+        tearDown();
+    }
+
+    @Test
+    void testCreaterUserInternalErrror() {
+        UserRequest request = createUserRequest("mati");
+        Mockito.when(authService.createUser(request)).thenThrow(RuntimeException.class);
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authMockController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        tearDown();
+    }
+
+    @Test
+    void testCreateDuplicateUser(){
+        UserRequest request = createUserRequest("mati");
+        authController.createUser(request);
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
+            authController.createUser(request);
+        });
+        Assert.assertEquals(ResponseMessage.DUPLICATE_EMAIL.getMessage(), e.getReason());
+        tearDown();
+    }
+
+
+
+    @Test
+    void testUpdateUser(){
+        UserResponse response = authController.createUser(createUserRequest("mati"));
+        authController.updateUser(response.getId(), createUserRequest("lucas"));
+
+        Optional<User> user = userRepository.findById(response.getId());
+
+        Assert.assertEquals("lucas@gmail.com", user.get().getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
+        Assert.assertEquals("lucas", user.get().getName());
+        tearDown();
+    }
+
+    @Test
+    void testUpdateUserSameEmail(){
+        authController.createUser(createUserRequest("mati"));
+        UserRequest req = createUserRequest("lucas");
+        req.setEmail("mati@gmail.com");
+        authController.updateUser(1L, req);
+
+        Optional<User> user = userRepository.findById(1L);
+
+        Assert.assertEquals("mati@gmail.com", user.get().getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
+        Assert.assertEquals("lucas", user.get().getName());
+        tearDown();
+    }
+
+    @Test
+    void testUpdateUserSameEmailOther(){
+        authController.createUser(createUserRequest("lucas"));
+        authController.createUser(createUserRequest("mati"));
+        UserRequest req = createUserRequest("lucas");
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.updateUser(2L, req);
+        });
+        Assert.assertEquals(ResponseMessage.DUPLICATE_EMAIL.getMessage(),e.getReason());
+        tearDown();
+    }
+
+    @Test
+    void testUpdateNotExistentUser() {
+        UserRequest request = createUserRequest("mati");
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.updateUser(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+        tearDown();
+    }
+
+    @Test
+    void testDeleteUser(){
+        authController.createUser(createUserRequest("mati"));
+        authController.deleteUser(1L);
+
+        Optional<User> user = userRepository.findById(1L);
+
+        Assert.assertFalse(user.isPresent());
+        tearDown();
+    }
+
+    @Test
+    void testDeleteNotExistentUser() {
+        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            authController.deleteUser(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+        tearDown();
+    }
+
+
+
+    @Test
+    void testGetUserNotExist(){
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            authController.getUser(1L);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+        tearDown();
     }
 
     @ParameterizedTest
@@ -114,51 +376,7 @@ class AuthControllerTest {
         Assert.assertThrows(ResponseStatusException.class, () ->{
             authController.registerUser(request);
         });
-    }
-
-    @Test
-    void testInvalidLogin(){
-        authController.registerUser(new AuthRequest("matias@gmail.com" ,"Prueba123"));
-        AuthRequest request = new AuthRequest("matiTest2", "Prueba123");
-        Assert.assertThrows(BadCredentialsException.class, () ->{
-            authController.authenticateUser(request);
-        });
-    }
-
-    @Test
-    void testLoginInternalErrror() throws UserNotFoundException {
-        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
-        Mockito.when(authService.login(request)).thenThrow(UserNotFoundException.class);
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authMockController.authenticateUser(request);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testInvalidRegisterDuplicateEmail(){
-        AuthRequest request = new AuthRequest("mati@gmail.com" ,"Prueba123");
-        authController.registerUser(request);
-        AuthRequest request2 = new AuthRequest("mati@gmail.com" ,"Prueba123");
-        Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.registerUser(request2);
-        });
-    }
-
-    @Test
-    void testRegisterUserInternalErrror() {
-        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
-        Mockito.when(authService.register(request)).thenThrow(RuntimeException.class);
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authMockController.registerUser(request);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testAuthCodeEmailNotFound(){
-        AuthRequest request = new AuthRequest("lucas@gmail.com","");
-        assertDoesNotThrow(() -> authController.generateCodeResetPassword(request));
+        tearDown();
     }
 
     @ParameterizedTest
@@ -173,24 +391,7 @@ class AuthControllerTest {
             authController.generateCodeResetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_REGISTER.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testAuthCode() throws UserNotFoundException {
-        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
-        Mockito.doNothing().when(authService).resetPasswordGenerateCode(request);
-        authController.registerUser(request);
-        assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
-    }
-
-    @Test
-    void testResetPassword() {
-        ResetPasswordRequest request = new ResetPasswordRequest("123456","Prueba123");
-        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.resetPassword(request);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-        Assert.assertTrue(e.getStatus().is4xxClientError());
+        tearDown();
     }
 
     @ParameterizedTest
@@ -206,81 +407,7 @@ class AuthControllerTest {
             authController.resetPassword(request);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
-    }
-
-    @Test
-    void testResetPasswordOldCode(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, -10);
-
-        createCode(calendar.getTime());
-        ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
-        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
-            authController.resetPassword(request);
-        });
-        Assert.assertEquals(ResponseMessage.CODE_EXPIRED.getMessage(), e.getReason());
-    }
-
-    @Test
-    void testHappyPath(){
-        createCode(Calendar.getInstance().getTime());
-        ResetPasswordRequest request = new ResetPasswordRequest("123456", "123456");
-        assertDoesNotThrow(()->authController.resetPassword(request));
-    }
-
-    @Test
-    void testGetRoles(){
-        List<RoleResponse> roles = authController.getRoles();
-        Assert.assertEquals(2L, roles.size());
-        Assert.assertEquals("ROLE_USER", roles.get(0).getName());
-        Assert.assertEquals("ROLE_ADMIN", roles.get(1).getName());
-    }
-
-    @Test
-    void getUsers(){
-        createUser();
-        List<UserResponse> users = authController.getUsers();
-        Assert.assertEquals(1L, users.size());
-        Assert.assertEquals("Matias", users.get(0).getName());
-        Assert.assertEquals("Reimondo", users.get(0).getSurname());
-    }
-
-    @Test
-    void getUser(){
-        createUser();
-        UserResponse user= authController.getUser(1L);
-        Assert.assertEquals("mati@gmail.com", user.getEmail());
-        Assert.assertEquals("Administrador", user.getRole().getName());
-    }
-
-    @Test
-    void testCreateUser(){
-        UserResponse response = authController.createUser(createUserRequest("mati"));
-        Optional<User> user = userRepository.findById(1L);
-
-        Assert.assertEquals("mati@gmail.com", user.get().getEmail());
-        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
-        Assert.assertEquals("mati@gmail.com", response.getEmail());
-    }
-
-    @Test
-    void testCreaterUserInternalErrror() {
-        UserRequest request = createUserRequest("mati");
-        Mockito.when(authService.createUser(request)).thenThrow(RuntimeException.class);
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authMockController.createUser(request);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testCreateDuplicateUser(){
-        UserRequest request = createUserRequest("mati");
-        authController.createUser(request);
-        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () -> {
-            authController.createUser(request);
-        });
-        Assert.assertEquals(ResponseMessage.DUPLICATE_EMAIL.getMessage(), e.getReason());
+        tearDown();
     }
 
     @ParameterizedTest
@@ -299,6 +426,7 @@ class AuthControllerTest {
             authController.createUser(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+        tearDown();
     }
 
     @ParameterizedTest
@@ -313,6 +441,7 @@ class AuthControllerTest {
             authController.createUser(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+        tearDown();
     }
 
     @ParameterizedTest
@@ -327,6 +456,7 @@ class AuthControllerTest {
             authController.createUser(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
+        tearDown();
     }
 
     @ParameterizedTest
@@ -341,83 +471,7 @@ class AuthControllerTest {
             authController.createUser(request);
         });
         Assert.assertEquals(ResponseMessage.INVALID_USER.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testUpdateUser(){
-        authController.createUser(createUserRequest("mati"));
-        authController.updateUser(1L, createUserRequest("lucas"));
-
-        Optional<User> user = userRepository.findById(1L);
-
-        Assert.assertEquals("lucas@gmail.com", user.get().getEmail());
-        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
-        Assert.assertEquals("lucas", user.get().getName());
-    }
-
-    @Test
-    void testUpdateUserSameEmail(){
-        authController.createUser(createUserRequest("mati"));
-        UserRequest req = createUserRequest("lucas");
-        req.setEmail("mati@gmail.com");
-        authController.updateUser(1L, req);
-
-        Optional<User> user = userRepository.findById(1L);
-
-        Assert.assertEquals("mati@gmail.com", user.get().getEmail());
-        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
-        Assert.assertEquals("lucas", user.get().getName());
-    }
-
-    @Test
-    void testUpdateUserSameEmailOther(){
-        authController.createUser(createUserRequest("lucas"));
-        authController.createUser(createUserRequest("mati"));
-        UserRequest req = createUserRequest("lucas");
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authController.updateUser(2L, req);
-        });
-        Assert.assertEquals(ResponseMessage.DUPLICATE_EMAIL.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testUpdateNotExistentUser() {
-        UserRequest request = createUserRequest("mati");
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authController.updateUser(1L,request);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-        Assert.assertTrue(e.getStatus().is4xxClientError());
-    }
-
-    @Test
-    void testDeleteUser(){
-        authController.createUser(createUserRequest("mati"));
-        authController.deleteUser(1L);
-
-        Optional<User> user = userRepository.findById(1L);
-
-        Assert.assertFalse(user.isPresent());
-    }
-
-    @Test
-    void testDeleteNotExistentUser() {
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authController.deleteUser(1L);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-        Assert.assertTrue(e.getStatus().is4xxClientError());
-    }
-
-
-
-    @Test
-    void getUserNotExist(){
-        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.getUser(1L);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-        Assert.assertTrue(e.getStatus().is4xxClientError());
+        tearDown();
     }
 
     private AuthCode createCode(Date date){
