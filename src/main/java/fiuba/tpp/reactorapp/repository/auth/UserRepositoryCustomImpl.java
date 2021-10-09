@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
 public class UserRepositoryCustomImpl implements UserRepositoryCustom{
@@ -20,7 +21,9 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         CriteriaQuery<User> cq = cb.createQuery(User.class);
         Root<User> user = cq.from(User.class);
 
-        cq.orderBy(cb.desc(user.get("role")),cb.desc(user.get("lastLogin")));
+        Date minDate = new Date(0L);
+
+        cq.orderBy(cb.desc(user.get("role")),cb.desc(cb.coalesce(user.get("lastLogin"), minDate)));
 
         return em.createQuery(cq).getResultList();
     }
