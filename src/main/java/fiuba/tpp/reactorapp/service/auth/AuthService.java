@@ -109,7 +109,7 @@ public class AuthService {
 
     public List<UserResponse> getUsers(){
         List<UserResponse> userResponses = new ArrayList<>();
-        for (User user: userRepository.findAll()) {
+        for (User user: userRepository.getAll()) {
             UserResponse response = new UserResponse(user);
             userResponses.add(response);
         }
