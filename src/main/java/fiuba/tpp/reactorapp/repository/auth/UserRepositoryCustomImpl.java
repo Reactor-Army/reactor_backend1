@@ -20,7 +20,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom{
         CriteriaQuery<User> cq = cb.createQuery(User.class);
         Root<User> user = cq.from(User.class);
 
-        cq.orderBy(cb.desc(user.get("role")),cb.desc(user.get("lastLogin")), cb.desc(user.get("email")));
+        cq.orderBy(cb.desc(user.get("role")),cb.desc(user.get("lastLogin")));
 
         return em.createQuery(cq).getResultList();
     }
