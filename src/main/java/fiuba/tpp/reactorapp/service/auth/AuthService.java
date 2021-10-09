@@ -144,12 +144,18 @@ public class AuthService {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
             User userUpdated = user.get().update(request);
-            userUpdated.setPassword(encoder.encode(request.getPassword()));
+            if(isValidPassword(request.getPassword())){
+                userUpdated.setPassword(encoder.encode(request.getPassword()));
+            }
             userUpdated.setRole(EnumUtils.getEnum(ERole.class,request.getRole()));
             userRepository.save(userUpdated);
             return new UserResponse(userUpdated);
         }
         throw new UserNotFoundException();
+    }
+
+    private boolean isValidPassword(String password){
+        return password != null && !password.isEmpty();
     }
 
     public void deleteUser(Long id) throws UserNotFoundException {

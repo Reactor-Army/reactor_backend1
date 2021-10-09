@@ -371,6 +371,18 @@ class AuthControllerTest {
     }
 
     @Test
+    void testUpdateUserWithoutPassword(){
+        UserResponse response = authController.createUser(createUserRequest("mati"));
+        authController.updateUser(response.getId(), createUserRequestWithoutPassword("lucas"));
+
+        Optional<User> user = userRepository.findById(response.getId());
+
+        Assert.assertEquals("lucas@gmail.com", user.get().getEmail());
+        Assert.assertEquals("ROLE_ADMIN", user.get().getRole().name());
+        Assert.assertEquals("lucas", user.get().getName());
+    }
+
+    @Test
     void testUpdateUserSameEmail(){
         UserResponse response = authController.createUser(createUserRequest("mati"));
         UserRequest req = createUserRequest("lucas");
@@ -464,6 +476,16 @@ class AuthControllerTest {
         user.setSurname("Reimondo");
         user.setEmail(placeholder+"@gmail.com");
         user.setPassword(encoder.encode("Prueba123"));
+        user.setRole(ERole.ROLE_ADMIN.name());
+        user.setDescription("Es un usuario de prueba");
+        return user;
+    }
+
+    private UserRequest createUserRequestWithoutPassword(String placeholder){
+        UserRequest user = new UserRequest();
+        user.setName(placeholder);
+        user.setSurname("Reimondo");
+        user.setEmail(placeholder+"@gmail.com");
         user.setRole(ERole.ROLE_ADMIN.name());
         user.setDescription("Es un usuario de prueba");
         return user;

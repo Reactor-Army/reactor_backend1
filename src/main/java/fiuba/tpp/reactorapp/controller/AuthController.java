@@ -143,7 +143,7 @@ public class AuthController {
     @PutMapping("/users/{id}")
     public UserResponse updateUser(@PathVariable Long id,@RequestBody UserRequest userRequest){
         try{
-            validateUserRequest(userRequest);
+            validateUpdateUserRequest(userRequest);
             return authService.updateUser(id,userRequest);
         } catch (InvalidUserException e) {
             throw new ResponseStatusException(
@@ -182,12 +182,25 @@ public class AuthController {
      * @throws InvalidUserException
      */
     private void validateUserRequest(UserRequest request) throws InvalidUserException {
+        validateUserData(request);
+        if(request.getPassword() == null || request.getPassword().isEmpty()) throw new InvalidUserException();
+    }
+
+    /**
+     * Validamos que los campos email nombre apellido no sean nulos
+     * Ademas el rol debe existir entre los roles posibles
+     * @param request
+     * @throws InvalidUserException
+     */
+    private void validateUpdateUserRequest(UserRequest request) throws InvalidUserException {
+        validateUserData(request);
+    }
+
+    private void validateUserData(UserRequest request) throws InvalidUserException {
         if(request.getEmail() == null || request.getEmail().isEmpty() || !isValidEmail(request.getEmail())) throw new InvalidUserException();
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidUserException();
         if(request.getSurname() == null || request.getSurname().isEmpty()) throw new InvalidUserException();
-        if(request.getPassword() == null || request.getPassword().isEmpty()) throw new InvalidUserException();
         if(!EnumUtils.isValidEnum(ERole.class, request.getRole())) throw new InvalidUserException();
-
     }
 
     private boolean isValidEmail(String email){

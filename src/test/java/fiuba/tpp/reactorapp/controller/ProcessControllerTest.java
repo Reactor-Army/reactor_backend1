@@ -90,7 +90,6 @@ class ProcessControllerTest {
         Assert.assertEquals(process.getAdsorbate().getId(), adsorbate.getId());
         Assert.assertEquals(process.getAdsorbent().getId(), adsorbent.getId());
         Assert.assertEquals(process.getQmax(), request.getQmax());
-        
     }
 
     @Test
