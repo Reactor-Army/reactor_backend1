@@ -101,7 +101,7 @@ public class AuthService {
     public List<RoleResponse> getRoles(){
         List<RoleResponse> roles = new ArrayList<>();
         for (ERole role :ERole.values()) {
-            roles.add(new RoleResponse(role.name(),role.getDescription()));
+            roles.add(new RoleResponse(role.name(),role.getRoleName(),role.getDescription()));
         }
         return roles;
 
