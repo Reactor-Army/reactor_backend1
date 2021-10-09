@@ -18,7 +18,7 @@ public class TesisFile {
 
     private Date publicationDate;
 
-    @OneToMany(mappedBy="tesisFile")
+    @OneToMany
     private List<Process> processes;
 
     @Lob

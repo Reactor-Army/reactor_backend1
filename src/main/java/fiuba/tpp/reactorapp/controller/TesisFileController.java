@@ -1,0 +1,62 @@
+package fiuba.tpp.reactorapp.controller;
+
+import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.FileSizeExceedException;
+import fiuba.tpp.reactorapp.model.exception.InvalidFileException;
+import fiuba.tpp.reactorapp.model.request.TesisFileRequest;
+import fiuba.tpp.reactorapp.model.response.ResponseMessage;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+@RestController
+@CrossOrigin(origins = "*")
+@RequestMapping("/tesis-archivos")
+public class TesisFileController {
+
+
+    //50 MB
+    private static final Long MAX_FILE_SIZE = 50000000L;
+
+    @PostMapping("/subir")
+    public void uploadTesisFile(@ModelAttribute TesisFileRequest request){
+        try{
+            validateTesisFile(request);
+        } catch (FileSizeExceedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(), e);
+        }catch (FileNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.FILE_NOT_FOUND.getMessage(), e);
+        }catch (InvalidFileException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_FILE.getMessage(), e);
+        }
+
+    }
+
+    private void validateTesisFile(TesisFileRequest request) {
+        validateFile(request.getTesis());
+    }
+
+
+    private void validateFile(MultipartFile file) {
+        if(file == null ||file.isEmpty()) throw new FileNotFoundException();
+        validateTesisExtensions(Objects.requireNonNull(FilenameUtils.getExtension(file.getOriginalFilename())));
+        if(file.getSize() > MAX_FILE_SIZE) throw new FileSizeExceedException();
+    }
+
+    private void validateTesisExtensions(String extension){
+        List<String> validExtensions = Arrays.asList("pdf", "doc", "docx");
+        boolean invalidExtension = !validExtensions.contains(extension.toLowerCase());
+        if(invalidExtension){
+            throw new InvalidFileException();
+        }
+    }
+}
