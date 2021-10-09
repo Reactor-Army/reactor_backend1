@@ -51,6 +51,9 @@ public class Process {
     @Column(columnDefinition = "boolean default false")
     private Boolean free;
 
+    @ManyToOne
+    @JoinColumn(name="id", nullable=true)
+    private TesisFile tesisFile;
 
     public Process() {}
 
@@ -198,6 +201,18 @@ public class Process {
 
     public void setFree(Boolean free) {
         this.free = free;
+    }
+
+    public Boolean getFree() {
+        return free;
+    }
+
+    public TesisFile getTesisFile() {
+        return tesisFile;
+    }
+
+    public void setTesisFile(TesisFile tesisFile) {
+        this.tesisFile = tesisFile;
     }
 
     @Override
