@@ -55,4 +55,8 @@ public class AuthCodeService {
         if(authCode.isPresent()) return authCode.get();
         throw new CodeNotFoundException();
     }
+
+    public void cleanAuthCodesUser(User user){
+        authCodeRepository.deleteAllByUser(user);
+    }
 }

@@ -11,4 +11,6 @@ public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
     Optional<AuthCode> findByUser(User user);
 
     Optional<AuthCode> findTopByCodeOrderByRefreshDate(String code);
+
+    void deleteAllByUser(User user);
 }

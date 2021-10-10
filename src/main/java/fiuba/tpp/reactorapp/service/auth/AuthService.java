@@ -14,6 +14,7 @@ import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
 import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
+import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
 import fiuba.tpp.reactorapp.security.services.UserDetailsImpl;
@@ -25,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -45,6 +47,9 @@ public class AuthService {
 
     @Autowired
     AuthCodeService authCodeService;
+
+    @Autowired
+    TokenRepository tokenRepository;
 
     private static final int CODE_DURATION = 10;
 
@@ -158,9 +163,12 @@ public class AuthService {
         return password != null && !password.isEmpty();
     }
 
+    @Transactional
     public void deleteUser(Long id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
+            authCodeService.cleanAuthCodesUser(user.get());
+            tokenRepository.deleteAllByUser(user.get());
             userRepository.delete(user.get());
         }else{
             throw new UserNotFoundException();
