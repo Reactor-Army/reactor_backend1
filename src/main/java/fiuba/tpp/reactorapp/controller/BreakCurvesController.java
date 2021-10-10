@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import fiuba.tpp.reactorapp.controller.utils.FileUtils;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
@@ -114,19 +115,10 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
-        return generateFileResponse(dto);
+        return FileUtils.generateFileResponse(dto);
     }
 
-    private ResponseEntity<ByteArrayResource> generateFileResponse(FileTemplateDTO dto){
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+ dto.getFileName());
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(dto.getFileSize())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(dto.getResource());
-    }
 
     private void validateThomasRequest(ThomasRequest request, Errors errors){
         handleErrors(errors);
