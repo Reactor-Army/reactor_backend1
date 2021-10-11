@@ -18,6 +18,8 @@ public class TesisFile {
 
     private Date publicationDate;
 
+    private Date uploadDate;
+
     @OneToMany
     private List<Process> processes;
 
@@ -74,5 +76,13 @@ public class TesisFile {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
     }
 }

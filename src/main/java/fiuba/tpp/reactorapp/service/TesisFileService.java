@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class TesisFileService {
         tesisFile.setType(FilenameUtils.getExtension(request.getTesis().getOriginalFilename()));
         tesisFile.setPublicationDate(request.getFechaPublicacion());
         tesisFile.setProcesses(getProcessesFromTesis(request.getProcesosIds()));
+        tesisFile.setUploadDate(Calendar.getInstance().getTime());
         return tesisFile;
     }
 

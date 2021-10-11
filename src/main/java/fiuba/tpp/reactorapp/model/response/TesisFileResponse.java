@@ -21,6 +21,9 @@ public class TesisFileResponse {
     @JsonProperty("fechaPublicacion")
     private Date publicationDate;
 
+    @JsonProperty("fechaSubida")
+    private Date uploadDate;
+
     @JsonProperty("sistemasRelacionados ")
     private List<ProcessResponse> processes;
 
@@ -35,6 +38,7 @@ public class TesisFileResponse {
         this.id = tesisFile.getId();
         this.name = tesisFile.getName();
         this.publicationDate = tesisFile.getPublicationDate();
+        this.uploadDate = tesisFile.getUploadDate();
         this.type = tesisFile.getType();
         this.processes = new ArrayList<>();
         for (Process p: tesisFile.getProcesses()) {
@@ -72,5 +76,21 @@ public class TesisFileResponse {
 
     public void setProcesses(List<ProcessResponse> processes) {
         this.processes = processes;
+    }
+
+    public Date getPublicationDate() {
+        return publicationDate;
+    }
+
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
     }
 }
