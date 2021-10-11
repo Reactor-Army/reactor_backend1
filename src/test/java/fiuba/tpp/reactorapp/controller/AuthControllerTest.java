@@ -401,8 +401,9 @@ class AuthControllerTest {
 
     @Test
     void testDeleteNotExistentUser() {
+        String token = getToken("admin2");
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authController.deleteUser(1L, getToken("admin2"));
+            authController.deleteUser(1L, token );
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
         Assert.assertTrue(e.getStatus().is4xxClientError());
@@ -413,8 +414,9 @@ class AuthControllerTest {
         UserResponse response = createUserController("admin3");
         LoginResponse login = authController.login(new AuthRequest("admin3@gmail.com", "Prueba123"));
         String token = "Bearer " + login.getAccessToken();
+        Long id = response.getId();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authController.deleteUser(response.getId(), token);
+            authController.deleteUser(id, token);
         });
         Assert.assertEquals(ResponseMessage.SAME_USER_ERROR.getMessage(),e.getReason());
         Assert.assertTrue(e.getStatus().is4xxClientError());
