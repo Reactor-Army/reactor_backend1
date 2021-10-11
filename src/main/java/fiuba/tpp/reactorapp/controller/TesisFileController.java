@@ -49,7 +49,6 @@ public class TesisFileController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_FILE.getMessage(), e);
         }catch (Exception e){
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -62,7 +61,6 @@ public class TesisFileController {
         try{
             dto = tesisFileService.downloadFile(id);
         }catch(Exception e){
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }

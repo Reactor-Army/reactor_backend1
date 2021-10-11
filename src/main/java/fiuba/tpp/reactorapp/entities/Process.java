@@ -199,9 +199,6 @@ public class Process {
         this.free = free;
     }
 
-    public Boolean getFree() {
-        return free;
-    }
 
     @Override
     public String toString() {

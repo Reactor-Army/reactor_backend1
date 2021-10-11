@@ -8,6 +8,10 @@ import org.springframework.http.ResponseEntity;
 
 public class FileUtils {
 
+    private FileUtils(){
+        throw new IllegalStateException("Utility class");
+    }
+
     public static ResponseEntity<ByteArrayResource> generateFileResponse(FileTemplateDTO dto){
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+ dto.getFileName());

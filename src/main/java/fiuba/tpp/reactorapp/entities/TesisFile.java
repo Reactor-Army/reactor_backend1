@@ -25,6 +25,7 @@ public class TesisFile {
     private byte[] data;
 
     public TesisFile() {
+        //Necesario para JPA
     }
 
     public Long getId() {
