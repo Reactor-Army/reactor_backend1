@@ -33,6 +33,8 @@ public class AuthController {
 
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
+    private static Integer EMAIL_MAX_LENGTH = 64;
+
     @Autowired
     AuthService authService;
 
@@ -204,6 +206,7 @@ public class AuthController {
     }
 
     private boolean isValidEmail(String email){
+        if(email.length() > EMAIL_MAX_LENGTH) return false;
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
