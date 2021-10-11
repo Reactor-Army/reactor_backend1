@@ -78,14 +78,12 @@ class AuthControllerTest {
         userRepository.deleteAll();
     }
 
-
-
     @Test
     void testRegisterUserAndLogin(){
-        authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
-        LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
+        createUserController("mati");
+        LoginResponse response = authController.login(new AuthRequest("mati@gmail.com", "Prueba123"));
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
-        Assert.assertEquals("Usuario", response.getUser().getRole().getRolename());
+        Assert.assertEquals("Administrador", response.getUser().getRole().getRolename());
         Assert.assertNotNull(response.getUser().getLastLogin());
     }
 
@@ -96,7 +94,7 @@ class AuthControllerTest {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentController.createAdsorbent(request);
 
-        LoginResponse response = authController.authenticateUser(new AuthRequest("mati@gmail.com", "Prueba123"));
+        LoginResponse response = authController.login(new AuthRequest("mati@gmail.com", "Prueba123"));
         String token = "Bearer " + response.getAccessToken();
 
         List<AdsorbentResponse> oldList = adsorbentController.getAdsorbents(token);
@@ -108,31 +106,11 @@ class AuthControllerTest {
     }
 
     @Test
-    void testRegisterUser(){
-        RegisterResponse response = authController.registerUser(new AuthRequest("mati@gmail.com","Prueba123"));
-        Assert.assertEquals("mati@gmail.com", response.getEmail());
-        Assert.assertEquals("ROLE_USER", response.getRoles().get(0));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "''",
-            "null",
-            "'matigmail.com'"
-    })
-    void testInvalidEmail(String email){
-        AuthRequest request = new AuthRequest("" ,"Prueba123");
-        Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.registerUser(request);
-        });
-    }
-
-    @Test
     void testInvalidLogin(){
-        authController.registerUser(new AuthRequest("matias@gmail.com" ,"Prueba123"));
+        createUserController("mati");
         AuthRequest request = new AuthRequest("matiTest2", "Prueba123");
         Assert.assertThrows(BadCredentialsException.class, () ->{
-            authController.authenticateUser(request);
+            authController.login(request);
         });
     }
 
@@ -141,27 +119,7 @@ class AuthControllerTest {
         AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
         Mockito.when(authService.login(request)).thenThrow(UserNotFoundException.class);
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authMockController.authenticateUser(request);
-        });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-    }
-
-    @Test
-    void testInvalidRegisterDuplicateEmail(){
-        AuthRequest request = new AuthRequest("mati@gmail.com" ,"Prueba123");
-        authController.registerUser(request);
-        AuthRequest request2 = new AuthRequest("mati@gmail.com" ,"Prueba123");
-        Assert.assertThrows(ResponseStatusException.class, () ->{
-            authController.registerUser(request2);
-        });
-    }
-
-    @Test
-    void testRegisterUserInternalErrror() {
-        AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
-        Mockito.when(authService.register(request)).thenThrow(RuntimeException.class);
-        ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authMockController.registerUser(request);
+            authMockController.login(request);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
     }
@@ -190,7 +148,7 @@ class AuthControllerTest {
     void testAuthCode() throws UserNotFoundException {
         AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
         Mockito.doNothing().when(authService).resetPasswordGenerateCode(request);
-        authController.registerUser(request);
+        createUserController("mati");
         assertDoesNotThrow(()->authMockController.generateCodeResetPassword(request));
     }
 
@@ -264,8 +222,8 @@ class AuthControllerTest {
         authController.createUser(createUserRequest("admin"));
         authController.createUser(createUserRequestNotAdmin("lucas"));
         authController.createUser(createUserRequestNotAdmin("log"));
-        authController.authenticateUser(new AuthRequest("log@gmail.com", "Prueba123"));
-        authController.authenticateUser(new AuthRequest("admin@gmail.com", "Prueba123"));
+        authController.login(new AuthRequest("log@gmail.com", "Prueba123"));
+        authController.login(new AuthRequest("admin@gmail.com", "Prueba123"));
         List<UserResponse> users = authController.getUsers();
         Assert.assertEquals(3L, users.size());
         Assert.assertEquals("ROLE_ADMIN", users.get(0).getRole().getName());
@@ -462,7 +420,7 @@ class AuthControllerTest {
     }
 
     private AuthCode createCode(Date date, String email){
-        authController.registerUser(new AuthRequest(email,"Prueba123"));
+        createUserController(email.split("@")[0]);
         Optional<User> user = userRepository.findByEmail(email);
         AuthCode authCode = new AuthCode();
         authCode.setCode("123456");
@@ -481,17 +439,6 @@ class AuthControllerTest {
         user.setRole(ERole.ROLE_ADMIN);
         user.setDescription("Es un usuario de prueba");
         userRepository.save(user);
-        return user;
-    }
-
-    private UserRequest createUserRequest(String placeholder){
-        UserRequest user = new UserRequest();
-        user.setName(placeholder);
-        user.setSurname("Reimondo");
-        user.setEmail(placeholder+"@gmail.com");
-        user.setPassword("Prueba123");
-        user.setRole(ERole.ROLE_ADMIN.name());
-        user.setDescription("Es un usuario de prueba");
         return user;
     }
 
@@ -515,5 +462,21 @@ class AuthControllerTest {
         user.setDescription("Es un usuario de prueba");
         return user;
     }
+
+    private UserRequest createUserRequest(String placeholder){
+        UserRequest user = new UserRequest();
+        user.setName(placeholder);
+        user.setSurname("Reimondo");
+        user.setEmail(placeholder+"@gmail.com");
+        user.setPassword("Prueba123");
+        user.setRole(ERole.ROLE_ADMIN.name());
+        user.setDescription("Es un usuario de prueba");
+        return user;
+    }
+
+    private UserResponse createUserController(String placeholder){
+        return authController.createUser(createUserRequest(placeholder));
+    }
+
 
 }

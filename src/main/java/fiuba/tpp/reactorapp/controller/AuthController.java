@@ -39,7 +39,7 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/login")
-    public LoginResponse authenticateUser(@RequestBody AuthRequest authRequest) {
+    public LoginResponse login(@RequestBody AuthRequest authRequest) {
         try {
             return authService.login(authRequest);
         } catch (UserNotFoundException e) {
@@ -51,23 +51,6 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout(@RequestHeader("Authorization") String authHeader) {
         authService.logout(authHeader);
-    }
-
-    @PostMapping("/register")
-    public RegisterResponse registerUser(@RequestBody AuthRequest registerRequest) {
-        try{
-            validateAuthRequest(registerRequest);
-            return authService.register(registerRequest);
-        } catch (EmailAlreadyExistException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.DUPLICATE_EMAIL.getMessage(), e);
-        } catch (InvalidRegisterException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REGISTER.getMessage(), e);
-        }catch(Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
-        }
     }
 
     @PostMapping("/reset/password/code")

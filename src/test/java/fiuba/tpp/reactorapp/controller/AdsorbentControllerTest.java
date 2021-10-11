@@ -1,8 +1,11 @@
 package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.entities.Adsorbent;
+import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
+import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
+import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
 import fiuba.tpp.reactorapp.model.response.AdsorbentNameResponse;
 import fiuba.tpp.reactorapp.model.response.AdsorbentResponse;
@@ -296,9 +299,24 @@ class AdsorbentControllerTest {
         adsorbentRepository.save(adsorbent);
     }
 
+    private UserRequest createUserRequest(String placeholder){
+        UserRequest user = new UserRequest();
+        user.setName(placeholder);
+        user.setSurname("Reimondo");
+        user.setEmail(placeholder+"@gmail.com");
+        user.setPassword("Prueba123");
+        user.setRole(ERole.ROLE_ADMIN.name());
+        user.setDescription("Es un usuario de prueba");
+        return user;
+    }
+
+    private UserResponse createUserController(String placeholder){
+        return authController.createUser(createUserRequest(placeholder));
+    }
+
     private String getToken(String name){
-        authController.registerUser(new AuthRequest(name+"@gmail.com","Prueba123"));
-        LoginResponse response = authController.authenticateUser(new AuthRequest(name+"@gmail.com", "Prueba123"));
+        createUserController(name);
+        LoginResponse response = authController.login(new AuthRequest(name + "@gmail.com", "Prueba123"));
         return  "Bearer " + response.getAccessToken();
     }
 }
