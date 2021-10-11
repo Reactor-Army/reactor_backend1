@@ -239,8 +239,8 @@ class TesisFileControllerTest {
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.downloadTesis(1000L);
         });
-        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
-        Assert.assertTrue(e.getStatus().is5xxServerError());
+        Assert.assertEquals(ResponseMessage.TESIS_NOT_FOUND.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
 
     }
 

@@ -62,7 +62,7 @@ public class TesisFileController {
             dto = tesisFileService.downloadFile(id);
         }catch(Exception e){
             throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+                    HttpStatus.NOT_FOUND, ResponseMessage.TESIS_NOT_FOUND.getMessage(), e);
         }
         return FileUtils.generateFileResponse(dto);
     }

@@ -24,7 +24,7 @@ public class TesisFileResponse {
     @JsonProperty("fechaSubida")
     private Date uploadDate;
 
-    @JsonProperty("sistemasRelacionados ")
+    @JsonProperty("sistemasRelacionados")
     private List<ProcessResponse> processes;
 
     public TesisFileResponse() {
