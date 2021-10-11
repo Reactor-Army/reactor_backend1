@@ -51,7 +51,6 @@ public class Process {
     @Column(columnDefinition = "boolean default false")
     private Boolean free;
 
-
     public Process() {}
 
 
@@ -199,6 +198,7 @@ public class Process {
     public void setFree(Boolean free) {
         this.free = free;
     }
+
 
     @Override
     public String toString() {
