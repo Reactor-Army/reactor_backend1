@@ -6,7 +6,6 @@ import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
 import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
-import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
 import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
@@ -33,7 +32,7 @@ public class AuthController {
 
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 
-    private static Integer EMAIL_MAX_LENGTH = 64;
+    private static final Integer EMAIL_MAX_LENGTH = 64;
 
     @Autowired
     AuthService authService;
