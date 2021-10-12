@@ -14,6 +14,7 @@ import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RoleResponse;
 import fiuba.tpp.reactorapp.model.auth.response.UserResponse;
+import fiuba.tpp.reactorapp.model.exception.SameUserException;
 import fiuba.tpp.reactorapp.repository.auth.TokenRepository;
 import fiuba.tpp.reactorapp.repository.auth.UserRepository;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
@@ -164,15 +165,20 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteUser(Long id) throws UserNotFoundException {
+    public void deleteUser(Long id, String token) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
+            if(isSameUser(jwtUtils.getUserNameFromJwtToken(token),user.get().getEmail())) throw new SameUserException();
             authCodeService.cleanAuthCodesUser(user.get());
             tokenRepository.deleteAllByUser(user.get());
             userRepository.delete(user.get());
         }else{
             throw new UserNotFoundException();
         }
+    }
+
+    private boolean isSameUser(String emailUser, String emailDeleted){
+        return emailUser.equalsIgnoreCase(emailDeleted);
     }
 
     public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
