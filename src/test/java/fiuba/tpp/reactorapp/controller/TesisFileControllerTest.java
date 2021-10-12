@@ -384,4 +384,20 @@ class TesisFileControllerTest {
 
     }
 
+    @Test
+    void testDeleteFile(){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        assertDoesNotThrow(() -> tesisFileController.deleteTesisFile(id));
+    }
+
+    @Test
+    void testDeleteNotExistent(){
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.deleteTesisFile(1000L);
+        });
+        Assert.assertEquals(ResponseMessage.TESIS_NOT_FOUND.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
 }

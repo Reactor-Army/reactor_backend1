@@ -56,7 +56,7 @@ public class TesisFileController {
 
     }
 
-    @PutMapping("/modificar/{id}")
+    @PutMapping("/{id}")
     public TesisFileResponse changeTesisFile(@PathVariable Long id,@ModelAttribute TesisFileRequest request){
         try{
             validateTesisFile(request);
@@ -78,6 +78,19 @@ public class TesisFileController {
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
 
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTesisFile(@PathVariable Long id){
+        try{
+            tesisFileService.deleteFile(id);
+        }catch (TesisNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.TESIS_NOT_FOUND.getMessage(), e);
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
     }
 
     @GetMapping("/descargar/{id}")

@@ -12,6 +12,7 @@ import fiuba.tpp.reactorapp.repository.TesisFileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +44,16 @@ public class TesisFileService {
             return new TesisFileResponse(file);
         }
         throw new TesisNotFoundException();
+    }
+
+    @Transactional
+    public void deleteFile(Long id){
+        Optional<TesisFile> tesis = tesisFileRepository.findById(id);
+        if(tesis.isPresent()){
+            tesisFileRepository.delete(tesis.get());
+        }else{
+            throw new TesisNotFoundException();
+        }
     }
 
     private TesisFile generateTesisFromRequest(TesisFileRequest request) throws IOException {
