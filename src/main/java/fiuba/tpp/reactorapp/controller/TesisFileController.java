@@ -2,9 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.controller.utils.FileUtils;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
-import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
-import fiuba.tpp.reactorapp.model.exception.FileSizeExceedException;
-import fiuba.tpp.reactorapp.model.exception.InvalidFileException;
+import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.TesisFileRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.TesisFileResponse;
@@ -34,11 +32,14 @@ public class TesisFileController {
     @Autowired
     private TesisFileService tesisFileService;
 
-    @PostMapping("/subir")
+    @PostMapping("")
     public TesisFileResponse uploadTesisFile(@ModelAttribute TesisFileRequest request){
         try{
             validateTesisFile(request);
             return tesisFileService.uploadFile(request);
+        } catch (InvalidRequestException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_REQUEST.getMessage(), e);
         } catch (FileSizeExceedException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(), e);
@@ -55,6 +56,46 @@ public class TesisFileController {
 
     }
 
+    @PutMapping("/{id}")
+    public TesisFileResponse changeTesisFile(@PathVariable Long id,@ModelAttribute TesisFileRequest request){
+        try{
+            validateTesisFile(request);
+            return tesisFileService.changeFile(id,request);
+        } catch (InvalidRequestException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_REQUEST.getMessage(), e);
+        } catch (FileSizeExceedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(), e);
+        }catch (FileNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.FILE_NOT_FOUND.getMessage(), e);
+        }catch (InvalidFileException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_FILE.getMessage(), e);
+        }catch (TesisNotFoundException e) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, ResponseMessage.TESIS_NOT_FOUND.getMessage(), e);
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteTesisFile(@PathVariable Long id){
+        try{
+            tesisFileService.deleteFile(id);
+        }catch (TesisNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.TESIS_NOT_FOUND.getMessage(), e);
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
     @GetMapping("/descargar/{id}")
     public ResponseEntity<ByteArrayResource> downloadTesis(@PathVariable Long id){
         FileTemplateDTO dto;
@@ -67,7 +108,14 @@ public class TesisFileController {
         return FileUtils.generateFileResponse(dto);
     }
 
+    @GetMapping("/buscar")
+    public List<TesisFileResponse> searchFiles(@RequestParam(name="nombre",required = false) String name){
+        return tesisFileService.searchFiles(name);
+    }
+
     private void validateTesisFile(TesisFileRequest request) {
+        if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
+        if(request.getAuthor() == null || request.getAuthor().isEmpty()) throw new InvalidRequestException();
         validateFile(request.getTesis());
     }
 

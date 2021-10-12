@@ -15,6 +15,12 @@ public class TesisFileResponse {
     @JsonProperty("titulo")
     private String name;
 
+    @JsonProperty("nombreArchivo")
+    private String filename;
+
+    @JsonProperty("autor")
+    private String author;
+
     @JsonProperty("formato")
     private String type;
 
@@ -37,6 +43,8 @@ public class TesisFileResponse {
     private void copyData(TesisFile tesisFile){
         this.id = tesisFile.getId();
         this.name = tesisFile.getName();
+        this.filename = tesisFile.getFilename();
+        this.author = tesisFile.getAuthor();
         this.publicationDate = tesisFile.getPublicationDate();
         this.uploadDate = tesisFile.getUploadDate();
         this.type = tesisFile.getType();
@@ -92,5 +100,21 @@ public class TesisFileResponse {
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

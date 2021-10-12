@@ -19,7 +19,7 @@ public enum ResponseMessage {
     DUPLICATE_EMAIL("El email ya existe en el sistema"),
     INVALID_REGISTER("El email es invalido o no cumple con un formato correcto"),
     FILE_NOT_FOUND("El archivo es invalido o no cumple con el formato correcto"),
-    TESIS_NOT_FOUND("La tesis que intenta descargar no existe"),
+    TESIS_NOT_FOUND("La tesis no existe"),
     INVALID_FILE("El archivo debe tener una extensión csv, xls o xlsx"),
     INVALID_TESIS_FILE("El archivo debe tener una extensión pdf, doc o docx"),
     TESIS_FILE_SIZE_EXCEED("El tamaño limite para un archivo son 50 MB"),
@@ -32,6 +32,7 @@ public enum ResponseMessage {
     INVALID_USER("Para crear un usuario se requiere un nombre y apellido, un email válido, unas password y uno de los roles permitidos"),
     BAD_CREDENTIALS("Credenciales inválidas"),
     UNAUTHORIZED("Para realizar esta operación debes ser administrador del sistema"),
+    INVALID_TESIS_REQUEST("Los trabajos deben tener un titulo y un autor"),
     SAME_USER_ERROR("Un administrador no puede borrarse a si mismo"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
