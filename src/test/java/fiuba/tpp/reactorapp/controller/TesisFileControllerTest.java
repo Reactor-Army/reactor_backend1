@@ -244,4 +244,144 @@ class TesisFileControllerTest {
 
     }
 
+    private TesisFileResponse uploadFile(){
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+
+        return tesisFileController.uploadTesisFile(request);
+
+    }
+
+    @Test
+    void testUpdateFileTooBig(){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        byte[] bytes = new byte[55000000];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.changeTesisFile(id,request);
+        });
+        Assert.assertEquals(ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @Test
+    void testFileChangeEmpty(){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        byte[] bytes = new byte[0];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.changeTesisFile(id,request);
+        });
+        Assert.assertEquals(ResponseMessage.FILE_NOT_FOUND.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @Test
+    void testFileChangeNull(){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        TesisFileRequest request = new TesisFileRequest(null, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.changeTesisFile(id,request);
+        });
+        Assert.assertEquals(ResponseMessage.FILE_NOT_FOUND.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @Test
+    void testChangeInvalidType(){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.csv", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.changeTesisFile(id,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_TESIS_FILE.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "pdf",
+            "doc",
+            "docx",
+    })
+    void testChangeFileAllExtensions(String extension){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello."+extension, MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+
+        assertDoesNotThrow(() -> tesisFileController.changeTesisFile(id,request));
+    }
+
+    @Test
+    void testChangeNotExistent(){
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.changeTesisFile(1000L,request);
+        });
+        Assert.assertEquals(ResponseMessage.TESIS_NOT_FOUND.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @Test
+    void testChangeFile(){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "goodbye",
+                "goodbye.docx", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileResponse change = tesisFileController.changeTesisFile(id,request);
+
+        Assert.assertEquals("goodbye", change.getName());
+        Assert.assertEquals("docx", change.getType());
+
+    }
+
 }

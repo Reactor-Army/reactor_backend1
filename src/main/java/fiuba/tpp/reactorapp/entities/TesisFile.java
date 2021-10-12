@@ -1,6 +1,11 @@
 package fiuba.tpp.reactorapp.entities;
 
+import fiuba.tpp.reactorapp.model.request.TesisFileRequest;
+import org.apache.commons.io.FilenameUtils;
+
 import javax.persistence.*;
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +33,23 @@ public class TesisFile {
 
     public TesisFile() {
         //Necesario para JPA
+    }
+
+    public TesisFile(TesisFileRequest request) throws IOException {
+        coyData(request);
+    }
+
+    private void coyData(TesisFileRequest request) throws IOException {
+        this.name = FilenameUtils.getBaseName(request.getTesis().getOriginalFilename());
+        this.data = request.getTesis().getBytes();
+        this.type = FilenameUtils.getExtension(request.getTesis().getOriginalFilename());
+        this.publicationDate = request.getFechaPublicacion();
+        this.uploadDate = Calendar.getInstance().getTime();
+    }
+
+    public TesisFile update(TesisFileRequest request) throws IOException {
+        coyData(request);
+        return this;
     }
 
     public Long getId() {

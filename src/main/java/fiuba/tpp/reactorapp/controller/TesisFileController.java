@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.FileSizeExceedException;
 import fiuba.tpp.reactorapp.model.exception.InvalidFileException;
+import fiuba.tpp.reactorapp.model.exception.TesisNotFoundException;
 import fiuba.tpp.reactorapp.model.request.TesisFileRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.TesisFileResponse;
@@ -48,6 +49,30 @@ public class TesisFileController {
         }catch (InvalidFileException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_FILE.getMessage(), e);
+        }catch (Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+
+    }
+
+    @PutMapping("/modificar/{id}")
+    public TesisFileResponse changeTesisFile(@PathVariable Long id,@ModelAttribute TesisFileRequest request){
+        try{
+            validateTesisFile(request);
+            return tesisFileService.changeFile(id,request);
+        } catch (FileSizeExceedException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(), e);
+        }catch (FileNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.FILE_NOT_FOUND.getMessage(), e);
+        }catch (InvalidFileException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_FILE.getMessage(), e);
+        }catch (TesisNotFoundException e) {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, ResponseMessage.TESIS_NOT_FOUND.getMessage(), e);
         }catch (Exception e){
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
