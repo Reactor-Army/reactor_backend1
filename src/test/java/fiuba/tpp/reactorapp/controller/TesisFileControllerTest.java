@@ -11,6 +11,7 @@ import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import fiuba.tpp.reactorapp.repository.TesisFileRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -473,6 +474,17 @@ class TesisFileControllerTest {
         Assert.assertEquals(2,l2.size());
         Assert.assertEquals(1, l1.size());
         Assert.assertEquals("MATIAS", l1.get(0).getAuthor());
+    }
+
+    @Test
+    void testSearchFilesNoResult(){
+        uploadFile("busqueda1","MATIAS");
+        uploadFile("busqueda2","LUCARIO");
+
+        List<TesisFileResponse> l1 = tesisFileController.searchFiles("tesisNoExiste");
+
+        Assertions.assertTrue(l1.isEmpty());
+
 
 
     }
