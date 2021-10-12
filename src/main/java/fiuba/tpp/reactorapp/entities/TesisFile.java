@@ -45,10 +45,10 @@ public class TesisFile {
     }
 
     public TesisFile(TesisFileRequest request) throws IOException {
-        coyData(request);
+        copyData(request);
     }
 
-    private void coyData(TesisFileRequest request) throws IOException {
+    private void copyData(TesisFileRequest request) throws IOException {
         this.name = request.getName();
         this.author = request.getAuthor();
         this.filename = FilenameUtils.getBaseName(request.getTesis().getOriginalFilename());
@@ -59,7 +59,7 @@ public class TesisFile {
     }
 
     public TesisFile update(TesisFileRequest request) throws IOException {
-        coyData(request);
+        copyData(request);
         return this;
     }
 

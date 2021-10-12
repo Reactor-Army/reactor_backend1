@@ -32,7 +32,7 @@ public class TesisFileController {
     @Autowired
     private TesisFileService tesisFileService;
 
-    @PostMapping("/subir")
+    @PostMapping("")
     public TesisFileResponse uploadTesisFile(@ModelAttribute TesisFileRequest request){
         try{
             validateTesisFile(request);
