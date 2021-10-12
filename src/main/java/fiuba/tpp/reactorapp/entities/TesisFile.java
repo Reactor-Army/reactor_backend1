@@ -19,6 +19,10 @@ public class TesisFile {
 
     private String name;
 
+    private String author;
+
+    private String filename;
+
     private String type;
 
     private Date publicationDate;
@@ -40,7 +44,9 @@ public class TesisFile {
     }
 
     private void coyData(TesisFileRequest request) throws IOException {
-        this.name = FilenameUtils.getBaseName(request.getTesis().getOriginalFilename());
+        this.name = request.getName();
+        this.author = request.getAuthor();
+        this.filename = FilenameUtils.getBaseName(request.getTesis().getOriginalFilename());
         this.data = request.getTesis().getBytes();
         this.type = FilenameUtils.getExtension(request.getTesis().getOriginalFilename());
         this.publicationDate = request.getFechaPublicacion();
@@ -106,5 +112,21 @@ public class TesisFile {
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

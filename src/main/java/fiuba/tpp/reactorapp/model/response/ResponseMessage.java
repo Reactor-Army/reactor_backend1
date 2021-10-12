@@ -32,6 +32,7 @@ public enum ResponseMessage {
     INVALID_USER("Para crear un usuario se requiere un nombre y apellido, un email válido, unas password y uno de los roles permitidos"),
     BAD_CREDENTIALS("Credenciales inválidas"),
     UNAUTHORIZED("Para realizar esta operación debes ser administrador del sistema"),
+    INVALID_TESIS_REQUEST("Los trabajos deben tener un titulo y un autor"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
     private final String message;

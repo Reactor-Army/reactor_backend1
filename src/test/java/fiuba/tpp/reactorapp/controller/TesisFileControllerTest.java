@@ -89,7 +89,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.uploadTesisFile(request);
         });
@@ -106,7 +106,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.uploadTesisFile(request);
         });
@@ -116,7 +116,7 @@ class TesisFileControllerTest {
 
     @Test
     void testFileNull(){
-        TesisFileRequest request = new TesisFileRequest(null, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",null, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.uploadTesisFile(request);
         });
@@ -133,7 +133,7 @@ class TesisFileControllerTest {
                 "hello.csv", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.uploadTesisFile(request);
         });
@@ -155,7 +155,7 @@ class TesisFileControllerTest {
                 "hello."+extension, MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
 
         assertDoesNotThrow(() -> tesisFileController.uploadTesisFile(request));
     }
@@ -169,11 +169,11 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
 
         TesisFileResponse response = tesisFileController.uploadTesisFile(request);
 
-        Assert.assertEquals("hello", response.getName());
+        Assert.assertEquals("hello", response.getFilename());
         Assert.assertEquals("pdf", response.getType());
         Assert.assertTrue(response.getProcesses().isEmpty());
     }
@@ -188,11 +188,12 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),String.valueOf(responseProcess.getId()));
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),String.valueOf(responseProcess.getId()));
 
         TesisFileResponse response = tesisFileController.uploadTesisFile(request);
 
-        Assert.assertEquals("hello", response.getName());
+        Assert.assertEquals("hello", response.getFilename());
+        Assert.assertEquals("Autor de prueba", response.getAuthor());
         Assert.assertEquals("pdf", response.getType());
         Assert.assertFalse(response.getProcesses().isEmpty());
     }
@@ -209,11 +210,12 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),ids);
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),ids);
 
         TesisFileResponse response = tesisFileController.uploadTesisFile(request);
 
-        Assert.assertEquals("hello", response.getName());
+        Assert.assertEquals("hello", response.getFilename());
+        Assert.assertEquals("Prueba", response.getName());
         Assert.assertEquals("pdf", response.getType());
         Assert.assertEquals(2, response.getProcesses().size());
     }
@@ -227,7 +229,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
 
         TesisFileResponse response = tesisFileController.uploadTesisFile(request);
         ResponseEntity<ByteArrayResource> fileResponse = tesisFileController.downloadTesis(response.getId());
@@ -252,7 +254,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
 
         return tesisFileController.uploadTesisFile(request);
 
@@ -269,7 +271,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.changeTesisFile(id,request);
         });
@@ -288,7 +290,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.changeTesisFile(id,request);
         });
@@ -300,7 +302,7 @@ class TesisFileControllerTest {
     void testFileChangeNull(){
         TesisFileResponse response = uploadFile();
         Long id = response.getId();
-        TesisFileRequest request = new TesisFileRequest(null, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",null, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.changeTesisFile(id,request);
         });
@@ -319,7 +321,7 @@ class TesisFileControllerTest {
                 "hello.csv", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.changeTesisFile(id,request);
         });
@@ -343,7 +345,7 @@ class TesisFileControllerTest {
                 "hello."+extension, MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
 
         assertDoesNotThrow(() -> tesisFileController.changeTesisFile(id,request));
     }
@@ -357,7 +359,7 @@ class TesisFileControllerTest {
                 "hello.pdf", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
             tesisFileController.changeTesisFile(1000L,request);
         });
@@ -376,10 +378,10 @@ class TesisFileControllerTest {
                 "goodbye.docx", MediaType.ALL_VALUE,
                 bytes);
 
-        TesisFileRequest request = new TesisFileRequest(file, Calendar.getInstance().getTime(),"");
+        TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
         TesisFileResponse change = tesisFileController.changeTesisFile(id,request);
 
-        Assert.assertEquals("goodbye", change.getName());
+        Assert.assertEquals("goodbye", change.getFilename());
         Assert.assertEquals("docx", change.getType());
 
     }
@@ -398,6 +400,53 @@ class TesisFileControllerTest {
         });
         Assert.assertEquals(ResponseMessage.TESIS_NOT_FOUND.getMessage(),e.getReason());
         Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            ",prueba",
+            "prueba,",
+            "prueba,null",
+            "null,prueba"
+    }, nullValues = {"null"})
+    void testUploadFileNoNameNoAuthor(String name, String author){
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+        TesisFileRequest request = new TesisFileRequest(name,author,file, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.uploadTesisFile(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_TESIS_REQUEST.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            ",prueba",
+            "prueba,",
+            "prueba,null",
+            "null,prueba"
+    }, nullValues = {"null"})
+    void testChangeFileNoNameNoAuthor(String name, String author){
+        TesisFileResponse response = uploadFile();
+        Long id = response.getId();
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+        TesisFileRequest request = new TesisFileRequest(name,author,file, Calendar.getInstance().getTime(),"");
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            tesisFileController.changeTesisFile(id,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_TESIS_REQUEST.getMessage(),e.getReason());
+        Assert.assertTrue(e.getStatus().is4xxClientError());
+
     }
 
 }

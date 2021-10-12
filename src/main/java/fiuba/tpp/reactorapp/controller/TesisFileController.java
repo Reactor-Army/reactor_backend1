@@ -2,10 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import fiuba.tpp.reactorapp.controller.utils.FileUtils;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
-import fiuba.tpp.reactorapp.model.exception.FileNotFoundException;
-import fiuba.tpp.reactorapp.model.exception.FileSizeExceedException;
-import fiuba.tpp.reactorapp.model.exception.InvalidFileException;
-import fiuba.tpp.reactorapp.model.exception.TesisNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.TesisFileRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.TesisFileResponse;
@@ -40,6 +37,9 @@ public class TesisFileController {
         try{
             validateTesisFile(request);
             return tesisFileService.uploadFile(request);
+        } catch (InvalidRequestException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_REQUEST.getMessage(), e);
         } catch (FileSizeExceedException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(), e);
@@ -61,6 +61,9 @@ public class TesisFileController {
         try{
             validateTesisFile(request);
             return tesisFileService.changeFile(id,request);
+        } catch (InvalidRequestException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_TESIS_REQUEST.getMessage(), e);
         } catch (FileSizeExceedException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.TESIS_FILE_SIZE_EXCEED.getMessage(), e);
@@ -106,6 +109,8 @@ public class TesisFileController {
     }
 
     private void validateTesisFile(TesisFileRequest request) {
+        if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
+        if(request.getAuthor() == null || request.getAuthor().isEmpty()) throw new InvalidRequestException();
         validateFile(request.getTesis());
     }
 
