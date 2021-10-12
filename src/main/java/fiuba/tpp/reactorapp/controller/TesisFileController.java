@@ -108,6 +108,11 @@ public class TesisFileController {
         return FileUtils.generateFileResponse(dto);
     }
 
+    @GetMapping("/buscar")
+    public List<TesisFileResponse> searchFiles(@RequestParam(name="nombre",required = false) String name){
+        return tesisFileService.searchFiles(name);
+    }
+
     private void validateTesisFile(TesisFileRequest request) {
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
         if(request.getAuthor() == null || request.getAuthor().isEmpty()) throw new InvalidRequestException();

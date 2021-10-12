@@ -11,6 +11,7 @@ import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import fiuba.tpp.reactorapp.repository.TesisFileRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,6 +26,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -257,7 +259,19 @@ class TesisFileControllerTest {
         TesisFileRequest request = new TesisFileRequest("Prueba","Autor de prueba",file, Calendar.getInstance().getTime(),"");
 
         return tesisFileController.uploadTesisFile(request);
+    }
 
+    private TesisFileResponse uploadFile(String name, String author){
+        byte[] bytes = new byte[10];
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "hello",
+                "hello.pdf", MediaType.ALL_VALUE,
+                bytes);
+
+        TesisFileRequest request = new TesisFileRequest(name,author,file, Calendar.getInstance().getTime(),"");
+
+        return tesisFileController.uploadTesisFile(request);
     }
 
     @Test
@@ -446,6 +460,32 @@ class TesisFileControllerTest {
         });
         Assert.assertEquals(ResponseMessage.INVALID_TESIS_REQUEST.getMessage(),e.getReason());
         Assert.assertTrue(e.getStatus().is4xxClientError());
+
+    }
+
+    @Test
+    void testSearchFiles(){
+        TesisFileResponse f1 = uploadFile("busqueda1","MATIAS");
+        TesisFileResponse f2 = uploadFile("busqueda2","LUCARIO");
+
+        List<TesisFileResponse> l1 = tesisFileController.searchFiles("mati");
+        List<TesisFileResponse> l2 = tesisFileController.searchFiles("BUSQUE");
+
+        Assert.assertEquals(2,l2.size());
+        Assert.assertEquals(1, l1.size());
+        Assert.assertEquals("MATIAS", l1.get(0).getAuthor());
+    }
+
+    @Test
+    void testSearchFilesNoResult(){
+        uploadFile("busqueda1","MATIAS");
+        uploadFile("busqueda2","LUCARIO");
+
+        List<TesisFileResponse> l1 = tesisFileController.searchFiles("tesisNoExiste");
+
+        Assertions.assertTrue(l1.isEmpty());
+
+
 
     }
 

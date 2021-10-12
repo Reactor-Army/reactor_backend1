@@ -87,4 +87,12 @@ public class TesisFileService {
     private String buildFileName(TesisFile file){
         return file.getName().concat(".").concat(file.getType());
     }
+
+    public List<TesisFileResponse> searchFiles(String name){
+        List<TesisFileResponse> response = new ArrayList<>();
+        for (TesisFile tesis: tesisFileRepository.getAll(name)) {
+            response.add(new TesisFileResponse(tesis));
+        }
+        return response;
+    }
 }

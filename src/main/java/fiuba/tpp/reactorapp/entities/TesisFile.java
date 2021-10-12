@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.entities;
 
 import fiuba.tpp.reactorapp.model.request.TesisFileRequest;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -21,6 +22,10 @@ public class TesisFile {
 
     private String author;
 
+    private String nameNormalized;
+
+    private String authorNormalized;
+
     private String filename;
 
     private String type;
@@ -29,7 +34,7 @@ public class TesisFile {
 
     private Date uploadDate;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Process> processes;
 
     @Lob
@@ -129,4 +134,28 @@ public class TesisFile {
     public void setFilename(String filename) {
         this.filename = filename;
     }
+
+    public String getNameNormalized() {
+        return nameNormalized;
+    }
+
+    public void setNameNormalized(String nameNormalized) {
+        this.nameNormalized = nameNormalized;
+    }
+
+    public String getAuthorNormalized() {
+        return authorNormalized;
+    }
+
+    public void setAuthorNormalized(String authorNormalized) {
+        this.authorNormalized = authorNormalized;
+    }
+
+    @PreUpdate
+    @PrePersist
+    protected void normalize() {
+        nameNormalized = (name == null)? "" : StringUtils.stripAccents(name.toLowerCase());
+        authorNormalized = (author == null) ? "": StringUtils.stripAccents(author.toLowerCase());
+    }
+
 }
