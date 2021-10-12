@@ -1,7 +1,5 @@
 package fiuba.tpp.reactorapp.repository;
 
-import fiuba.tpp.reactorapp.entities.Adsorbate;
-import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.entities.TesisFile;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
