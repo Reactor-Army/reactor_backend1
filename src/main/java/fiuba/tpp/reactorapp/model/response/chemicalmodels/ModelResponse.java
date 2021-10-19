@@ -14,6 +14,9 @@ public class ModelResponse {
     @JsonProperty("observaciones")
     private List<Observation> observations;
 
+    @JsonProperty("dataId")
+    private Long dataId;
+
     public ModelResponse() {
         observations = new ArrayList<>();
     }
@@ -34,4 +37,11 @@ public class ModelResponse {
         this.observations = observations;
     }
 
+    public Long getDataId(Long aLong) {
+        return dataId;
+    }
+
+    public void setDataId(Long dataId) {
+        this.dataId = dataId;
+    }
 }

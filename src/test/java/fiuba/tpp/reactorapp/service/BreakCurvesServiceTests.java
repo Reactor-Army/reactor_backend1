@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
@@ -27,7 +28,7 @@ class BreakCurvesServiceTests {
 
 
     @Test
-    void testEasyObservations() {
+    void testEasyObservations() throws JsonProcessingException {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
@@ -73,7 +74,7 @@ class BreakCurvesServiceTests {
     }
 
     @Test
-    void testThomasWithDataFromTesis(){
+    void testThomasWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisThomas();
         ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
@@ -105,7 +106,7 @@ class BreakCurvesServiceTests {
     }
 
     @Test
-    void testThomasWithJuancho(){
+    void testThomasWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);

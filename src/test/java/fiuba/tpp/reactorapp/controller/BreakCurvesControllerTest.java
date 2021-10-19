@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
@@ -162,7 +163,7 @@ class BreakCurvesControllerTest {
             "xls",
             "xlsx",
     })
-    void testMockResponse(String fileExtension) {
+    void testMockResponse(String fileExtension) throws JsonProcessingException {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",

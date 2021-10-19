@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.model.request.chemicalmodels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
  * */
 public class ThomasRequest {
 
+    @JsonIgnore
     private MultipartFile observaciones;
 
     //F

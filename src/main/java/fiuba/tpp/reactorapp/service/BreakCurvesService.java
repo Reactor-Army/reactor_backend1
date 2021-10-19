@@ -1,14 +1,21 @@
 package fiuba.tpp.reactorapp.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.model.dto.BreakCurvesThomasDTO;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
+import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
+import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
 import fiuba.tpp.reactorapp.service.utils.CSVParserService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BreakCurvesService {
@@ -34,7 +42,10 @@ public class BreakCurvesService {
     @Autowired
     private CSVParserService csvParserService;
 
-    public ThomasResponse calculateByThomas(ThomasRequest request){
+    @Autowired
+    private BreakCurvesDataRepository breakCurvesDataRepository;
+
+    public ThomasResponse calculateByThomas(ThomasRequest request) throws JsonProcessingException {
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
         return thomasModelService.thomasEvaluation(chemicalObservations,request);
@@ -58,6 +69,25 @@ public class BreakCurvesService {
         byte[] bytes = IOUtils.toByteArray(inputStream);
 
         return new FileTemplateDTO(new ByteArrayResource(bytes),"datos.xlsx", bytes.length);
+    }
+
+    public BreakCurvesDataResponse getBreakCurveData(Long id) throws JsonProcessingException {
+        Optional<BreakCurvesData> data = breakCurvesDataRepository.findById(id);
+        if(data.isPresent()){
+            return formatData(data.get());
+        }
+        throw new ComponentNotFoundException();
+    }
+
+    private BreakCurvesDataResponse formatData(BreakCurvesData data) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        switch (data.getModel()){
+            case THOMAS:
+                BreakCurvesThomasDTO dto = mapper.readValue(data.getData(), BreakCurvesThomasDTO.class);
+                return new BreakCurvesDataResponse(data,dto);
+            default:
+                return null;
+        }
     }
 
 }
