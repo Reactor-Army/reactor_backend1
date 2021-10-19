@@ -338,6 +338,14 @@ class BreakCurvesControllerTest {
     }
 
     @Test
+    void testDeleteBreakCurvesDataNotFound()  {
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.deleteBreakCurveData(1000L);
+        });
+        Assert.assertEquals(ResponseMessage.DATA_NOT_FOUND.getMessage(), e.getReason());
+    }
+
+    @Test
     void testDownloadFile(){
         ResponseEntity<ByteArrayResource> fileResponse = breakCurvesController.downloadDataTemplate();
         Assert.assertEquals(HttpStatus.OK, fileResponse.getStatusCode());

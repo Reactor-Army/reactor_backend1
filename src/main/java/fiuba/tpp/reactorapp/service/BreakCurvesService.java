@@ -98,4 +98,13 @@ public class BreakCurvesService {
         }
     }
 
+    public void deleteBreakCurveData(Long id){
+        Optional<BreakCurvesData> data = breakCurvesDataRepository.findById(id);
+        if(data.isPresent()){
+            breakCurvesDataRepository.delete(data.get());
+            return;
+        }
+        throw new ComponentNotFoundException();
+    }
+
 }

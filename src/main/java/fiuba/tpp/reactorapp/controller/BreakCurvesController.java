@@ -137,6 +137,16 @@ public class BreakCurvesController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteBreakCurveData(@PathVariable Long id){
+        try{
+            breakCurvesService.deleteBreakCurveData(id);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+        }
+    }
+
 
 
     private void validateThomasRequest(ThomasRequest request, Errors errors){

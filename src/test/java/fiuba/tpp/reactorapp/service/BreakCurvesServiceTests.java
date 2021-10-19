@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
+import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -177,6 +179,19 @@ class BreakCurvesServiceTests {
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
         Assert.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
+    }
+
+    @Test
+    void testDeleteData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        breakCurvesService.deleteBreakCurveData(result.getDataId());
+        Long id = result.getDataId();
+        Assert.assertThrows(ComponentNotFoundException.class, () ->{
+            breakCurvesService.getBreakCurveData(id);
+        });
+
     }
 
 
