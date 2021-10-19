@@ -3,15 +3,6 @@ package fiuba.tpp.reactorapp.model.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
-import fiuba.tpp.reactorapp.model.dto.BreakCurvesAdamsDTO;
-import fiuba.tpp.reactorapp.model.dto.BreakCurvesThomasDTO;
-import fiuba.tpp.reactorapp.model.dto.BreakCurvesYoonNelsonDTO;
-import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
-import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
-import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
-import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
-import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
-import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 
 import java.util.Date;
 
