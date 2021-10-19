@@ -81,6 +81,9 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
 
     }
@@ -105,6 +108,9 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
 
     }
@@ -125,7 +131,7 @@ public class BreakCurvesController {
     public BreakCurvesDataResponse getBreakCurveData(@PathVariable Long id){
         try{
             return breakCurvesService.getBreakCurveData(id);
-        }catch( Exception e){
+        }catch(Exception e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
         }

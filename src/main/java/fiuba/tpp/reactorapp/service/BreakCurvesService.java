@@ -4,7 +4,9 @@ package fiuba.tpp.reactorapp.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.model.dto.BreakCurvesAdamsDTO;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesThomasDTO;
+import fiuba.tpp.reactorapp.model.dto.BreakCurvesYoonNelsonDTO;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
@@ -51,13 +53,13 @@ public class BreakCurvesService {
         return thomasModelService.thomasEvaluation(chemicalObservations,request);
     }
 
-    public YoonNelsonResponse calculateByYoonNelson(YoonNelsonRequest request){
+    public YoonNelsonResponse calculateByYoonNelson(YoonNelsonRequest request) throws JsonProcessingException {
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
         return yoonNelsonModelService.yoonNelsonEvaluation(chemicalObservations,request);
     }
 
-    public AdamsBohartResponse calculateByAdamsBohart(AdamsBohartRequest request){
+    public AdamsBohartResponse calculateByAdamsBohart(AdamsBohartRequest request) throws JsonProcessingException {
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
         return adamsBohartModelService.adamsBohartEvaluation(chemicalObservations,request);
@@ -83,10 +85,16 @@ public class BreakCurvesService {
         ObjectMapper mapper = new ObjectMapper();
         switch (data.getModel()){
             case THOMAS:
-                BreakCurvesThomasDTO dto = mapper.readValue(data.getData(), BreakCurvesThomasDTO.class);
-                return new BreakCurvesDataResponse(data,dto);
+                BreakCurvesThomasDTO dtoThomas = mapper.readValue(data.getData(), BreakCurvesThomasDTO.class);
+                return new BreakCurvesDataResponse(data,dtoThomas);
+            case YOON_NELSON:
+                BreakCurvesYoonNelsonDTO dtoYoon = mapper.readValue(data.getData(),BreakCurvesYoonNelsonDTO.class);
+                return new BreakCurvesDataResponse(data,dtoYoon);
+            case ADAMS_BOHART:
+                BreakCurvesAdamsDTO dtoAdams = mapper.readValue(data.getData(),BreakCurvesAdamsDTO.class);
+                return new BreakCurvesDataResponse(data,dtoAdams);
             default:
-                return null;
+                throw new ComponentNotFoundException();
         }
     }
 

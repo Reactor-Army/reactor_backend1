@@ -37,7 +37,7 @@ public class ModelResponse {
         this.observations = observations;
     }
 
-    public Long getDataId(Long aLong) {
+    public Long getDataId() {
         return dataId;
     }
 

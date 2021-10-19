@@ -3,9 +3,13 @@ package fiuba.tpp.reactorapp.model.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.model.dto.BreakCurvesAdamsDTO;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesThomasDTO;
+import fiuba.tpp.reactorapp.model.dto.BreakCurvesYoonNelsonDTO;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 
@@ -27,6 +31,9 @@ public class BreakCurvesDataResponse {
 
     private YoonNelsonResponse yoonNelsonResponse;
 
+    private AdamsBohartRequest adamsBohartRequest;
+
+    private AdamsBohartResponse adamsBohartResponse;
 
     @JsonProperty("sistema")
     private ProcessResponse processResponse;
@@ -43,9 +50,31 @@ public class BreakCurvesDataResponse {
         }
         this.thomasRequest = dto.getRequest();
         this.thomasResponse = dto.getResponse();
-
         this.uploadDate = data.getUploadDate();
     }
+
+    public BreakCurvesDataResponse(BreakCurvesData data, BreakCurvesYoonNelsonDTO dto){
+        this.id = data.getId();
+        this.name = data.getName();
+        if(data.getProcess() != null){
+            this.processResponse = new ProcessResponse(data.getProcess());
+        }
+        this.yoonNelsonRequest = dto.getRequest();
+        this.yoonNelsonResponse = dto.getResponse();
+        this.uploadDate = data.getUploadDate();
+    }
+
+    public BreakCurvesDataResponse(BreakCurvesData data, BreakCurvesAdamsDTO dto){
+        this.id = data.getId();
+        this.name = data.getName();
+        if(data.getProcess() != null){
+            this.processResponse = new ProcessResponse(data.getProcess());
+        }
+        this.adamsBohartRequest = dto.getRequest();
+        this.adamsBohartResponse = dto.getResponse();
+        this.uploadDate = data.getUploadDate();
+    }
+
 
     public Long getId() {
         return id;
@@ -110,5 +139,21 @@ public class BreakCurvesDataResponse {
 
     public void setYoonNelsonResponse(YoonNelsonResponse yoonNelsonResponse) {
         this.yoonNelsonResponse = yoonNelsonResponse;
+    }
+
+    public AdamsBohartRequest getAdamsBohartRequest() {
+        return adamsBohartRequest;
+    }
+
+    public void setAdamsBohartRequest(AdamsBohartRequest adamsBohartRequest) {
+        this.adamsBohartRequest = adamsBohartRequest;
+    }
+
+    public AdamsBohartResponse getAdamsBohartResponse() {
+        return adamsBohartResponse;
+    }
+
+    public void setAdamsBohartResponse(AdamsBohartResponse adamsBohartResponse) {
+        this.adamsBohartResponse = adamsBohartResponse;
     }
 }

@@ -85,7 +85,7 @@ class BreakCurvesServiceTests {
 
 
     @Test
-    void testYoonNelsonWithDataFromTesis(){
+    void testYoonNelsonWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisThomas();
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.0005);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
@@ -96,7 +96,7 @@ class BreakCurvesServiceTests {
     }
 
     @Test
-    void testAdamsBohartWithDataFromTesis(){
+    void testAdamsBohartWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisAdams();
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.5,42.1,0.4723,15.0);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
@@ -117,7 +117,7 @@ class BreakCurvesServiceTests {
 
 
     @Test
-    void testYoonNelsonWithJuancho(){
+    void testYoonNelsonWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
@@ -128,7 +128,7 @@ class BreakCurvesServiceTests {
     }
 
     @Test
-    void testAdamsBohartWithJuancho(){
+    void testAdamsBohartWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);

@@ -10,6 +10,9 @@ public class AdamsBohartResponse extends ModelResponse {
     @JsonProperty("capacidadMaximaAbsorcion")
     private double maxAbsorptionCapacity;
 
+    public AdamsBohartResponse() {
+    }
+
     public AdamsBohartResponse(double adamsBohartConstant, double maxAbsorptionCapacity) {
         super();
         this.adamsBohartConstant = adamsBohartConstant;

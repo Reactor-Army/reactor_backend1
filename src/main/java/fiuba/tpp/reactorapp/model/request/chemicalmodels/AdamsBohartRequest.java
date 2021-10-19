@@ -1,9 +1,11 @@
 package fiuba.tpp.reactorapp.model.request.chemicalmodels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 public class AdamsBohartRequest {
 
+    @JsonIgnore
     private MultipartFile observaciones;
 
     //F
@@ -18,6 +20,8 @@ public class AdamsBohartRequest {
     //Z
     private Double alturaLechoReactor;
 
+    public AdamsBohartRequest() {
+    }
 
     public AdamsBohartRequest(MultipartFile observaciones, Double caudalVolumetrico, Double concentracionInicial, Double velocidadLineal, Double alturaLechoReactor) {
         this.observaciones = observaciones;
