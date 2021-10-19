@@ -44,15 +44,11 @@ public class YoonNelsonModelService implements ModelService {
     }
 
     private Long persistBreakCurvesYoonNelson(YoonNelsonRequest request, YoonNelsonResponse response) throws JsonProcessingException {
-        BreakCurvesYoonNelsonDTO dto = new BreakCurvesYoonNelsonDTO(request,response);
+        BreakCurvesYoonNelsonDTO dto = new BreakCurvesYoonNelsonDTO(request, response);
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            String data = mapper.writeValueAsString(dto);
-            BreakCurvesData bcData =  new BreakCurvesData(EModel.YOON_NELSON,data, Calendar.getInstance().getTime());
-            return breakCurvesDataRepository.save(bcData).getId();
-        } catch (JsonProcessingException e) {
-            throw e;
-        }
+        String data = mapper.writeValueAsString(dto);
+        BreakCurvesData bcData = new BreakCurvesData(EModel.YOON_NELSON, data, Calendar.getInstance().getTime());
+        return breakCurvesDataRepository.save(bcData).getId();
     }
 
 }

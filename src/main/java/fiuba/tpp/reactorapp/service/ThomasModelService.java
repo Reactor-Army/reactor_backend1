@@ -49,13 +49,9 @@ public class ThomasModelService implements  ModelService{
     private Long persistBreakCurvesThomas(ThomasRequest request, ThomasResponse response) throws JsonProcessingException {
         BreakCurvesThomasDTO dto = new BreakCurvesThomasDTO(request,response);
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            String data = mapper.writeValueAsString(dto);
-            BreakCurvesData bcData =  new BreakCurvesData(EModel.THOMAS,data, Calendar.getInstance().getTime());
-            return breakCurvesDataRepository.save(bcData).getId();
-        } catch (JsonProcessingException e) {
-            throw e;
-        }
+        String data = mapper.writeValueAsString(dto);
+        BreakCurvesData bcData =  new BreakCurvesData(EModel.THOMAS,data, Calendar.getInstance().getTime());
+        return breakCurvesDataRepository.save(bcData).getId();
     }
 
 }

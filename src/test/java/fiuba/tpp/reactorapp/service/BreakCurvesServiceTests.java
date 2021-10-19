@@ -82,7 +82,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
-        Assertions.assertTrue(result.getDataId() != null);
+        Assertions.assertNotNull(result.getDataId());
     }
 
 
@@ -94,7 +94,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(0.1, result.getYoonNelsonConstant(),0.01);
         Assertions.assertEquals(136.314, result.getTimeFiftyPercent(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
-        Assertions.assertTrue(result.getDataId() != null);
+        Assertions.assertNotNull(result.getDataId());
 
     }
 
@@ -106,7 +106,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
         Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
         Assertions.assertEquals(0.97, result.getRms(),0.01);
-        Assertions.assertTrue(result.getDataId() != null);
+        Assertions.assertNotNull(result.getDataId());
     }
 
     @Test

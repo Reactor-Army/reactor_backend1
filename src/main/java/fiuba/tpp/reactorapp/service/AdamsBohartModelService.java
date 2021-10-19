@@ -46,12 +46,8 @@ public class AdamsBohartModelService implements ModelService{
     private Long persistBreakCurvesAdamsBoharth(AdamsBohartRequest request, AdamsBohartResponse response) throws JsonProcessingException {
         BreakCurvesAdamsDTO dto = new BreakCurvesAdamsDTO(request,response);
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            String data = mapper.writeValueAsString(dto);
-            BreakCurvesData bcData =  new BreakCurvesData(EModel.ADAMS_BOHART,data, Calendar.getInstance().getTime());
-            return breakCurvesDataRepository.save(bcData).getId();
-        } catch (JsonProcessingException e) {
-            throw e;
-        }
+        String data = mapper.writeValueAsString(dto);
+        BreakCurvesData bcData =  new BreakCurvesData(EModel.ADAMS_BOHART,data, Calendar.getInstance().getTime());
+        return breakCurvesDataRepository.save(bcData).getId();
     }
 }
