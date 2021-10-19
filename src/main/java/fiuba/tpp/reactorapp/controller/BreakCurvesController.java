@@ -1,11 +1,13 @@
 package fiuba.tpp.reactorapp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.controller.utils.FileUtils;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
@@ -53,6 +55,9 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
     }
 
@@ -76,6 +81,9 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
 
     }
@@ -100,6 +108,9 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
 
     }
@@ -114,6 +125,16 @@ public class BreakCurvesController {
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
         return FileUtils.generateFileResponse(dto);
+    }
+
+    @GetMapping("/{id}")
+    public BreakCurvesDataResponse getBreakCurveData(@PathVariable Long id){
+        try{
+            return breakCurvesService.getBreakCurveData(id);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+        }
     }
 
 

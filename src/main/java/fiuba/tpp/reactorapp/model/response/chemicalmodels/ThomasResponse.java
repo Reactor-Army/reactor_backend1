@@ -10,6 +10,9 @@ public class ThomasResponse extends ModelResponse{
     @JsonProperty("concentracionMaximaSoluto")
     private double maxConcentration;
 
+    public ThomasResponse() {
+    }
+
     public ThomasResponse(double thomasConstant, double maxConcentration) {
         super();
         this.thomasConstant = thomasConstant;

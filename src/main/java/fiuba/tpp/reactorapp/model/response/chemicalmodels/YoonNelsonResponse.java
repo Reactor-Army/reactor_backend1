@@ -10,6 +10,8 @@ public class YoonNelsonResponse extends ModelResponse {
     @JsonProperty("tiempoCincuentaPorciento")
     private double timeFiftyPercent;
 
+    public YoonNelsonResponse() {
+    }
 
     public YoonNelsonResponse(double yoonNelsonConstant, double timeFiftyPercent) {
         super();

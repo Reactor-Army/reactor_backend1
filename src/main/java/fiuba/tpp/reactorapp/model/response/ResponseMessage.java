@@ -34,6 +34,7 @@ public enum ResponseMessage {
     UNAUTHORIZED("Para realizar esta operación debes ser administrador del sistema"),
     INVALID_TESIS_REQUEST("Los trabajos deben tener un titulo y un autor"),
     SAME_USER_ERROR("Un administrador no puede borrarse a si mismo"),
+    DATA_NOT_FOUND("Los datos a los que intenta acceder no existen"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
     private final String message;

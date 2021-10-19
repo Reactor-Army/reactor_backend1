@@ -1,13 +1,18 @@
 package fiuba.tpp.reactorapp.model.request.chemicalmodels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 public class YoonNelsonRequest {
 
+    @JsonIgnore
     private MultipartFile observaciones;
 
     //F
     private Double caudalVolumetrico;
+
+    public YoonNelsonRequest() {
+    }
 
     public YoonNelsonRequest(MultipartFile observaciones, Double caudalVolumetrico) {
         this.observaciones = observaciones;

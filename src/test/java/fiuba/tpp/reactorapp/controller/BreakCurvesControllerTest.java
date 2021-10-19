@@ -1,7 +1,9 @@
 package fiuba.tpp.reactorapp.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
+import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.service.BreakCurvesService;
@@ -162,7 +164,7 @@ class BreakCurvesControllerTest {
             "xls",
             "xlsx",
     })
-    void testMockResponse(String fileExtension) {
+    void testMockResponse(String fileExtension) throws JsonProcessingException {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
@@ -239,6 +241,100 @@ class BreakCurvesControllerTest {
         Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.adamsBohart(request, errors);
         });
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "0.0",
+            "null",
+    }, nullValues = {"null"})
+    void testInvalidRequestResponseYoonNelson(Double caudal){
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv",
+                MediaType.TEXT_PLAIN_VALUE,
+                ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
+        );
+
+        YoonNelsonRequest request = new YoonNelsonRequest(file,caudal);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
+        Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.yoonNelson(request, errors);
+        });
+    }
+
+    @Test
+    void testJsonErrorThomas() throws JsonProcessingException {
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv" ,
+                MediaType.TEXT_PLAIN_VALUE,
+                "blabla".getBytes()
+        );
+        ThomasRequest request = new ThomasRequest(file,1d,1d,1d);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
+        Mockito.when(breakCurvesService.calculateByThomas(request)).thenThrow(JsonProcessingException.class);
+
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.thomas(request, errors);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorAdams() throws JsonProcessingException {
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv" ,
+                MediaType.TEXT_PLAIN_VALUE,
+                "blabla".getBytes()
+        );
+
+        AdamsBohartRequest request = new AdamsBohartRequest(file,1.0,1.0,2.0,1.0);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+
+        Mockito.when(breakCurvesService.calculateByAdamsBohart(request)).thenThrow(JsonProcessingException.class);
+
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.adamsBohart(request, errors);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorYoonNelson() throws JsonProcessingException {
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.csv" ,
+                MediaType.TEXT_PLAIN_VALUE,
+                "blabla".getBytes()
+        );
+        YoonNelsonRequest request = new YoonNelsonRequest(file,1.0);
+
+        Errors errors = new BeanPropertyBindingResult(request, "request");
+        Mockito.when(breakCurvesService.calculateByYoonNelson(request)).thenThrow(JsonProcessingException.class);
+
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.yoonNelson(request, errors);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testBreakCurvesDataNotFound()  {
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.getBreakCurveData(1000L);
+        });
+        Assert.assertEquals(ResponseMessage.DATA_NOT_FOUND.getMessage(), e.getReason());
     }
 
     @Test

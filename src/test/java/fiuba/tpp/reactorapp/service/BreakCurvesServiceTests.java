@@ -1,12 +1,15 @@
 package fiuba.tpp.reactorapp.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,7 @@ class BreakCurvesServiceTests {
 
 
     @Test
-    void testEasyObservations() {
+    void testEasyObservations() throws JsonProcessingException {
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
@@ -73,39 +76,42 @@ class BreakCurvesServiceTests {
     }
 
     @Test
-    void testThomasWithDataFromTesis(){
+    void testThomasWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisThomas();
         ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
+        Assertions.assertNotNull(result.getDataId());
     }
 
 
     @Test
-    void testYoonNelsonWithDataFromTesis(){
+    void testYoonNelsonWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisThomas();
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.0005);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Assertions.assertEquals(0.1, result.getYoonNelsonConstant(),0.01);
         Assertions.assertEquals(136.314, result.getTimeFiftyPercent(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
+        Assertions.assertNotNull(result.getDataId());
 
     }
 
     @Test
-    void testAdamsBohartWithDataFromTesis(){
+    void testAdamsBohartWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisAdams();
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.5,42.1,0.4723,15.0);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
         Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
         Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
         Assertions.assertEquals(0.97, result.getRms(),0.01);
+        Assertions.assertNotNull(result.getDataId());
     }
 
     @Test
-    void testThomasWithJuancho(){
+    void testThomasWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
@@ -116,7 +122,7 @@ class BreakCurvesServiceTests {
 
 
     @Test
-    void testYoonNelsonWithJuancho(){
+    void testYoonNelsonWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
@@ -127,7 +133,7 @@ class BreakCurvesServiceTests {
     }
 
     @Test
-    void testAdamsBohartWithJuancho(){
+    void testAdamsBohartWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
@@ -142,6 +148,38 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals("datos.xlsx", dto.getFileName());
         Assertions.assertNotNull(dto.getResource());
     }
+
+    @Test
+    void testAdamsBohartGetData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
+        AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
+        BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
+        Assert.assertTrue(data.getRequest() instanceof AdamsBohartRequest);
+        Assert.assertTrue(data.getResponse() instanceof AdamsBohartResponse);
+    }
+
+    @Test
+    void testThomasGetData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
+        Assert.assertTrue(data.getRequest() instanceof ThomasRequest);
+        Assert.assertTrue(data.getResponse() instanceof ThomasResponse);
+    }
+
+    @Test
+    void testYoonNelsonGetData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
+        Assert.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
+        Assert.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
+    }
+
+
 
     private MockMultipartFile dataFromTesisThomas(){
         return new MockMultipartFile("thomas","thomas.csv",MediaType.TEXT_PLAIN_VALUE,tesisData().getBytes());

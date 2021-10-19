@@ -1,11 +1,13 @@
 package fiuba.tpp.reactorapp.model.response.chemicalmodels;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.model.math.Observation;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ModelResponse {
 
     @JsonProperty("R2")
@@ -13,6 +15,9 @@ public class ModelResponse {
 
     @JsonProperty("observaciones")
     private List<Observation> observations;
+
+    @JsonProperty("dataId")
+    private Long dataId;
 
     public ModelResponse() {
         observations = new ArrayList<>();
@@ -34,4 +39,11 @@ public class ModelResponse {
         this.observations = observations;
     }
 
+    public Long getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(Long dataId) {
+        this.dataId = dataId;
+    }
 }
