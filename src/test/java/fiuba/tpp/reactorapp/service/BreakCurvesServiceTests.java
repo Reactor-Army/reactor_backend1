@@ -5,6 +5,7 @@ import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
+import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
@@ -81,6 +82,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
+        Assertions.assertTrue(result.getDataId() != null);
     }
 
 
@@ -92,6 +94,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(0.1, result.getYoonNelsonConstant(),0.01);
         Assertions.assertEquals(136.314, result.getTimeFiftyPercent(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
+        Assertions.assertTrue(result.getDataId() != null);
 
     }
 
@@ -103,6 +106,7 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
         Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
         Assertions.assertEquals(0.97, result.getRms(),0.01);
+        Assertions.assertTrue(result.getDataId() != null);
     }
 
     @Test
@@ -143,6 +147,50 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals("datos.xlsx", dto.getFileName());
         Assertions.assertNotNull(dto.getResource());
     }
+
+    @Test
+    void testAdamsBohartGetData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
+        AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
+        BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
+        Assertions.assertNotNull(data.getAdamsBohartRequest());
+        Assertions.assertNotNull(data.getAdamsBohartResponse());
+        Assertions.assertNull(data.getThomasRequest());
+        Assertions.assertNull(data.getThomasResponse());
+        Assertions.assertNull(data.getYoonNelsonRequest());
+        Assertions.assertNull(data.getYoonNelsonResponse());
+    }
+
+    @Test
+    void testThomasGetData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
+        Assertions.assertNull(data.getAdamsBohartRequest());
+        Assertions.assertNull(data.getAdamsBohartResponse());
+        Assertions.assertNotNull(data.getThomasRequest());
+        Assertions.assertNotNull(data.getThomasResponse());
+        Assertions.assertNull(data.getYoonNelsonRequest());
+        Assertions.assertNull(data.getYoonNelsonResponse());
+    }
+
+    @Test
+    void testYoonNelsonGetData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
+        Assertions.assertNull(data.getAdamsBohartRequest());
+        Assertions.assertNull(data.getAdamsBohartResponse());
+        Assertions.assertNull(data.getThomasRequest());
+        Assertions.assertNull(data.getThomasResponse());
+        Assertions.assertNotNull(data.getYoonNelsonRequest());
+        Assertions.assertNotNull(data.getYoonNelsonResponse());
+    }
+
+
 
     private MockMultipartFile dataFromTesisThomas(){
         return new MockMultipartFile("thomas","thomas.csv",MediaType.TEXT_PLAIN_VALUE,tesisData().getBytes());

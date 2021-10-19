@@ -54,7 +54,6 @@ public class ThomasModelService implements  ModelService{
             BreakCurvesData bcData =  new BreakCurvesData(EModel.THOMAS,data, Calendar.getInstance().getTime());
             return breakCurvesDataRepository.save(bcData).getId();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             throw e;
         }
     }

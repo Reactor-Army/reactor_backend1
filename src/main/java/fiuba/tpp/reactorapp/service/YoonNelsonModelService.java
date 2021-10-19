@@ -51,7 +51,6 @@ public class YoonNelsonModelService implements ModelService {
             BreakCurvesData bcData =  new BreakCurvesData(EModel.YOON_NELSON,data, Calendar.getInstance().getTime());
             return breakCurvesDataRepository.save(bcData).getId();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             throw e;
         }
     }

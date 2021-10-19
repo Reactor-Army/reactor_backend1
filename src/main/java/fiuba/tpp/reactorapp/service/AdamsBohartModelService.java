@@ -51,7 +51,6 @@ public class AdamsBohartModelService implements ModelService{
             BreakCurvesData bcData =  new BreakCurvesData(EModel.ADAMS_BOHART,data, Calendar.getInstance().getTime());
             return breakCurvesDataRepository.save(bcData).getId();
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             throw e;
         }
     }
