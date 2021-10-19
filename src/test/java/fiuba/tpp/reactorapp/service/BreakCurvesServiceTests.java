@@ -9,6 +9,7 @@ import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,12 +155,8 @@ class BreakCurvesServiceTests {
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
-        Assertions.assertNotNull(data.getAdamsBohartRequest());
-        Assertions.assertNotNull(data.getAdamsBohartResponse());
-        Assertions.assertNull(data.getThomasRequest());
-        Assertions.assertNull(data.getThomasResponse());
-        Assertions.assertNull(data.getYoonNelsonRequest());
-        Assertions.assertNull(data.getYoonNelsonResponse());
+        Assert.assertTrue(data.getRequest() instanceof AdamsBohartRequest);
+        Assert.assertTrue(data.getResponse() instanceof AdamsBohartResponse);
     }
 
     @Test
@@ -168,12 +165,8 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
-        Assertions.assertNull(data.getAdamsBohartRequest());
-        Assertions.assertNull(data.getAdamsBohartResponse());
-        Assertions.assertNotNull(data.getThomasRequest());
-        Assertions.assertNotNull(data.getThomasResponse());
-        Assertions.assertNull(data.getYoonNelsonRequest());
-        Assertions.assertNull(data.getYoonNelsonResponse());
+        Assert.assertTrue(data.getRequest() instanceof ThomasRequest);
+        Assert.assertTrue(data.getResponse() instanceof ThomasResponse);
     }
 
     @Test
@@ -182,12 +175,8 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
-        Assertions.assertNull(data.getAdamsBohartRequest());
-        Assertions.assertNull(data.getAdamsBohartResponse());
-        Assertions.assertNull(data.getThomasRequest());
-        Assertions.assertNull(data.getThomasResponse());
-        Assertions.assertNotNull(data.getYoonNelsonRequest());
-        Assertions.assertNotNull(data.getYoonNelsonResponse());
+        Assert.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
+        Assert.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
     }
 
 

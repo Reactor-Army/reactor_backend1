@@ -23,17 +23,9 @@ public class BreakCurvesDataResponse {
     @JsonProperty("nombre")
     private String name;
 
-    private ThomasRequest thomasRequest;
+    private Object request;
 
-    private ThomasResponse thomasResponse;
-
-    private YoonNelsonRequest yoonNelsonRequest;
-
-    private YoonNelsonResponse yoonNelsonResponse;
-
-    private AdamsBohartRequest adamsBohartRequest;
-
-    private AdamsBohartResponse adamsBohartResponse;
+    private Object response;
 
     @JsonProperty("sistema")
     private ProcessResponse processResponse;
@@ -42,39 +34,16 @@ public class BreakCurvesDataResponse {
     private Date uploadDate;
 
 
-    public BreakCurvesDataResponse(BreakCurvesData data, BreakCurvesThomasDTO dto){
+    public BreakCurvesDataResponse(BreakCurvesData data, Object request, Object response){
         this.id = data.getId();
         this.name = data.getName();
         if(data.getProcess() != null){
             this.processResponse = new ProcessResponse(data.getProcess());
         }
-        this.thomasRequest = dto.getRequest();
-        this.thomasResponse = dto.getResponse();
+        this.request = request;
+        this.response = response;
         this.uploadDate = data.getUploadDate();
     }
-
-    public BreakCurvesDataResponse(BreakCurvesData data, BreakCurvesYoonNelsonDTO dto){
-        this.id = data.getId();
-        this.name = data.getName();
-        if(data.getProcess() != null){
-            this.processResponse = new ProcessResponse(data.getProcess());
-        }
-        this.yoonNelsonRequest = dto.getRequest();
-        this.yoonNelsonResponse = dto.getResponse();
-        this.uploadDate = data.getUploadDate();
-    }
-
-    public BreakCurvesDataResponse(BreakCurvesData data, BreakCurvesAdamsDTO dto){
-        this.id = data.getId();
-        this.name = data.getName();
-        if(data.getProcess() != null){
-            this.processResponse = new ProcessResponse(data.getProcess());
-        }
-        this.adamsBohartRequest = dto.getRequest();
-        this.adamsBohartResponse = dto.getResponse();
-        this.uploadDate = data.getUploadDate();
-    }
-
 
     public Long getId() {
         return id;
@@ -109,51 +78,20 @@ public class BreakCurvesDataResponse {
         this.uploadDate = uploadDate;
     }
 
-    public ThomasRequest getThomasRequest() {
-        return thomasRequest;
+
+    public Object getRequest() {
+        return request;
     }
 
-    public void setThomasRequest(ThomasRequest thomasRequest) {
-        this.thomasRequest = thomasRequest;
+    public void setRequest(Object request) {
+        this.request = request;
     }
 
-    public ThomasResponse getThomasResponse() {
-        return thomasResponse;
+    public Object getResponse() {
+        return response;
     }
 
-    public void setThomasResponse(ThomasResponse thomasResponse) {
-        this.thomasResponse = thomasResponse;
-    }
-
-    public YoonNelsonRequest getYoonNelsonRequest() {
-        return yoonNelsonRequest;
-    }
-
-    public void setYoonNelsonRequest(YoonNelsonRequest yoonNelsonRequest) {
-        this.yoonNelsonRequest = yoonNelsonRequest;
-    }
-
-    public YoonNelsonResponse getYoonNelsonResponse() {
-        return yoonNelsonResponse;
-    }
-
-    public void setYoonNelsonResponse(YoonNelsonResponse yoonNelsonResponse) {
-        this.yoonNelsonResponse = yoonNelsonResponse;
-    }
-
-    public AdamsBohartRequest getAdamsBohartRequest() {
-        return adamsBohartRequest;
-    }
-
-    public void setAdamsBohartRequest(AdamsBohartRequest adamsBohartRequest) {
-        this.adamsBohartRequest = adamsBohartRequest;
-    }
-
-    public AdamsBohartResponse getAdamsBohartResponse() {
-        return adamsBohartResponse;
-    }
-
-    public void setAdamsBohartResponse(AdamsBohartResponse adamsBohartResponse) {
-        this.adamsBohartResponse = adamsBohartResponse;
+    public void setResponse(Object response) {
+        this.response = response;
     }
 }

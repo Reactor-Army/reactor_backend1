@@ -86,13 +86,13 @@ public class BreakCurvesService {
         switch (data.getModel()){
             case THOMAS:
                 BreakCurvesThomasDTO dtoThomas = mapper.readValue(data.getData(), BreakCurvesThomasDTO.class);
-                return new BreakCurvesDataResponse(data,dtoThomas);
+                return new BreakCurvesDataResponse(data,dtoThomas.getRequest(), dtoThomas.getResponse());
             case YOON_NELSON:
                 BreakCurvesYoonNelsonDTO dtoYoon = mapper.readValue(data.getData(),BreakCurvesYoonNelsonDTO.class);
-                return new BreakCurvesDataResponse(data,dtoYoon);
+                return new BreakCurvesDataResponse(data,dtoYoon.getRequest(),dtoYoon.getResponse());
             case ADAMS_BOHART:
                 BreakCurvesAdamsDTO dtoAdams = mapper.readValue(data.getData(),BreakCurvesAdamsDTO.class);
-                return new BreakCurvesDataResponse(data,dtoAdams);
+                return new BreakCurvesDataResponse(data,dtoAdams.getRequest(),dtoAdams.getResponse());
             default:
                 throw new ComponentNotFoundException();
         }
