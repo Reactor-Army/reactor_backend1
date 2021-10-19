@@ -1,20 +1,14 @@
 package fiuba.tpp.reactorapp.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fiuba.tpp.reactorapp.entities.BreakCurvesData;
 import fiuba.tpp.reactorapp.entities.EModel;
-import fiuba.tpp.reactorapp.model.dto.BreakCurvesYoonNelsonDTO;
 import fiuba.tpp.reactorapp.model.math.Observation;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
-import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
 import fiuba.tpp.reactorapp.service.chemicalmodels.YoonNelsonModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -27,7 +21,7 @@ public class YoonNelsonModelService implements ModelService {
     private SeedService seedService;
 
     @Autowired
-    private BreakCurvesDataRepository breakCurvesDataRepository;
+    private BreakCurvesDataService breakCurvesDataService;
 
     public YoonNelsonResponse yoonNelsonEvaluation(List<ChemicalObservation> chemicalObs, YoonNelsonRequest request) throws JsonProcessingException {
         List<Observation> observations = getObservationsPoints(chemicalObs);
@@ -39,16 +33,10 @@ public class YoonNelsonModelService implements ModelService {
         response.setTimeFiftyPercent(mathService.round(response.getTimeFiftyPercent()));
         response.setObservations(observations);
         response.setRms(mathService.round(response.getRms()));
-        response.setDataId(persistBreakCurvesYoonNelson(request,response));
+        response.setDataId(breakCurvesDataService.persistBreakCurvesData(request,response,EModel.YOON_NELSON));
         return response;
     }
 
-    private Long persistBreakCurvesYoonNelson(YoonNelsonRequest request, YoonNelsonResponse response) throws JsonProcessingException {
-        BreakCurvesYoonNelsonDTO dto = new BreakCurvesYoonNelsonDTO(request, response);
-        ObjectMapper mapper = new ObjectMapper();
-        String data = mapper.writeValueAsString(dto);
-        BreakCurvesData bcData = new BreakCurvesData(EModel.YOON_NELSON, data, Calendar.getInstance().getTime());
-        return breakCurvesDataRepository.save(bcData).getId();
-    }
+
 
 }
