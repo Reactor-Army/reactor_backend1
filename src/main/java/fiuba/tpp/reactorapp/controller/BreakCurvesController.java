@@ -133,7 +133,7 @@ public class BreakCurvesController {
             return breakCurvesService.getBreakCurveData(id);
         }catch(Exception e){
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+                    HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
         }
     }
 
