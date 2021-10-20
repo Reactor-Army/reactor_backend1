@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
@@ -327,6 +328,31 @@ class BreakCurvesControllerTest {
             breakCurvesMockController.yoonNelson(request, errors);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorSaveData() throws JsonProcessingException {
+        BreakCurveDataRequest request = new BreakCurveDataRequest(1L,"PruebaError");
+        Mockito.when(breakCurvesService.saveBreakCurveData(1L,request)).thenThrow(JsonProcessingException.class);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.saveBreakCurveData(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1,''",
+            "null, 'nombre'",
+            "0, 'nombre'",
+            "1, null"
+    }, nullValues = {"null"})
+    void testInvalidSaveData(Long id, String nombre) throws JsonProcessingException {
+        BreakCurveDataRequest request = new BreakCurveDataRequest(id,nombre);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.saveBreakCurveData(1L,request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_BREAK_CURVE_DATA.getMessage(), e.getReason());
     }
 
     @Test

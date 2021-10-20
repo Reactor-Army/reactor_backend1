@@ -13,6 +13,7 @@ import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
 import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
 import fiuba.tpp.reactorapp.repository.AdsorbateRepository;
 import fiuba.tpp.reactorapp.repository.AdsorbentRepository;
+import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
 import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
@@ -45,8 +46,12 @@ class ProcessServiceTests {
     @Autowired
     private ProcessRepository processRepository;
 
+    @Autowired
+    private BreakCurvesDataRepository breakCurvesDataRepository;
+
     @AfterEach
     void resetDatabase(){
+        breakCurvesDataRepository.deleteAll();
         adsorbentRepository.deleteAll();
         adsorbateRepository.deleteAll();
         processRepository.deleteAll();
@@ -187,7 +192,7 @@ class ProcessServiceTests {
     @Test
     void testProcessNotFoundExceptionDelete() {
         Assertions.assertThrows(ComponentNotFoundException.class, () -> {
-            processService.deleteProcess(1L);
+            processService.deleteProcess(1000L);
         });
     }
 
