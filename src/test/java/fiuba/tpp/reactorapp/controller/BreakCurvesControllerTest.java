@@ -36,11 +36,17 @@ class BreakCurvesControllerTest {
     @Autowired
     private BreakCurvesController breakCurvesController;
 
+    @Autowired
+    private ProcessController processController;
+
     @Mock
     private BreakCurvesService breakCurvesService;
 
     @InjectMocks
     private BreakCurvesController breakCurvesMockController = new BreakCurvesController();
+
+    @InjectMocks
+    private ProcessController processMockController = new ProcessController();
 
     @Test
     void testInvalidFile(){
@@ -344,7 +350,7 @@ class BreakCurvesControllerTest {
     void testJsonErrorGetByProcess() throws JsonProcessingException {
         Mockito.when(breakCurvesService.getBreakCurvesDataByProcess(1L)).thenThrow(JsonProcessingException.class);
         ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesMockController.getBreakCurvesDataByProcess(1L);
+            processMockController.getBreakCurvesDataByProcess(1L);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
     }
@@ -375,7 +381,7 @@ class BreakCurvesControllerTest {
     @Test
     void testBreakCurvesDataByProcessNotFound()  {
         ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
-            breakCurvesController.getBreakCurvesDataByProcess(1000L);
+            processController.getBreakCurvesDataByProcess(1000L);
         });
         Assert.assertEquals(ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e.getReason());
     }

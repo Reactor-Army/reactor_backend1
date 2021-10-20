@@ -138,19 +138,6 @@ public class BreakCurvesController {
         }
     }
 
-    @GetMapping("/process/{id}")
-    public List<BreakCurvesDataResponse> getBreakCurvesDataByProcess(@PathVariable Long id){
-        try {
-            return breakCurvesService.getBreakCurvesDataByProcess(id);
-        }catch(InvalidRequestException e){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
-        }catch(Exception e){
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
-        }
-    }
-
     @PostMapping("/{id}")
     public BreakCurvesDataResponse saveBreakCurveData(@PathVariable Long id, @RequestBody BreakCurveDataRequest request){
         try{
