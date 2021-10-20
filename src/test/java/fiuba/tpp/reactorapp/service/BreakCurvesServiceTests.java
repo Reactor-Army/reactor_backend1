@@ -37,6 +37,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Timer;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -285,6 +286,25 @@ class BreakCurvesServiceTests {
         Assertions.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
         Assertions.assertEquals("Prueba4", data.getName());
         Assertions.assertEquals(processId, data.getProcessResponse().getId());
+    }
+
+    @Test
+    void testGetDataByProcess() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        Long processId = createProcess("pruebaData10","PruebaData11").getId();
+        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba5"));
+
+        ThomasRequest requestThomas = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse resultThomas = breakCurvesService.calculateByThomas(requestThomas);
+
+        breakCurvesService.saveBreakCurveData(resultThomas.getDataId(),new BreakCurveDataRequest(processId,"Prueba6"));
+
+        List<BreakCurvesDataResponse> dataResponses = breakCurvesService.getBreakCurvesDataByProcess(processId);
+
+        Assertions.assertEquals(2, dataResponses.size());
+
     }
 
     @Test

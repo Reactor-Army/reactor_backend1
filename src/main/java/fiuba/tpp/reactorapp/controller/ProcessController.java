@@ -7,11 +7,9 @@ import fiuba.tpp.reactorapp.model.filter.ProcessFilter;
 import fiuba.tpp.reactorapp.model.request.ProcessRequest;
 import fiuba.tpp.reactorapp.model.request.ReactorVolumeRequest;
 import fiuba.tpp.reactorapp.model.request.SearchByAdsorbateRequest;
-import fiuba.tpp.reactorapp.model.response.ProcessResponse;
-import fiuba.tpp.reactorapp.model.response.ReactorVolumeResponse;
-import fiuba.tpp.reactorapp.model.response.ResponseMessage;
-import fiuba.tpp.reactorapp.model.response.SearchByAdsorbateResponse;
+import fiuba.tpp.reactorapp.model.response.*;
 import fiuba.tpp.reactorapp.security.jwt.JwtUtils;
+import fiuba.tpp.reactorapp.service.BreakCurvesService;
 import fiuba.tpp.reactorapp.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +27,9 @@ public class ProcessController {
 
     @Autowired
     private ProcessService processService;
+
+    @Autowired
+    private BreakCurvesService breakCurvesService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -149,6 +150,19 @@ public class ProcessController {
         }catch (InvalidProcessException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_KINECT_INFORMATION.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/{id}/curvas")
+    public List<BreakCurvesDataResponse> getBreakCurvesDataByProcess(@PathVariable Long id){
+        try {
+            return breakCurvesService.getBreakCurvesDataByProcess(id);
+        }catch(InvalidRequestException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);
+        }catch(Exception e){
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
     }
 
