@@ -4,11 +4,14 @@ package fiuba.tpp.reactorapp.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesAdamsDTO;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesThomasDTO;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesYoonNelsonDTO;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
+import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
+import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
@@ -18,6 +21,7 @@ import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
+import fiuba.tpp.reactorapp.repository.ProcessRepository;
 import fiuba.tpp.reactorapp.service.utils.CSVParserService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +52,9 @@ public class BreakCurvesService {
 
     @Autowired
     private BreakCurvesDataRepository breakCurvesDataRepository;
+
+    @Autowired
+    private ProcessRepository processRepository;
 
     public ThomasResponse calculateByThomas(ThomasRequest request) throws JsonProcessingException {
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
@@ -75,11 +83,21 @@ public class BreakCurvesService {
     }
 
     public BreakCurvesDataResponse getBreakCurveData(Long id) throws JsonProcessingException {
-        Optional<BreakCurvesData> data = breakCurvesDataRepository.findById(id);
+        Optional<BreakCurvesData> data = breakCurvesDataRepository.findByIdAndNameNotNull(id);
         if(data.isPresent()){
             return formatData(data.get());
         }
         throw new ComponentNotFoundException();
+    }
+
+    public List<BreakCurvesDataResponse> getBreakCurvesDataByProcess(Long processId) throws JsonProcessingException {
+        List<BreakCurvesDataResponse> responses = new ArrayList<>();
+        Optional<Process> process = processRepository.findById(processId);
+        if(!process.isPresent()) throw new InvalidRequestException();
+        for (BreakCurvesData data: breakCurvesDataRepository.findAllByProcess(process.get())) {
+            responses.add(formatData(data));
+        }
+        return responses;
     }
 
     private BreakCurvesDataResponse formatData(BreakCurvesData data) throws JsonProcessingException {
@@ -107,6 +125,21 @@ public class BreakCurvesService {
             return;
         }
         throw new ComponentNotFoundException();
+    }
+
+    public BreakCurvesDataResponse saveBreakCurveData(Long dataId, BreakCurveDataRequest request) throws JsonProcessingException {
+        Optional<BreakCurvesData> data = breakCurvesDataRepository.findById(dataId);
+
+        if(!data.isPresent()) throw new InvalidRequestException();
+        BreakCurvesData d = data.get();
+
+        Optional<Process> process = processRepository.findById(request.getProcessId());
+        if(!process.isPresent()) throw new InvalidRequestException();
+
+        d.setName(request.getName());
+        d.setProcess(process.get());
+        breakCurvesDataRepository.save(d);
+        return formatData(d);
     }
 
 }

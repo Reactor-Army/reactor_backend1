@@ -16,7 +16,7 @@ public class BreakCurvesData {
 
     private String name;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     private Process process;
 
     @Column(columnDefinition = "TEXT")

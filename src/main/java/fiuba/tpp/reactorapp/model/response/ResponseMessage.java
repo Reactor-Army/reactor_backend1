@@ -35,6 +35,7 @@ public enum ResponseMessage {
     INVALID_TESIS_REQUEST("Los trabajos deben tener un titulo y un autor"),
     SAME_USER_ERROR("Un administrador no puede borrarse a si mismo"),
     DATA_NOT_FOUND("Los datos a los que intenta acceder no existen"),
+    INVALID_BREAK_CURVE_DATA("Se necesita un nombre y un proceso válido para guardar los datos de la curva de ruptura"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
     private final String message;

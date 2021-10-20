@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.controller.utils.FileUtils;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.*;
+import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
@@ -137,6 +138,20 @@ public class BreakCurvesController {
         }
     }
 
+    @PostMapping("/{id}")
+    public BreakCurvesDataResponse saveBreakCurveData(@PathVariable Long id, @RequestBody BreakCurveDataRequest request){
+        try{
+            validateBreakCurvesDataRequest(request);
+            return breakCurvesService.saveBreakCurveData(id,request);
+        }catch(InvalidRequestException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_BREAK_CURVE_DATA.getMessage(), e);
+        } catch (JsonProcessingException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
     @DeleteMapping("/{id}")
     public void deleteBreakCurveData(@PathVariable Long id){
         try{
@@ -147,6 +162,10 @@ public class BreakCurvesController {
         }
     }
 
+    private void validateBreakCurvesDataRequest(BreakCurveDataRequest request){
+        if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
+        if(request.getProcessId() == null || request.getProcessId() == 0) throw new InvalidRequestException();
+    }
 
 
     private void validateThomasRequest(ThomasRequest request, Errors errors){
