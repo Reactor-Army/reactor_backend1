@@ -247,7 +247,7 @@ class BreakCurvesServiceTests {
 
         Long idNoBorrrado = d1.getId();
         Assert.assertTrue(breakCurvesDataRepository.findById(idNoBorrrado).isPresent());
-        
+
     }
 
 
