@@ -118,17 +118,17 @@ public class BreakCurvesService {
 
     public BreakCurvesDataResponse saveBreakCurveData(Long dataId, BreakCurveDataRequest request) throws JsonProcessingException {
         Optional<BreakCurvesData> data = breakCurvesDataRepository.findById(dataId);
-        if(data.isPresent()){
-            BreakCurvesData d = data.get();
-            Optional<Process> process = processRepository.findById(request.getProcessId());
-            if(process.isPresent()){
-                d.setName(request.getName());
-                d.setProcess(process.get());
-                breakCurvesDataRepository.save(d);
-                return formatData(d);
-            }
-        }
-        throw new InvalidRequestException();
+
+        if(!data.isPresent()) throw new InvalidRequestException();
+        BreakCurvesData d = data.get();
+
+        Optional<Process> process = processRepository.findById(request.getProcessId());
+        if(!process.isPresent()) throw new InvalidRequestException();
+
+        d.setName(request.getName());
+        d.setProcess(process.get());
+        breakCurvesDataRepository.save(d);
+        return formatData(d);
     }
 
 }
