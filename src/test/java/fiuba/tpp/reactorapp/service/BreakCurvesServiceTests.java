@@ -10,6 +10,7 @@ import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
+import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,16 +20,22 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Timer;
 
 @SpringBootTest
 class BreakCurvesServiceTests {
 
     @Autowired
     private BreakCurvesService breakCurvesService;
+
+    @Autowired
+    private BreakCurvesDataRepository breakCurvesDataRepository;
 
 
     @Test
@@ -187,6 +194,21 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         breakCurvesService.deleteBreakCurveData(result.getDataId());
+        Long id = result.getDataId();
+        Assert.assertThrows(ComponentNotFoundException.class, () ->{
+            breakCurvesService.getBreakCurveData(id);
+        });
+    }
+
+    @Test
+    @Transactional
+    void testDeleteDataCustomQuery() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        breakCurvesDataRepository.deleteAllByNameNullAndUploadDateBefore(calendar.getTime());
         Long id = result.getDataId();
         Assert.assertThrows(ComponentNotFoundException.class, () ->{
             breakCurvesService.getBreakCurveData(id);

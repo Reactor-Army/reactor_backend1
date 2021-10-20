@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,6 +99,7 @@ public class BreakCurvesService {
         }
     }
 
+    @Transactional
     public void deleteBreakCurveData(Long id){
         Optional<BreakCurvesData> data = breakCurvesDataRepository.findById(id);
         if(data.isPresent()){
