@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,16 @@ public class BreakCurvesService {
             return formatData(data.get());
         }
         throw new ComponentNotFoundException();
+    }
+
+    public List<BreakCurvesDataResponse> getBreakCurvesDataByProcess(Long processId) throws JsonProcessingException {
+        List<BreakCurvesDataResponse> responses = new ArrayList<>();
+        Optional<Process> process = processRepository.findById(processId);
+        if(!process.isPresent()) throw new InvalidRequestException();
+        for (BreakCurvesData data: breakCurvesDataRepository.findAllByProcess(process.get())) {
+            responses.add(formatData(data));
+        }
+        return responses;
     }
 
     private BreakCurvesDataResponse formatData(BreakCurvesData data) throws JsonProcessingException {

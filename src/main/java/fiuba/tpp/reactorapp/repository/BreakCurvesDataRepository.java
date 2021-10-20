@@ -1,9 +1,10 @@
 package fiuba.tpp.reactorapp.repository;
 
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.entities.Process;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface BreakCurvesDataRepository extends JpaRepository<BreakCurvesData,Long> {
@@ -11,4 +12,6 @@ public interface BreakCurvesDataRepository extends JpaRepository<BreakCurvesData
     void deleteAllByNameNullAndUploadDateBefore(Date date);
 
     Optional<BreakCurvesData> findByIdAndNameNotNull(Long id);
+
+    List<BreakCurvesData> findAllByProcess(Process process);
 }
