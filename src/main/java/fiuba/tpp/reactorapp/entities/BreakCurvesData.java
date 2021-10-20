@@ -19,7 +19,7 @@ public class BreakCurvesData {
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Process process;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String data;
 
     private Date uploadDate;
