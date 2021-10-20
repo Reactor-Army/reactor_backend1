@@ -1,6 +1,8 @@
 package fiuba.tpp.reactorapp.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
@@ -11,6 +13,7 @@ import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
+import fiuba.tpp.reactorapp.scheduler.BreakCurvesDataScheduler;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,6 +31,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Timer;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 @SpringBootTest
 class BreakCurvesServiceTests {
 
@@ -36,6 +41,9 @@ class BreakCurvesServiceTests {
 
     @Autowired
     private BreakCurvesDataRepository breakCurvesDataRepository;
+
+    @Autowired
+    private BreakCurvesDataScheduler breakCurvesDataScheduler;
 
 
     @Test
@@ -214,6 +222,32 @@ class BreakCurvesServiceTests {
             breakCurvesService.getBreakCurveData(id);
         });
 
+    }
+
+    @Test
+    void testDeleteDataScheduler() throws JsonProcessingException {
+        Calendar calendar = Calendar.getInstance();
+
+        BreakCurvesData d1 = new BreakCurvesData();
+        d1.setUploadDate(calendar.getTime());
+        d1.setModel(EModel.THOMAS);
+        breakCurvesDataRepository.save(d1);
+
+        calendar.add(Calendar.DAY_OF_MONTH, -2);
+        BreakCurvesData d2 = new BreakCurvesData();
+        d2.setUploadDate(calendar.getTime());
+        breakCurvesDataRepository.save(d2);
+
+        breakCurvesDataScheduler.cleanBreakCurvesDataJob();
+
+        Long id = d2.getId();
+        Assert.assertThrows(ComponentNotFoundException.class, () ->{
+            breakCurvesService.getBreakCurveData(id);
+        });
+
+        Long idNoBorrrado = d1.getId();
+        Assert.assertTrue(breakCurvesDataRepository.findById(idNoBorrrado).isPresent());
+        
     }
 
 
