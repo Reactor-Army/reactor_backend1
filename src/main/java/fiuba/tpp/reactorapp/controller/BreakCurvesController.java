@@ -23,6 +23,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +38,7 @@ public class BreakCurvesController {
     private BreakCurvesService breakCurvesService;
 
     @PostMapping(value= "/thomas")
-    public ThomasResponse thomas(@ModelAttribute ThomasRequest request, Errors errors){
+    public ThomasResponse thomas(@ModelAttribute ThomasRequest request, @ApiIgnore Errors errors){
         try{
             validateThomasRequest(request, errors);
             return breakCurvesService.calculateByThomas(request);
@@ -63,7 +64,7 @@ public class BreakCurvesController {
     }
 
     @PostMapping(value= "/yoon-nelson")
-    public YoonNelsonResponse yoonNelson(@ModelAttribute YoonNelsonRequest request, Errors errors){
+    public YoonNelsonResponse yoonNelson(@ModelAttribute YoonNelsonRequest request, @ApiIgnore Errors errors){
         try{
             validateYoonNelsonRequest(request,errors);
             return breakCurvesService.calculateByYoonNelson(request);
@@ -90,7 +91,7 @@ public class BreakCurvesController {
     }
 
     @PostMapping(value= "/adams-bohart")
-    public AdamsBohartResponse adamsBohart(@ModelAttribute AdamsBohartRequest request, Errors errors){
+    public AdamsBohartResponse adamsBohart(@ModelAttribute AdamsBohartRequest request, @ApiIgnore Errors errors){
         try{
             validateAdamsBohart(request,errors);
             return breakCurvesService.calculateByAdamsBohart(request);
