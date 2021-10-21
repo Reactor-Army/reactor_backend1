@@ -138,15 +138,18 @@ public class CSVParserService {
             Row row = null;
             for (int i = 0; i < sheet.getLastRowNum()+1; i++) {
                 row = sheet.getRow(i);
-                StringBuilder builderRow = new StringBuilder();
-                for (int j = 0; j < EXCEL_COLUMNS; j++) {
-                    if(row.getCell(j)==null) {
-                        builderRow.append(BLANK_SPACE+ COMMA);
-                    }else {
-                        builderRow.append(row.getCell(j)+ COMMA);
+                if(row != null){
+                    StringBuilder builderRow = new StringBuilder();
+                    for (int j = 0; j < EXCEL_COLUMNS; j++) {
+                        if(row.getCell(j)==null) {
+                            builderRow.append(BLANK_SPACE+ COMMA);
+                        }else {
+                            builderRow.append(row.getCell(j)+ COMMA);
+                        }
                     }
+                    builder.append(builderRow.substring(0, builderRow.length() - 1)).append(System.lineSeparator());
                 }
-                builder.append(builderRow.substring(0, builderRow.length() - 1)).append(System.lineSeparator());
+
             }
             return new ByteArrayInputStream(builder.toString().getBytes(StandardCharsets.UTF_8));
         }
