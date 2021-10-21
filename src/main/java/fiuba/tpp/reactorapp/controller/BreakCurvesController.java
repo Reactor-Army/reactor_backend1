@@ -57,7 +57,7 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -83,7 +83,7 @@ public class BreakCurvesController {
         }catch(InvalidFieldException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -107,13 +107,13 @@ public class BreakCurvesController {
         }catch(InvalidCSVFormatException e){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_HEADER.getMessage(), e);
-        }catch(InvalidFieldException e){
+        }catch(InvalidFieldException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
-        } catch (JsonProcessingException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
-        }
+        } catch(Exception e){
+        throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+    }
 
     }
 
