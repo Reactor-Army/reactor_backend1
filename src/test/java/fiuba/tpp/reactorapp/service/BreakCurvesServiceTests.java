@@ -35,9 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.Timer;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -346,6 +348,23 @@ class BreakCurvesServiceTests {
 
         Long idNoBorrrado = d1.getId();
         Assert.assertTrue(breakCurvesDataRepository.findById(idNoBorrrado).isPresent());
+
+    }
+
+    @Test
+    void testGetFreeData() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        Optional<BreakCurvesData> data =  breakCurvesDataRepository.findById(result.getDataId());
+        if(!data.isPresent()) throw new ComponentNotFoundException();
+        data.get().setFree(true);
+        data.get().setName("PruebaFree");
+        breakCurvesDataRepository.save(data.get());
+
+        BreakCurvesDataResponse dataResponse = breakCurvesService.getFreeData(EModel.YOON_NELSON);
+
+        Assertions.assertEquals("PruebaFree", dataResponse.getName());
 
     }
 

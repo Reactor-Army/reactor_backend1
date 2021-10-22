@@ -45,6 +45,7 @@ public class BreakCurvesDataService {
                 break;
         }
         BreakCurvesData bcData =  new BreakCurvesData(eModel,data, Calendar.getInstance().getTime());
+        bcData.setFree(false);
         return breakCurvesDataRepository.save(bcData).getId();
     }
 }

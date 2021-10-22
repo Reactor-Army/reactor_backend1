@@ -2,6 +2,7 @@ package fiuba.tpp.reactorapp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.controller.utils.FileUtils;
+import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
@@ -113,8 +114,7 @@ public class BreakCurvesController {
         } catch(Exception e){
         throw new ResponseStatusException(
                 HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
-    }
-
+        }
     }
 
     @GetMapping(value = "/ejemplo")
@@ -160,6 +160,45 @@ public class BreakCurvesController {
         }catch(Exception e){
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+        }
+    }
+
+    @GetMapping(value= "/thomas")
+    public BreakCurvesDataResponse getFreeThomas(){
+        try{
+            return breakCurvesService.getFreeData(EModel.THOMAS);
+        }catch (ComponentNotFoundException e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+        }catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
+    @GetMapping(value= "/yoon-nelson")
+    public BreakCurvesDataResponse getFreeYoonNelson(){
+        try{
+            return breakCurvesService.getFreeData(EModel.YOON_NELSON);
+        }catch (ComponentNotFoundException e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+        }catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
+    @GetMapping(value= "/adams-bohart")
+    public BreakCurvesDataResponse getFreeAdams(){
+        try{
+            return breakCurvesService.getFreeData(EModel.ADAMS_BOHART);
+        }catch (ComponentNotFoundException e){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
+        }catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
     }
 
