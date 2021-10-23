@@ -24,6 +24,9 @@ public class BreakCurvesData {
 
     private Date uploadDate;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean free;
+
     public BreakCurvesData() {
     }
 
@@ -79,5 +82,13 @@ public class BreakCurvesData {
 
     public void setProcess(Process process) {
         this.process = process;
+    }
+
+    public Boolean getFree() {
+        return free;
+    }
+
+    public void setFree(Boolean free) {
+        this.free = free;
     }
 }

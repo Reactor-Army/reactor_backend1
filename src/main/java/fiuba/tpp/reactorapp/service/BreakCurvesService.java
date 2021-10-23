@@ -4,6 +4,7 @@ package fiuba.tpp.reactorapp.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
+import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.entities.Process;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesAdamsDTO;
 import fiuba.tpp.reactorapp.model.dto.BreakCurvesThomasDTO;
@@ -115,6 +116,17 @@ public class BreakCurvesService {
             default:
                 throw new ComponentNotFoundException();
         }
+    }
+
+    /*
+    Por que hago una lista y no un solo resultado, para hacerlo mas indestructible
+    Si en algun momento llega a ver dos valores free si busco un solo resultado crashea el endpoint
+    En cambio asi te aseguras de que mientras haya uno esto anda
+     */
+    public BreakCurvesDataResponse getFreeData(EModel model) throws JsonProcessingException {
+        List<BreakCurvesData> data = breakCurvesDataRepository.findAllByModelAndFreeTrue(model);
+        if(data.isEmpty()) throw new ComponentNotFoundException();
+        return formatData(data.get(0));
     }
 
     @Transactional

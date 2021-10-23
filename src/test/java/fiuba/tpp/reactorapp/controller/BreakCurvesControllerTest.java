@@ -1,6 +1,7 @@
 package fiuba.tpp.reactorapp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
@@ -398,6 +399,56 @@ class BreakCurvesControllerTest {
     void testDownloadFile(){
         ResponseEntity<ByteArrayResource> fileResponse = breakCurvesController.downloadDataTemplate();
         Assert.assertEquals(HttpStatus.OK, fileResponse.getStatusCode());
+    }
+
+    @Test
+    void testBreakCurvesDataFreeThomasNotFound()  {
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.getFreeThomas();
+        });
+        Assert.assertEquals(ResponseMessage.DATA_NOT_FOUND.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testBreakCurvesDataFreeYoonNotFound()  {
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.getFreeYoonNelson();
+        });
+        Assert.assertEquals(ResponseMessage.DATA_NOT_FOUND.getMessage(), e.getReason());
+    }
+    @Test
+    void testBreakCurvesDataFreeAdamsNotFound()  {
+        ResponseStatusException e = Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.getFreeAdams();
+        });
+        Assert.assertEquals(ResponseMessage.DATA_NOT_FOUND.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorGetFreeThomas() throws JsonProcessingException {
+        Mockito.when(breakCurvesService.getFreeData(EModel.THOMAS)).thenThrow(JsonProcessingException.class);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.getFreeThomas();
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorGetFreeYoon() throws JsonProcessingException {
+        Mockito.when(breakCurvesService.getFreeData(EModel.YOON_NELSON)).thenThrow(JsonProcessingException.class);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.getFreeYoonNelson();
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorGetFreeAdams() throws JsonProcessingException {
+        Mockito.when(breakCurvesService.getFreeData(EModel.ADAMS_BOHART)).thenThrow(JsonProcessingException.class);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.getFreeAdams();
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
     }
 
 }
