@@ -14,6 +14,9 @@ public class BreakCurvesDataResponse {
     @JsonProperty("nombre")
     private String name;
 
+    @JsonProperty("modelo")
+    private EModelResponse model;
+
     private Object request;
 
     private Object response;
@@ -34,6 +37,7 @@ public class BreakCurvesDataResponse {
         this.request = request;
         this.response = response;
         this.uploadDate = data.getUploadDate();
+        this.model = new EModelResponse(data.getModel());
     }
 
     public Long getId() {
@@ -84,5 +88,13 @@ public class BreakCurvesDataResponse {
 
     public void setResponse(Object response) {
         this.response = response;
+    }
+
+    public EModelResponse getModel() {
+        return model;
+    }
+
+    public void setModel(EModelResponse model) {
+        this.model = model;
     }
 }
