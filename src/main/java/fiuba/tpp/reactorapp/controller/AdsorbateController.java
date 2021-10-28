@@ -90,19 +90,19 @@ public class AdsorbateController {
     }
 
     @GetMapping(value = "")
-    public List<AdsorbateResponse> getAdsorbates(@RequestHeader(name ="Authorization", required = false) String authHeader){
+    public List<AdsorbateResponse> getAdsorbates(@RequestHeader(name ="Authorization", required = false) String authHeader, @RequestHeader(value = "User-Agent") String userAgent){
         List<AdsorbateResponse> response = new ArrayList<>();
-        for (Adsorbate adsorbate: adsorbateService.getAdsorbates(jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate: adsorbateService.getAdsorbates(jwtUtils.isAnonymous(authHeader, userAgent))) {
             response.add(new AdsorbateResponse(adsorbate));
         }
         return response;
     }
 
     @GetMapping(value = "/buscar")
-    public List<AdsorbateResponse> searchAdsorbates(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="cargaIon",required = false) Integer ionCharge, @RequestHeader(name ="Authorization", required = false) String authHeader){
+    public List<AdsorbateResponse> searchAdsorbates(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="cargaIon",required = false) Integer ionCharge, @RequestHeader(name ="Authorization", required = false) String authHeader,@RequestHeader(value = "User-Agent") String userAgent){
         AdsorbateFilter filter = new AdsorbateFilter(name, ionCharge);
         List<AdsorbateResponse> response = new ArrayList<>();
-        for (Adsorbate adsorbate: adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate: adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader, userAgent))) {
             response.add(new AdsorbateResponse(adsorbate));
         }
         return response;
@@ -110,19 +110,19 @@ public class AdsorbateController {
     }
 
     @GetMapping(value = "/buscar/nombre")
-    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="idAdsorbente",required = false) Long adsorbentId, @RequestHeader(name ="Authorization", required = false) String authHeader){
+    public List<AdsorbateNameResponse> searchAdsorbatesName(@RequestParam(name="nombre",required = false) String name, @RequestParam(name="idAdsorbente",required = false) Long adsorbentId, @RequestHeader(name ="Authorization", required = false) String authHeader,@RequestHeader(value = "User-Agent") String userAgent){
         List<AdsorbateNameResponse> adsorbatesName = new ArrayList<>();
         AdsorbateFilter filter = new AdsorbateFilter(name, adsorbentId);
-        for (Adsorbate adsorbate : adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader))) {
+        for (Adsorbate adsorbate : adsorbateService.search(filter,jwtUtils.isAnonymous(authHeader, userAgent))) {
             adsorbatesName.add(new AdsorbateNameResponse(adsorbate));
         }
         return adsorbatesName;
     }
 
     @GetMapping(value = "/{id}")
-    public AdsorbateResponse getAdsorbate(@PathVariable Long id, @RequestHeader(name ="Authorization", required = false) String authHeader) {
+    public AdsorbateResponse getAdsorbate(@PathVariable Long id, @RequestHeader(name ="Authorization", required = false) String authHeader, @RequestHeader(value = "User-Agent") String userAgent) {
         try {
-            return new AdsorbateResponse(adsorbateService.getById(id,jwtUtils.isAnonymous(authHeader)));
+            return new AdsorbateResponse(adsorbateService.getById(id,jwtUtils.isAnonymous(authHeader, userAgent)));
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.ADSORBATE_NOT_FOUND.getMessage(), e);

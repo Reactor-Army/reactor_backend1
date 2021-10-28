@@ -38,7 +38,7 @@ public class JwtUtils {
     @Autowired
     private TokenRepository tokenRepository;
 
-    public String generateJwtToken(Authentication authentication, User user) {
+    public String generateJwtToken(Authentication authentication, User user, String device) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -49,15 +49,15 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
 
-        saveToken(token, user);
+        saveToken(token, user, device);
 
         return token;
     }
 
-    public void invalidateJwtToken(String token) {
+    public void invalidateJwtToken(String token, String device) {
         Optional<User> user = userRepository.findByEmail(getUserNameFromJwtToken(token));
         if(user.isPresent()){
-            Optional<Token> tokenDeleted = tokenRepository.findByUser(user.get());
+            Optional<Token> tokenDeleted = tokenRepository.findByUserAndDevice(user.get(), device);
             tokenDeleted.ifPresent(t -> tokenRepository.delete(t));
         }
     }
@@ -66,12 +66,12 @@ public class JwtUtils {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateJwtToken(String authToken) {
+    public boolean validateJwtToken(String authToken, String device) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             Optional<User> user = userRepository.findByEmail(getUserNameFromJwtToken(authToken));
             if(user.isPresent()){
-                Optional<Token> t = tokenRepository.findByUser(user.get());
+                Optional<Token> t = tokenRepository.findByUserAndDevice(user.get(), device);
                 if(t.isPresent()){
                     return t.get().getHashToken().equals(authToken);
                 }
@@ -102,23 +102,23 @@ public class JwtUtils {
         return null;
     }
 
-    public boolean isAnonymous(String token){
+    public boolean isAnonymous(String token, String device){
         if(token == null || token.isEmpty()) return true;
         String authToken = parseJwtHeader(token);
         if(authToken == null || authToken.isEmpty()) return true;
-        return !validateJwtToken(authToken);
+        return !validateJwtToken(authToken, device);
     }
 
-    private void saveToken(String token, User user){
+    private void saveToken(String token, User user, String device){
         Token generated;
         Date date = Calendar.getInstance().getTime();
-        Optional<Token> tokenGenerated = tokenRepository.findByUser(user);
+        Optional<Token> tokenGenerated = tokenRepository.findByUserAndDevice(user,device);
         if(tokenGenerated.isPresent()){
             generated = tokenGenerated.get();
             generated.setHashToken(token);
             generated.setCreatedAt(date);
         }else{
-            generated = new Token(user,token, Calendar.getInstance().getTime());
+            generated = new Token(user,token, Calendar.getInstance().getTime(), device);
         }
         tokenRepository.save(generated);
 

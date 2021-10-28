@@ -81,7 +81,7 @@ class AuthControllerTest {
     @Test
     void testRegisterUserAndLogin(){
         createUserController("mati");
-        LoginResponse response = authController.login(new AuthRequest("mati@gmail.com", "Prueba123"));
+        LoginResponse response = authController.login(new AuthRequest("mati@gmail.com", "Prueba123"),"userAgent");
         Assert.assertEquals("mati@gmail.com", response.getUser().getEmail());
         Assert.assertEquals("Administrador", response.getUser().getRole().getRolename());
         Assert.assertNotNull(response.getUser().getLastLogin());
@@ -94,15 +94,15 @@ class AuthControllerTest {
         AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
         adsorbentController.createAdsorbent(request);
 
-        LoginResponse response = authController.login(new AuthRequest("mati@gmail.com", "Prueba123"));
+        LoginResponse response = authController.login(new AuthRequest("mati@gmail.com", "Prueba123"),"userAgent");
         String token = "Bearer " + response.getAccessToken();
 
-        List<AdsorbentResponse> oldList = adsorbentController.getAdsorbents(token);
-        authController.logout(token);
+        List<AdsorbentResponse> oldList = adsorbentController.getAdsorbents(token, "userAgent");
+        authController.logout(token,"userAgent");
 
         Assert.assertEquals(1L,oldList.size());
 
-        Assert.assertEquals(0L,adsorbentController.getAdsorbents(token).size());
+        Assert.assertEquals(0L,adsorbentController.getAdsorbents(token,"userAgent").size());
     }
 
     @Test
@@ -110,16 +110,16 @@ class AuthControllerTest {
         createUserController("mati");
         AuthRequest request = new AuthRequest("matiTest2", "Prueba123");
         Assert.assertThrows(BadCredentialsException.class, () ->{
-            authController.login(request);
+            authController.login(request,"userAgent");
         });
     }
 
     @Test
     void testLoginInternalErrror() throws UserNotFoundException {
         AuthRequest request = new AuthRequest("mati@gmail.com","Prueba123");
-        Mockito.when(authService.login(request)).thenThrow(UserNotFoundException.class);
+        Mockito.when(authService.login(request,"userAgent")).thenThrow(UserNotFoundException.class);
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
-            authMockController.login(request);
+            authMockController.login(request,"userAgent");
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(),e.getReason());
     }
@@ -222,8 +222,8 @@ class AuthControllerTest {
         authController.createUser(createUserRequest("admin"));
         authController.createUser(createUserRequestNotAdmin("lucas"));
         authController.createUser(createUserRequestNotAdmin("log"));
-        authController.login(new AuthRequest("log@gmail.com", "Prueba123"));
-        authController.login(new AuthRequest("admin@gmail.com", "Prueba123"));
+        authController.login(new AuthRequest("log@gmail.com", "Prueba123"),"userAgent");
+        authController.login(new AuthRequest("admin@gmail.com", "Prueba123"),"userAgent");
         List<UserResponse> users = authController.getUsers();
         Assert.assertEquals(3L, users.size());
         Assert.assertEquals("ROLE_ADMIN", users.get(0).getRole().getName());
@@ -412,7 +412,7 @@ class AuthControllerTest {
     @Test
     void testDeleteSameUser() {
         UserResponse response = createUserController("admin3");
-        LoginResponse login = authController.login(new AuthRequest("admin3@gmail.com", "Prueba123"));
+        LoginResponse login = authController.login(new AuthRequest("admin3@gmail.com", "Prueba123"),"userAgent");
         String token = "Bearer " + login.getAccessToken();
         Long id = response.getId();
         ResponseStatusException e = Assertions.assertThrows(ResponseStatusException.class, () -> {
@@ -492,7 +492,7 @@ class AuthControllerTest {
 
     private String getToken(String name){
         createUserController(name);
-        LoginResponse response = authController.login(new AuthRequest(name + "@gmail.com", "Prueba123"));
+        LoginResponse response = authController.login(new AuthRequest(name + "@gmail.com", "Prueba123"),"userAgent");
         return  "Bearer " + response.getAccessToken();
     }
 

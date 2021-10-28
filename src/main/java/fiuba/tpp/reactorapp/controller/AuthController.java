@@ -43,9 +43,9 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody AuthRequest authRequest) {
+    public LoginResponse login(@RequestBody AuthRequest authRequest, @RequestHeader(value = "User-Agent") String userAgent) {
         try {
-            return authService.login(authRequest);
+            return authService.login(authRequest, userAgent);
         } catch (UserNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
@@ -53,8 +53,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestHeader("Authorization") String authHeader) {
-        authService.logout(authHeader);
+    public void logout(@RequestHeader("Authorization") String authHeader,@RequestHeader(value = "User-Agent") String userAgent) {
+        authService.logout(authHeader, userAgent);
     }
 
     @PostMapping("/reset/password/code")
