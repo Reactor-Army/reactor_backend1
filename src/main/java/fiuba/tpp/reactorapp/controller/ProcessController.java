@@ -98,37 +98,37 @@ public class ProcessController {
     }
 
     @GetMapping(value = "")
-    public List<ProcessResponse> getProcesses(@RequestHeader(name ="Authorization", required = false) String authHeader){
+    public List<ProcessResponse> getProcesses(@RequestHeader(name ="Authorization", required = false) String authHeader,@RequestHeader(value = "User-Agent") String userAgent){
         List<ProcessResponse> processes = new ArrayList<>();
-        for (Process process : processService.getProcesses(jwtUtils.isAnonymous(authHeader))) {
+        for (Process process : processService.getProcesses(jwtUtils.isAnonymous(authHeader, userAgent))) {
             processes.add(new ProcessResponse(process));
         }
         return processes;
     }
 
     @GetMapping(value = "/buscar")
-    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId, @RequestHeader(name ="Authorization", required = false) String authHeader){
+    public List<ProcessResponse> searchProcesses(@RequestParam(name="idAdsorbato",required = false) Long adsorbateId, @RequestParam(name="idAdsorbente", required = false) Long adsorbentId, @RequestHeader(name ="Authorization", required = false) String authHeader,@RequestHeader(value = "User-Agent") String userAgent){
         List<ProcessResponse> processes = new ArrayList<>();
         ProcessFilter filter = new ProcessFilter(adsorbateId,adsorbentId);
-        for (Process process : processService.search(filter,jwtUtils.isAnonymous(authHeader))){
+        for (Process process : processService.search(filter,jwtUtils.isAnonymous(authHeader, userAgent))){
             processes.add(new ProcessResponse(process));
         }
         return processes;
     }
 
     @PostMapping(value = "/adsorbato")
-    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request,@RequestHeader(name ="Authorization", required = false) String authHeader){
+    public List<SearchByAdsorbateResponse> searchBestAdsorbentByAdsorbates(@RequestBody SearchByAdsorbateRequest request,@RequestHeader(name ="Authorization", required = false) String authHeader,@RequestHeader(value = "User-Agent") String userAgent){
         List<SearchByAdsorbateResponse> searchResults = new ArrayList<>();
-        for (SearchByAdsorbateDTO result: processService.searchByAdsorbate(request,jwtUtils.isAnonymous(authHeader))) {
+        for (SearchByAdsorbateDTO result: processService.searchByAdsorbate(request,jwtUtils.isAnonymous(authHeader,userAgent))) {
             searchResults.add(new SearchByAdsorbateResponse(result,request.getAdsorbatesIds().size()));
         }
         return searchResults;
     }
 
     @GetMapping(value = "/{id}")
-    public ProcessResponse getProcess(@PathVariable Long id,@RequestHeader(name ="Authorization", required = false) String authHeader) {
+    public ProcessResponse getProcess(@PathVariable Long id,@RequestHeader(name ="Authorization", required = false) String authHeader, @RequestHeader(value = "User-Agent") String userAgent) {
         try {
-            return new ProcessResponse(processService.getById(id,jwtUtils.isAnonymous(authHeader)));
+            return new ProcessResponse(processService.getById(id,jwtUtils.isAnonymous(authHeader, userAgent)));
         } catch (ComponentNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.PROCESS_NOT_FOUND.getMessage(), e);

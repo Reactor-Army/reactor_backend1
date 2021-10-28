@@ -68,7 +68,7 @@ public class AuthService {
 
     }
 
-    public LoginResponse login(AuthRequest request) throws UserNotFoundException {
+    public LoginResponse login(AuthRequest request, String device) throws UserNotFoundException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
@@ -79,7 +79,7 @@ public class AuthService {
         Optional<User> user = userRepository.findByEmail(userDetails.getEmail());
         if(!user.isPresent()) throw new UserNotFoundException();
 
-        String jwt = jwtUtils.generateJwtToken(authentication, user.get());
+        String jwt = jwtUtils.generateJwtToken(authentication, user.get(), device);
 
 
         return new LoginResponse(jwt, new UserResponse(updateLastLogin(user.get())));
@@ -91,8 +91,8 @@ public class AuthService {
         return user;
     }
 
-    public void logout(String authHeader){
-        jwtUtils.invalidateJwtToken(jwtUtils.parseJwtHeader(authHeader));
+    public void logout(String authHeader, String device){
+        jwtUtils.invalidateJwtToken(jwtUtils.parseJwtHeader(authHeader), device);
     }
 
     public void resetPasswordGenerateCode(AuthRequest request) throws UserNotFoundException {

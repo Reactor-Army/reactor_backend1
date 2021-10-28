@@ -119,7 +119,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbente.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.getProcesses(getToken("prueba11"));
+        List<ProcessResponse> processes = processController.getProcesses(getToken("prueba11"),"userAgent");
         Assert.assertEquals(1L,processes.size());
     }
 
@@ -141,7 +141,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbente.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.getProcesses(token);
+        List<ProcessResponse> processes = processController.getProcesses(token,"userAgent");
         Assert.assertEquals(0L,processes.size());
     }
 
@@ -204,7 +204,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         ProcessResponse response = processController.createProcess(request);
         processController.deleteProcess(response.getId());
-        Assert.assertTrue(processController.getProcesses(getToken("prueba9")).isEmpty());
+        Assert.assertTrue(processController.getProcesses(getToken("prueba9"),"userAgent").isEmpty());
     }
 
     @Test
@@ -227,7 +227,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(adsorbate.getId(),adsorbent.getId(), getToken("prueba8"));
+        List<ProcessResponse> processes = processController.searchProcesses(adsorbate.getId(),adsorbent.getId(), getToken("prueba8"),"userAgent");
 
         Assert.assertEquals(1L, processes.size());
     }
@@ -250,7 +250,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(1L,1L, token);
+        List<ProcessResponse> processes = processController.searchProcesses(1L,1L, token,"userAgent");
 
         Assert.assertEquals(0L, processes.size());
     }
@@ -268,7 +268,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(adsorbate.getId(),null, getToken("prueba7"));
+        List<ProcessResponse> processes = processController.searchProcesses(adsorbate.getId(),null, getToken("prueba7"),"userAgent");
 
         Assert.assertEquals(1L,processes.size());
     }
@@ -286,7 +286,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         processController.createProcess(request);
 
-        List<ProcessResponse> processes = processController.searchProcesses(null,adsorbent.getId(), getToken("prueba6"));
+        List<ProcessResponse> processes = processController.searchProcesses(null,adsorbent.getId(), getToken("prueba6"),"userAgent");
 
         Assert.assertEquals(1L,processes.size());
     }
@@ -304,7 +304,7 @@ class ProcessControllerTest {
         request.setIdAdsorbent(adsorbent.getId());
         ProcessResponse process = processController.createProcess(request);
 
-        ProcessResponse processResponse = processController.getProcess(process.getId(), getToken("prueba5"));
+        ProcessResponse processResponse = processController.getProcess(process.getId(), getToken("prueba5"),"userAgent");
 
         Assertions.assertEquals(processResponse.getId(), process.getId());
         Assertions.assertEquals(processResponse.getQmax(), process.getQmax());
@@ -326,7 +326,7 @@ class ProcessControllerTest {
         List<Long> ids = new ArrayList<>();
         ids.add(adsorbate.getId());
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids),getToken("prueba4"));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids),getToken("prueba4"),"userAgent");
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertTrue(searchResult.get(0).isRemovesAllAdsorbates());
@@ -354,7 +354,7 @@ class ProcessControllerTest {
         ids.add(adsorbate.getId());
         ids.add(adsorbate2.getId());
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken("prueba3"));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken("prueba3"),"userAgent");
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
@@ -384,7 +384,7 @@ class ProcessControllerTest {
         ids.add(adsorbate.getId());
         ids.add(2L);
 
-        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken("prueba1"));
+        List<SearchByAdsorbateResponse> searchResult = processController.searchBestAdsorbentByAdsorbates(new SearchByAdsorbateRequest(ids), getToken("prueba1"),"userAgent");
 
         Assertions.assertEquals(1, searchResult.size());
         Assertions.assertFalse(searchResult.get(0).isRemovesAllAdsorbates());
@@ -398,7 +398,7 @@ class ProcessControllerTest {
     void testGetProcessByIdNotFound(){
         String token = getToken("prueba2");
         Assertions.assertThrows(ResponseStatusException.class, () -> {
-            processController.getProcess(20L, token);
+            processController.getProcess(20L, token,"userAgent");
         });
     }
 
@@ -631,7 +631,7 @@ class ProcessControllerTest {
 
     private String getToken(String name){
         createUserController(name);
-        LoginResponse response = authController.login(new AuthRequest(name + "@gmail.com", "Prueba123"));
+        LoginResponse response = authController.login(new AuthRequest(name + "@gmail.com", "Prueba123"),"userAgent");
         return  "Bearer " + response.getAccessToken();
     }
 

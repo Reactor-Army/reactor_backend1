@@ -18,6 +18,8 @@ public class Token {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    private String device;
+
     private String hashToken;
 
     private Date createdAt;
@@ -25,10 +27,11 @@ public class Token {
     public Token() {
     }
 
-    public Token(User user, String hashToken, Date createdAt) {
+    public Token(User user, String hashToken, Date createdAt, String device) {
         this.user = user;
         this.hashToken = hashToken;
         this.createdAt = createdAt;
+        this.device = device;
     }
 
     public Long getId() {
@@ -61,5 +64,13 @@ public class Token {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public void setDevice(String device) {
+        this.device = device;
     }
 }

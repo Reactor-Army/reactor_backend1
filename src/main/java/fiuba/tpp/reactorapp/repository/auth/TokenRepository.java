@@ -10,7 +10,7 @@ public interface TokenRepository extends JpaRepository<Token,Long> {
 
     Optional<Token> findByHashToken(String token);
 
-    Optional<Token> findByUser(User user);
+    Optional<Token> findByUserAndDevice(User user, String device);
 
     void deleteAllByUser(User user);
 }
