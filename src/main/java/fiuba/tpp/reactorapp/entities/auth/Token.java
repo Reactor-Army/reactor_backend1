@@ -4,17 +4,14 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(	name = "\"Token\"",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "user_id")
-        })
+@Table(	name = "\"Token\"")
 public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
