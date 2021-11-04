@@ -59,7 +59,6 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -86,7 +85,6 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -114,7 +112,6 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_FIELDS.getMessage(), e);
         } catch(Exception e){
-            e.printStackTrace();
             throw new ResponseStatusException(
                 HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -174,7 +171,6 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
         }catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -188,7 +184,6 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
         }catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }
@@ -202,7 +197,6 @@ public class BreakCurvesController {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, ResponseMessage.DATA_NOT_FOUND.getMessage(), e);
         }catch (Exception e) {
-            e.printStackTrace();
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
         }

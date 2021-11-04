@@ -32,7 +32,7 @@ public class AdsorbentController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value= "")
     public AdsorbentResponse createAdsorbent(@RequestBody AdsorbentRequest request) {
         AdsorbentResponse response = null;
