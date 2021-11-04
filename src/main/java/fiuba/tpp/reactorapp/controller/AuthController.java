@@ -3,7 +3,6 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.model.auth.exception.*;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
-import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.exception.SameUserException;
@@ -55,36 +54,6 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout(@RequestHeader("Authorization") String authHeader,@RequestHeader(value = "User-Agent") String userAgent) {
         authService.logout(authHeader, userAgent);
-    }
-
-    @PostMapping("/reset/password/code")
-    public void generateCodeResetPassword(@RequestBody AuthRequest request){
-        try{
-            validateAuthRequest(request);
-            authService.resetPasswordGenerateCode(request);
-        } catch (InvalidRegisterException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REGISTER.getMessage(), e);
-        } catch (Exception ignored) {
-            //Se ignora y se devuelve 200
-        }
-    }
-
-    @PostMapping("/reset/password")
-    public void resetPassword(@RequestBody ResetPasswordRequest request){
-        try{
-            validateResetPasswordRequest(request);
-            authService.resetPassword(request);
-        } catch (InvalidResetPasswordException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
-        } catch (CodeExpiredException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.CODE_EXPIRED.getMessage(), e);
-        } catch (CodeNotFoundException e) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
-        }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -199,15 +168,6 @@ public class AuthController {
         if(email.length() > EMAIL_MAX_LENGTH) return false;
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
-    }
-
-    private void validateAuthRequest(AuthRequest request) throws InvalidRegisterException {
-        if(request.getEmail() == null || request.getEmail().isEmpty() || !request.getEmail().contains("@")) throw new InvalidRegisterException();
-    }
-
-    private void validateResetPasswordRequest(ResetPasswordRequest request) throws InvalidResetPasswordException {
-        if(request.getCode() == null || request.getCode().isEmpty())  throw new InvalidResetPasswordException();
-        if(request.getPassword() == null || request.getPassword().isEmpty()) throw new InvalidResetPasswordException();
     }
 
 }

@@ -34,7 +34,7 @@ public class ProcessController {
     @Autowired
     private JwtUtils jwtUtils;
 
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value= "")
     public ProcessResponse createProcess(@RequestBody ProcessRequest request) {
         ProcessResponse response = null;
