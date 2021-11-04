@@ -1,14 +1,10 @@
 package fiuba.tpp.reactorapp.service.auth;
 
-import fiuba.tpp.reactorapp.entities.auth.AuthCode;
 import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.entities.auth.User;
-import fiuba.tpp.reactorapp.model.auth.exception.CodeExpiredException;
-import fiuba.tpp.reactorapp.model.auth.exception.CodeNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.exception.EmailAlreadyExistException;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
-import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.auth.response.RegisterResponse;
@@ -47,12 +43,7 @@ public class AuthService {
     JwtUtils jwtUtils;
 
     @Autowired
-    AuthCodeService authCodeService;
-
-    @Autowired
     TokenRepository tokenRepository;
-
-    private static final int CODE_DURATION = 10;
 
     public RegisterResponse register(AuthRequest request) throws EmailAlreadyExistException {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(request.getEmail()))) {
@@ -60,12 +51,10 @@ public class AuthService {
         }
 
         User user = new User(request.getEmail(),encoder.encode(request.getPassword()));
-
         user.setRole(ERole.ROLE_USER);
         userRepository.save(user);
 
         return new RegisterResponse(user);
-
     }
 
     public LoginResponse login(AuthRequest request, String device) throws UserNotFoundException {
@@ -93,15 +82,6 @@ public class AuthService {
 
     public void logout(String authHeader, String device){
         jwtUtils.invalidateJwtToken(jwtUtils.parseJwtHeader(authHeader), device);
-    }
-
-    public void resetPasswordGenerateCode(AuthRequest request) throws UserNotFoundException {
-        Optional<User> user = userRepository.findByEmail(request.getEmail());
-        if(user.isPresent()){
-           authCodeService.generateAuthCode(user.get());
-        }else{
-            throw new UserNotFoundException();
-        }
     }
 
     public List<RoleResponse> getRoles(){
@@ -169,7 +149,6 @@ public class AuthService {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
             if(isSameUser(jwtUtils.getUserNameFromJwtToken(token),user.get().getEmail())) throw new SameUserException();
-            authCodeService.cleanAuthCodesUser(user.get());
             tokenRepository.deleteAllByUser(user.get());
             userRepository.delete(user.get());
         }else{
@@ -181,21 +160,5 @@ public class AuthService {
         return emailUser.equalsIgnoreCase(emailDeleted);
     }
 
-    public void resetPassword(ResetPasswordRequest request) throws CodeExpiredException, CodeNotFoundException {
-        AuthCode authCode = authCodeService.getAuthCode(request.getCode());
-        validateCodeExpiration(authCode.getRefreshDate());
-        authCode.getUser().setPassword(encoder.encode(request.getPassword()));
-        userRepository.save(authCode.getUser());
-    }
 
-    private void validateCodeExpiration(Date codeDate) throws CodeExpiredException {
-        Calendar calendar = Calendar.getInstance();
-        Date now = calendar.getTime();
-        calendar.setTime(codeDate);
-        calendar.add(Calendar.MINUTE, CODE_DURATION);
-        Date validTime = calendar.getTime();
-        if(!codeDate.before(now) || !validTime.after(now)){
-            throw new CodeExpiredException();
-        }
-    }
 }
