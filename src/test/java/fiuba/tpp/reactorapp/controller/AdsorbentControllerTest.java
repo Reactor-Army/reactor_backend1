@@ -67,7 +67,7 @@ class AdsorbentControllerTest {
 
     @Test
     void testCreateAdsorbent(){
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba1", "Prueba1", 1f, 1f,1f);
         AdsorbentResponse adsorbent = adsorbentController.createAdsorbent(request);
 
         Assert.assertEquals(adsorbent.getName(), request.getName());
@@ -77,13 +77,13 @@ class AdsorbentControllerTest {
 
     @Test
     void testCreateAdsorbentWithoutName(){
-        AdsorbentRequest request = new AdsorbentRequest(null, "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request = new AdsorbentRequest(null, "Prueba2", 1f, 1f,1f);
         Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.createAdsorbent(request));
     }
 
     @Test
     void testGetAllAdsorbents() {
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba3", "Prueba3", 1f, 1f,1f);
         adsorbentController.createAdsorbent(request);
         List<AdsorbentResponse> adsorbents = adsorbentController.getAdsorbents(getToken("pruebaToken"),"userAgent");
         Assert.assertEquals(1L,adsorbents.size());
@@ -96,7 +96,7 @@ class AdsorbentControllerTest {
             "''"
     })
     void testGetAllAdsorbentsNoToken(String token) {
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba4", "Prueba4", 1f, 1f,1f);
         adsorbentController.createAdsorbent(request);
         List<AdsorbentResponse> adsorbents = adsorbentController.getAdsorbents(token,"userAgent");
         Assert.assertEquals(0L,adsorbents.size());
@@ -105,8 +105,8 @@ class AdsorbentControllerTest {
 
     @Test
     void testUpdateAdsorbent() {
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba5", "Prueba5", 1f, 1f,1f);
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba6", "Prueba6", 10f, 10f,10f);
         AdsorbentResponse r = adsorbentController.createAdsorbent(request);
         AdsorbentResponse updated = adsorbentController.updateAdsorbent(r.getId(), requestUpdate);
 
@@ -117,14 +117,14 @@ class AdsorbentControllerTest {
 
     @Test
     void testComponentNotFoundExceptionUpdate(){
-        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest requestUpdate = new AdsorbentRequest("Prueba7", "Prueba7", 10f, 10f,10f);
         requestUpdate.setId(2L);
         Assertions.assertThrows(ResponseStatusException.class, () -> adsorbentController.updateAdsorbent(2L,requestUpdate));
     }
 
     @Test
     void testDeleteAdsorbent() {
-        AdsorbentRequest request = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba8", "Prueba8", 10f, 10f,10f);
         AdsorbentResponse response = adsorbentController.createAdsorbent(request);
         adsorbentController.deleteAdsorbent(response.getId());
         Assert.assertTrue(adsorbentController.getAdsorbents(getToken("prueba2"),"userAgent").isEmpty());
@@ -138,8 +138,8 @@ class AdsorbentControllerTest {
 
     @Test
     void testSearchAdsorbentsNoFilter() {
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba48", "PruebaPiedra", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba22", "Prueba233", 10f, 10f,10f);
         adsorbentController.createAdsorbent(request);
         adsorbentController.createAdsorbent(request2);
         List<AdsorbentResponse> adsorbentes = adsorbentController.searchAdsorbents(null, getToken("prueba3"),"userAgent");
@@ -154,8 +154,8 @@ class AdsorbentControllerTest {
     })
     void testSearchAdsorbentsNoFilterNoToken(String token) {
         addFreeAdsorbent();
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba9", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba10", "Prueba2", 10f, 10f,10f);
         adsorbentController.createAdsorbent(request);
         adsorbentController.createAdsorbent(request2);
         List<AdsorbentResponse> adsorbentes = adsorbentController.searchAdsorbents(null, token,"userAgent");
@@ -165,8 +165,8 @@ class AdsorbentControllerTest {
 
     @Test
     void testSearchAdsorbentsFilterName() {
-        AdsorbentRequest request = new AdsorbentRequest("Prueba", "Prueba", 1f, 1f,1f);
-        AdsorbentRequest request2 = new AdsorbentRequest("Prueba2", "Prueba2", 10f, 10f,10f);
+        AdsorbentRequest request = new AdsorbentRequest("Prueba11", "Prueba", 1f, 1f,1f);
+        AdsorbentRequest request2 = new AdsorbentRequest("Prueba22", "Prueba2", 10f, 10f,10f);
         adsorbentController.createAdsorbent(request);
         adsorbentController.createAdsorbent(request2);
         List<AdsorbentResponse> adsorbents = adsorbentController.searchAdsorbents("Prueba2", getToken("test1"),"userAgent");
