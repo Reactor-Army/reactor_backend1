@@ -450,5 +450,4 @@ class BreakCurvesControllerTest {
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
     }
-
 }

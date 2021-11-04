@@ -13,5 +13,6 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public void handleException(Exception e) throws Exception {
         logger.error(e.getMessage(), e);
-        throw e;    }
+        throw e;
+    }
 }
