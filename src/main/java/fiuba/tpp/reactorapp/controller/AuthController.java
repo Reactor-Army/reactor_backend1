@@ -3,7 +3,6 @@ package fiuba.tpp.reactorapp.controller;
 import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.model.auth.exception.*;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
-import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.exception.SameUserException;

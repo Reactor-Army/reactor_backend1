@@ -4,7 +4,6 @@ import fiuba.tpp.reactorapp.entities.auth.ERole;
 import fiuba.tpp.reactorapp.entities.auth.User;
 import fiuba.tpp.reactorapp.model.auth.exception.UserNotFoundException;
 import fiuba.tpp.reactorapp.model.auth.request.AuthRequest;
-import fiuba.tpp.reactorapp.model.auth.request.ResetPasswordRequest;
 import fiuba.tpp.reactorapp.model.auth.request.UserRequest;
 import fiuba.tpp.reactorapp.model.auth.response.LoginResponse;
 import fiuba.tpp.reactorapp.model.request.AdsorbentRequest;
@@ -29,11 +28,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
