@@ -5,7 +5,6 @@ import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.model.math.Observation;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
-import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.service.chemicalmodels.ThomasModel;
 import org.springframework.beans.factory.annotation.Autowired;
