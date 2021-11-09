@@ -27,6 +27,9 @@ public class BreakCurvesData {
     @Column(columnDefinition = "boolean default false")
     private Boolean free;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean baseline;
+
     public BreakCurvesData() {
     }
 
@@ -90,5 +93,13 @@ public class BreakCurvesData {
 
     public void setFree(Boolean free) {
         this.free = free;
+    }
+
+    public Boolean getBaseline() {
+        return baseline;
+    }
+
+    public void setBaseline(Boolean baseline) {
+        this.baseline = baseline;
     }
 }

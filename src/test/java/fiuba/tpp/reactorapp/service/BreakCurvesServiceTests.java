@@ -220,7 +220,7 @@ class BreakCurvesServiceTests {
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
         Long processId = createProcess("pruebaData1","PruebaData2").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba1"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba1", false));
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof AdamsBohartRequest);
         Assert.assertTrue(data.getResponse() instanceof AdamsBohartResponse);
@@ -232,7 +232,7 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Long processId = createProcess("pruebaData3","PruebaData4").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba2"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba2",false));
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof ThomasRequest);
         Assert.assertTrue(data.getResponse() instanceof ThomasResponse);
@@ -244,7 +244,7 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData5","PruebaData6").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
         Assert.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
@@ -268,7 +268,7 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Long processId = createProcess("pruebaData6","PruebaData7").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
         breakCurvesService.deleteBreakCurveData(result.getDataId());
         Long id = result.getDataId();
         Assert.assertThrows(ComponentNotFoundException.class, () ->{
@@ -283,7 +283,7 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData8","PruebaData9").getId();
-        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba4"));
+        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba4", false));
         Assertions.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
         Assertions.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
         Assertions.assertEquals("Prueba4", data.getName());
@@ -296,12 +296,12 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData10","PruebaData11").getId();
-        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba5"));
+        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba5", false));
 
         ThomasRequest requestThomas = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse resultThomas = breakCurvesService.calculateByThomas(requestThomas);
 
-        breakCurvesService.saveBreakCurveData(resultThomas.getDataId(),new BreakCurveDataRequest(processId,"Prueba6"));
+        breakCurvesService.saveBreakCurveData(resultThomas.getDataId(),new BreakCurveDataRequest(processId,"Prueba6", false));
 
         List<BreakCurvesDataResponse> dataResponses = breakCurvesService.getBreakCurvesDataByProcess(processId);
 
@@ -359,6 +359,7 @@ class BreakCurvesServiceTests {
         Optional<BreakCurvesData> data =  breakCurvesDataRepository.findById(result.getDataId());
         if(!data.isPresent()) throw new ComponentNotFoundException();
         data.get().setFree(true);
+        data.get().setBaseline(false);
         data.get().setName("PruebaFree");
         breakCurvesDataRepository.save(data.get());
 

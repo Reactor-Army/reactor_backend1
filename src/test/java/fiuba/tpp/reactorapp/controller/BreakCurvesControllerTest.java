@@ -339,7 +339,7 @@ class BreakCurvesControllerTest {
 
     @Test
     void testJsonErrorSaveData() throws JsonProcessingException {
-        BreakCurveDataRequest request = new BreakCurveDataRequest(1L,"PruebaError");
+        BreakCurveDataRequest request = new BreakCurveDataRequest(1L,"PruebaError", false);
         Mockito.when(breakCurvesService.saveBreakCurveData(1L,request)).thenThrow(JsonProcessingException.class);
         ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesMockController.saveBreakCurveData(1L,request);
@@ -364,7 +364,7 @@ class BreakCurvesControllerTest {
             "1, null"
     }, nullValues = {"null"})
     void testInvalidSaveData(Long id, String nombre) throws JsonProcessingException {
-        BreakCurveDataRequest request = new BreakCurveDataRequest(id,nombre);
+        BreakCurveDataRequest request = new BreakCurveDataRequest(id,nombre, false);
         ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.saveBreakCurveData(1L,request);
         });

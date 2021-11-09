@@ -151,6 +151,7 @@ public class BreakCurvesService {
 
         d.setName(request.getName());
         d.setProcess(process.get());
+        d.setBaseline(request.isBaseline());
         breakCurvesDataRepository.save(d);
         return formatData(d);
     }
