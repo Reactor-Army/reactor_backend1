@@ -18,6 +18,7 @@ import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorQResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
@@ -152,6 +153,37 @@ public class BreakCurvesService {
         d.setProcess(process.get());
         breakCurvesDataRepository.save(d);
         return formatData(d);
+    }
+
+    public ReactorQResponse calculateQValue(Long idCurve, Long idLineBase) throws JsonProcessingException {
+        BreakCurvesDataResponse curve = getBreakCurveData(idCurve);
+        double curveArea = calculateBreakCurveArea(curve);
+
+        BreakCurvesDataResponse baseline = getBreakCurveData(idLineBase);
+        double baseArea = calculateBreakCurveArea(baseline);
+
+        double reactorQ = curveArea - baseArea;
+
+        return new ReactorQResponse(baseline,curve,baseArea,curveArea,reactorQ);
+    }
+
+    private double calculateBreakCurveArea(BreakCurvesDataResponse data){
+        if(data.getModel().getName().equals(EModel.THOMAS.name())){
+            ThomasRequest request = (ThomasRequest) data.getRequest();
+            ThomasResponse response = (ThomasResponse) data.getResponse();
+            return thomasModelService.calculateArea(request,response);
+        }
+        if(data.getModel().getName().equals(EModel.YOON_NELSON.name())){
+            YoonNelsonRequest request = (YoonNelsonRequest) data.getRequest();
+            YoonNelsonResponse response = (YoonNelsonResponse) data.getResponse();
+            return yoonNelsonModelService.calculateArea(request,response);
+        }
+        if(data.getModel().getName().equals(EModel.ADAMS_BOHART.name())){
+            AdamsBohartRequest request = (AdamsBohartRequest) data.getRequest();
+            AdamsBohartResponse response = (AdamsBohartResponse) data.getResponse();
+            return adamsBohartModelService.calculateArea(request,response);
+        }
+        throw new InvalidRequestException();
     }
 
 }

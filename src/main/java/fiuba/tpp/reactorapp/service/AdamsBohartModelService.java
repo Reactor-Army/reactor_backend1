@@ -36,4 +36,11 @@ public class AdamsBohartModelService implements ModelService{
         response.setDataId(breakCurvesDataService.persistBreakCurvesData(request,response, EModel.ADAMS_BOHART));
         return response;
     }
+
+    public double calculateArea(AdamsBohartRequest request, AdamsBohartResponse response){
+        AdamsBohartModel model = new AdamsBohartModel(response.getObservations(),request.getVelocidadLineal(),request.getAlturaLechoReactor(),request.getCaudalVolumetrico(),request.getConcentracionInicial());
+        double result = model.integrate(response.getAdamsBohartConstant(), response.getMaxAbsorptionCapacity(), response.getObservations());
+
+        return mathService.round(result);
+    }
 }

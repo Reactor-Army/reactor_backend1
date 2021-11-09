@@ -37,6 +37,14 @@ public class YoonNelsonModelService implements ModelService {
         return response;
     }
 
+    public double calculateArea(YoonNelsonRequest request, YoonNelsonResponse response){
+        YoonNelsonModel model = new YoonNelsonModel(response.getObservations(),request.getCaudalVolumetrico());
+
+        double result = model.integrate(response.getYoonNelsonConstant(),response.getTimeFiftyPercent(),response.getObservations());
+        return mathService.round(result);
+
+    }
+
 
 
 }

@@ -16,6 +16,11 @@ public interface NumericModel {
 
     int JACOBIAN_COLUMNS = 2;
 
+    /**
+     * Esto siempre debe ser par
+     */
+    double N_INTEGRATION = 1000;
+
     LeastSquareResolver leastSquareResolver = new LeastSquareResolver();
 
 
@@ -69,6 +74,35 @@ public interface NumericModel {
             yMean += ob.getY();
         }
         return (yMean/ observations.size());
+    }
+
+    /**
+    Asumimos que la integracion siempre tiene como limite inferior 0
+     * Se integra con el metodo de simpson
+     * donde dx/3 * (f(x0) + 4f(x1) + 2f(x2) + ... + f(xn)
+     * dx = (b -a) / n
+     *
+     */
+    default double numericIntegration(double limit, double a, double b){
+        //Tamanio de paso
+        double h = (limit) / (N_INTEGRATION);
+
+        // Primer y ultimo termino
+        double sum = (1.0 / 3.0) * (simplifiedFunction(0,a,b)+ simplifiedFunction(limit,a,b));
+
+        // 4/3 terms
+        for (int i = 1; i < N_INTEGRATION - 1; i += 2) {
+            double x = h * i;
+            sum += (4.0 / 3.0) * simplifiedFunction(x,a,b);
+        }
+
+        // 2/3 terms
+        for (int i = 2; i < N_INTEGRATION - 1; i += 2) {
+            double x = h * i;
+            sum += (2.0 / 3.0) * simplifiedFunction(x,a,b);
+        }
+
+        return sum * h;
     }
 
     double simplifiedDerivativeB(double x, double a, double b);
