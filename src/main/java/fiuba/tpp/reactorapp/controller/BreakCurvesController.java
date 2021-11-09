@@ -6,10 +6,12 @@ import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.*;
 import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
+import fiuba.tpp.reactorapp.model.request.ReactorQRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorQResponse;
 import fiuba.tpp.reactorapp.model.response.ResponseMessage;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
@@ -202,11 +204,29 @@ public class BreakCurvesController {
         }
     }
 
+    @PostMapping("/reactor-q")
+    public ReactorQResponse calculateReactorQ(@RequestBody ReactorQRequest request){
+        try{
+            validateReactorQRequest(request);
+            return breakCurvesService.calculateQValue(request.getCurveId(), request.getBaselineId());
+        }catch(InvalidRequestException e){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_BOHART.getMessage(), e);
+        }catch (Exception e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);
+        }
+    }
+
+    private void validateReactorQRequest(ReactorQRequest request){
+        if(request.getCurveId() == null) throw new InvalidRequestException();
+        if(request.getBaselineId() == null) throw new InvalidRequestException();
+    }
+
     private void validateBreakCurvesDataRequest(BreakCurveDataRequest request){
         if(request.getName() == null || request.getName().isEmpty()) throw new InvalidRequestException();
         if(request.getProcessId() == null || request.getProcessId() == 0) throw new InvalidRequestException();
     }
-
 
     private void validateThomasRequest(ThomasRequest request, Errors errors){
         handleErrors(errors);
