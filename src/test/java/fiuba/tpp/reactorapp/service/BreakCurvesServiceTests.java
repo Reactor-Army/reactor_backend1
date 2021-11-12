@@ -13,6 +13,7 @@ import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorQResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
@@ -369,6 +370,60 @@ class BreakCurvesServiceTests {
 
     }
 
+    @Test
+    void testAdamsBohartReactorQ() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
+        AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
+        Long processId = createProcess("pruebaData1Q","PruebaData2Q").getId();
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba1Q", false));
+
+        AdamsBohartResponse resultBase = breakCurvesService.calculateByAdamsBohart(request);
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"Prueba1QBase", true));
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(0D, qResponse.getReactorQ());
+        Assertions.assertEquals(41.86D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(41.86D, qResponse.getBaselineArea(),0.01);
+    }
+
+    @Test
+    void testThomasReactorQ() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        Long processId = createProcess("pruebaData3Q","PruebaData4Q").getId();
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba2Q",false));
+
+        ThomasResponse resultBase = breakCurvesService.calculateByThomas(request);
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"Prueba2QBase",true));
+
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(0D, qResponse.getReactorQ());
+        Assertions.assertEquals(43.14D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(43.14D, qResponse.getBaselineArea(),0.01);
+    }
+
+    @Test
+    void testYoonNelsonReactorQ() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        Long processId = createProcess("pruebaData5Q","PruebaData6Q").getId();
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
+
+        YoonNelsonResponse resultBase = breakCurvesService.calculateByYoonNelson(request);
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", true));
+
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(0D, qResponse.getReactorQ());
+        Assertions.assertEquals(43.14D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(43.14D, qResponse.getBaselineArea(),0.01);
+    }
+
+    
     private Process createProcess(String adsorbateName, String adsorbentName) {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest(adsorbentName, adsorbentName + "Size", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);

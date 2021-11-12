@@ -181,17 +181,17 @@ public class BreakCurvesService {
     }
 
     private double calculateBreakCurveArea(BreakCurvesDataResponse data, double upperLimit){
-        if(data.getModel().getName().equals(EModel.THOMAS.name())){
+        if(data.getModel().getModel().equals(EModel.THOMAS.name())){
             ThomasRequest request = (ThomasRequest) data.getRequest();
             ThomasResponse response = (ThomasResponse) data.getResponse();
             return thomasModelService.calculateArea(request,response, upperLimit);
         }
-        if(data.getModel().getName().equals(EModel.YOON_NELSON.name())){
+        if(data.getModel().getModel().equals(EModel.YOON_NELSON.name())){
             YoonNelsonRequest request = (YoonNelsonRequest) data.getRequest();
             YoonNelsonResponse response = (YoonNelsonResponse) data.getResponse();
             return yoonNelsonModelService.calculateArea(request,response, upperLimit);
         }
-        if(data.getModel().getName().equals(EModel.ADAMS_BOHART.name())){
+        if(data.getModel().getModel().equals(EModel.ADAMS_BOHART.name())){
             AdamsBohartRequest request = (AdamsBohartRequest) data.getRequest();
             AdamsBohartResponse response = (AdamsBohartResponse) data.getResponse();
             return adamsBohartModelService.calculateArea(request,response, upperLimit);
