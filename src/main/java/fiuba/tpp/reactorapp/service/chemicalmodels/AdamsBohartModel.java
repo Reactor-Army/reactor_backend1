@@ -90,11 +90,11 @@ public class AdamsBohartModel {
         return (b * uo) / (kab * z);
     }
 
-    public double integrate(double kab, double no,List<Observation> observations){
-        Observation observation = observations.get(observations.size()-1);
+    public double integrate(double kab, double no,double upperLimit){
         double a = (kab * co) / f;
         double b = (kab * no * z) / uo;
-        return numericModel.numericIntegration(observation.getX(),a,b);
+
+        return numericModel.numericIntegration(upperLimit,a,b);
     }
 
 

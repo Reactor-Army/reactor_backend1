@@ -38,9 +38,9 @@ public class ThomasModelService implements  ModelService{
         return response;
     }
 
-    public double calculateArea(ThomasRequest request,ThomasResponse response){
+    public double calculateArea(ThomasRequest request,ThomasResponse response, double upperLimit){
         ThomasModel model = new ThomasModel(response.getObservations(),request.getSorbenteReactor(),request.getCaudalVolumetrico(),request.getConcentracionInicial());
-        double result = model.integrate(response.getThomasConstant(), response.getMaxConcentration(),response.getObservations());
+        double result = model.integrate(response.getThomasConstant(), response.getMaxConcentration(),upperLimit);
 
         return mathService.round(result);
     }

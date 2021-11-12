@@ -88,13 +88,11 @@ public class ThomasModel {
     }
 
 
-    public double integrate(double kth, double qo, List<Observation> observations){
-
-        Observation observation = observations.get(observations.size()-1);
+    public double integrate(double kth, double qo, double upperLimit){
         double a = (kth * co) / f;
         double b = (kth* qo * w) / f;
 
-        return numericModel.numericIntegration(observation.getX(),a,b);
+        return numericModel.numericIntegration(upperLimit,a,b);
 
 
 

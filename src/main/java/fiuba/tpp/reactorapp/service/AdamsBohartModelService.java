@@ -37,9 +37,9 @@ public class AdamsBohartModelService implements ModelService{
         return response;
     }
 
-    public double calculateArea(AdamsBohartRequest request, AdamsBohartResponse response){
+    public double calculateArea(AdamsBohartRequest request, AdamsBohartResponse response, double upperLimit){
         AdamsBohartModel model = new AdamsBohartModel(response.getObservations(),request.getVelocidadLineal(),request.getAlturaLechoReactor(),request.getCaudalVolumetrico(),request.getConcentracionInicial());
-        double result = model.integrate(response.getAdamsBohartConstant(), response.getMaxAbsorptionCapacity(), response.getObservations());
+        double result = model.integrate(response.getAdamsBohartConstant(), response.getMaxAbsorptionCapacity(), upperLimit);
 
         return mathService.round(result);
     }

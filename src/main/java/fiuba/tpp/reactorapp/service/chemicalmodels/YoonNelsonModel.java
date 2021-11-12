@@ -73,11 +73,10 @@ public class YoonNelsonModel {
         return b / kyn;
     }
 
-    public double integrate(double kyn, double t50, List<Observation> observations){
-        Observation observation = observations.get(observations.size()-1);
+    public double integrate(double kyn, double t50, double upperLimit){
         double a = kyn / f;
         double b = kyn * t50;
 
-        return numericModel.numericIntegration(observation.getX(),a,b);
+        return numericModel.numericIntegration(upperLimit,a,b);
     }
 }

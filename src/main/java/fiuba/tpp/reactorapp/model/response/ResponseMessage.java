@@ -36,6 +36,7 @@ public enum ResponseMessage {
     SAME_USER_ERROR("Un administrador no puede borrarse a si mismo"),
     DATA_NOT_FOUND("Los datos a los que intenta acceder no existen"),
     INVALID_BREAK_CURVE_DATA("Se necesita un nombre y un proceso válido para guardar los datos de la curva de ruptura"),
+    INVALID_REACTOR_Q_REQUEST("Se requiere los ids de la curva y la linea base"),
     INTERNAL_ERROR("Ocurrió un error inesperado");
 
     private final String message;

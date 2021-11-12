@@ -209,9 +209,9 @@ public class BreakCurvesController {
         try{
             validateReactorQRequest(request);
             return breakCurvesService.calculateQValue(request.getCurveId(), request.getBaselineId());
-        }catch(InvalidRequestException e){
+        }catch(InvalidRequestException | ComponentNotFoundException e){
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_BOHART.getMessage(), e);
+                    HttpStatus.BAD_REQUEST, ResponseMessage.INVALID_REACTOR_Q_REQUEST.getMessage(), e);
         }catch (Exception e) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_ERROR.getMessage(), e);

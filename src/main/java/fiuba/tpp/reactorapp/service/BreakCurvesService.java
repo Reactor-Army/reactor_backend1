@@ -12,6 +12,7 @@ import fiuba.tpp.reactorapp.model.dto.BreakCurvesYoonNelsonDTO;
 import fiuba.tpp.reactorapp.model.dto.FileTemplateDTO;
 import fiuba.tpp.reactorapp.model.exception.ComponentNotFoundException;
 import fiuba.tpp.reactorapp.model.exception.InvalidRequestException;
+import fiuba.tpp.reactorapp.model.math.Observation;
 import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
 import fiuba.tpp.reactorapp.model.request.ChemicalObservation;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
@@ -20,6 +21,7 @@ import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
 import fiuba.tpp.reactorapp.model.response.ReactorQResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
+import fiuba.tpp.reactorapp.model.response.chemicalmodels.ModelResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
 import fiuba.tpp.reactorapp.repository.BreakCurvesDataRepository;
@@ -92,6 +94,14 @@ public class BreakCurvesService {
         throw new ComponentNotFoundException();
     }
 
+    public BreakCurvesDataResponse getBreakCurveDataBaseLine(Long id) throws JsonProcessingException {
+        Optional<BreakCurvesData> data = breakCurvesDataRepository.findByIdAndNameNotNullAndBaselineTrue(id);
+        if(data.isPresent()){
+            return formatData(data.get());
+        }
+        throw new ComponentNotFoundException();
+    }
+
     public List<BreakCurvesDataResponse> getBreakCurvesDataByProcess(Long processId) throws JsonProcessingException {
         List<BreakCurvesDataResponse> responses = new ArrayList<>();
         Optional<Process> process = processRepository.findById(processId);
@@ -158,33 +168,44 @@ public class BreakCurvesService {
 
     public ReactorQResponse calculateQValue(Long idCurve, Long idLineBase) throws JsonProcessingException {
         BreakCurvesDataResponse curve = getBreakCurveData(idCurve);
-        double curveArea = calculateBreakCurveArea(curve);
+        BreakCurvesDataResponse baseline = getBreakCurveDataBaseLine(idLineBase);
 
-        BreakCurvesDataResponse baseline = getBreakCurveData(idLineBase);
-        double baseArea = calculateBreakCurveArea(baseline);
+        double upperLimit = getUpperLimit(getLastObservation(curve),getLastObservation(baseline));
+
+        double curveArea = calculateBreakCurveArea(curve, upperLimit);
+        double baseArea = calculateBreakCurveArea(baseline,upperLimit);
 
         double reactorQ = curveArea - baseArea;
 
         return new ReactorQResponse(baseline,curve,baseArea,curveArea,reactorQ);
     }
 
-    private double calculateBreakCurveArea(BreakCurvesDataResponse data){
+    private double calculateBreakCurveArea(BreakCurvesDataResponse data, double upperLimit){
         if(data.getModel().getName().equals(EModel.THOMAS.name())){
             ThomasRequest request = (ThomasRequest) data.getRequest();
             ThomasResponse response = (ThomasResponse) data.getResponse();
-            return thomasModelService.calculateArea(request,response);
+            return thomasModelService.calculateArea(request,response, upperLimit);
         }
         if(data.getModel().getName().equals(EModel.YOON_NELSON.name())){
             YoonNelsonRequest request = (YoonNelsonRequest) data.getRequest();
             YoonNelsonResponse response = (YoonNelsonResponse) data.getResponse();
-            return yoonNelsonModelService.calculateArea(request,response);
+            return yoonNelsonModelService.calculateArea(request,response, upperLimit);
         }
         if(data.getModel().getName().equals(EModel.ADAMS_BOHART.name())){
             AdamsBohartRequest request = (AdamsBohartRequest) data.getRequest();
             AdamsBohartResponse response = (AdamsBohartResponse) data.getResponse();
-            return adamsBohartModelService.calculateArea(request,response);
+            return adamsBohartModelService.calculateArea(request,response, upperLimit);
         }
         throw new InvalidRequestException();
+    }
+
+    private Observation getLastObservation(BreakCurvesDataResponse data){
+        ModelResponse response = (ModelResponse) data.getResponse();
+        return response.getObservations().get(response.getObservations().size()-1);
+    }
+
+    private double getUpperLimit(Observation curve, Observation baseline){
+        return Math.min(curve.getX(), baseline.getX());
     }
 
 }
