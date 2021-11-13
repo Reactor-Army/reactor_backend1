@@ -27,6 +27,9 @@ public class BreakCurvesDataResponse {
     @JsonProperty("fecha")
     private Date uploadDate;
 
+    @JsonProperty("esLineaBase")
+    private boolean isBaseline;
+
 
     public BreakCurvesDataResponse(BreakCurvesData data, Object request, Object response){
         this.id = data.getId();
@@ -38,6 +41,7 @@ public class BreakCurvesDataResponse {
         this.response = response;
         this.uploadDate = data.getUploadDate();
         this.model = new EModelResponse(data.getModel());
+        this.isBaseline = data.getBaseline();
     }
 
     public Long getId() {

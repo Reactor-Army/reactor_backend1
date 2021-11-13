@@ -14,6 +14,8 @@ public interface BreakCurvesDataRepository extends JpaRepository<BreakCurvesData
 
     Optional<BreakCurvesData> findByIdAndNameNotNull(Long id);
 
+    Optional<BreakCurvesData> findByIdAndNameNotNullAndBaselineTrue(Long id);
+
     List<BreakCurvesData> findAllByProcess(Process process);
 
     List<BreakCurvesData> findAllByModelAndFreeTrue(EModel model);

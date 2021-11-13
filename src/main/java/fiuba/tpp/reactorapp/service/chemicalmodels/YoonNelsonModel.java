@@ -72,4 +72,11 @@ public class YoonNelsonModel {
     private double calculateTimeFiftyPercent(double b, double kyn){
         return b / kyn;
     }
+
+    public double integrate(double kyn, double t50, double upperLimit){
+        double a = kyn / f;
+        double b = kyn * t50;
+
+        return numericModel.numericIntegration(upperLimit,a,b);
+    }
 }

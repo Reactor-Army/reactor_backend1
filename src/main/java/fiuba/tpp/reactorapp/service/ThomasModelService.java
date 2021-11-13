@@ -37,4 +37,11 @@ public class ThomasModelService implements  ModelService{
         response.setDataId(breakCurvesDataService.persistBreakCurvesData(request,response, EModel.THOMAS));
         return response;
     }
+
+    public double calculateArea(ThomasRequest request,ThomasResponse response, double upperLimit){
+        ThomasModel model = new ThomasModel(response.getObservations(),request.getSorbenteReactor(),request.getCaudalVolumetrico(),request.getConcentracionInicial());
+        double result = model.integrate(response.getThomasConstant(), response.getMaxConcentration(),upperLimit);
+
+        return mathService.round(result);
+    }
 }

@@ -10,12 +10,17 @@ public class BreakCurveDataRequest {
     @JsonProperty("nombre")
     private String name;
 
+    @JsonProperty("esLineaBase")
+    private boolean isBaseline;
+
+
     public BreakCurveDataRequest() {
     }
 
-    public BreakCurveDataRequest(Long processId, String name) {
+    public BreakCurveDataRequest(Long processId, String name, boolean isBaseline) {
         this.processId = processId;
         this.name = name;
+        this.isBaseline = isBaseline;
     }
 
     public Long getProcessId() {
@@ -32,5 +37,13 @@ public class BreakCurveDataRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isBaseline() {
+        return isBaseline;
+    }
+
+    public void setBaseline(boolean baseline) {
+        isBaseline = baseline;
     }
 }

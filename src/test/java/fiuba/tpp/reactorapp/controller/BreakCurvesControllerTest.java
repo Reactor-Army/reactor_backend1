@@ -3,6 +3,7 @@ package fiuba.tpp.reactorapp.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fiuba.tpp.reactorapp.entities.EModel;
 import fiuba.tpp.reactorapp.model.request.BreakCurveDataRequest;
+import fiuba.tpp.reactorapp.model.request.ReactorQRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
@@ -339,7 +340,7 @@ class BreakCurvesControllerTest {
 
     @Test
     void testJsonErrorSaveData() throws JsonProcessingException {
-        BreakCurveDataRequest request = new BreakCurveDataRequest(1L,"PruebaError");
+        BreakCurveDataRequest request = new BreakCurveDataRequest(1L,"PruebaError", false);
         Mockito.when(breakCurvesService.saveBreakCurveData(1L,request)).thenThrow(JsonProcessingException.class);
         ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesMockController.saveBreakCurveData(1L,request);
@@ -364,7 +365,7 @@ class BreakCurvesControllerTest {
             "1, null"
     }, nullValues = {"null"})
     void testInvalidSaveData(Long id, String nombre) throws JsonProcessingException {
-        BreakCurveDataRequest request = new BreakCurveDataRequest(id,nombre);
+        BreakCurveDataRequest request = new BreakCurveDataRequest(id,nombre, false);
         ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesController.saveBreakCurveData(1L,request);
         });
@@ -447,6 +448,29 @@ class BreakCurvesControllerTest {
         Mockito.when(breakCurvesService.getFreeData(EModel.ADAMS_BOHART)).thenThrow(JsonProcessingException.class);
         ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
             breakCurvesMockController.getFreeAdams();
+        });
+        Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1000,null",
+            "null, 1000"
+    }, nullValues = {"null"})
+    void testInvalidReactorQRequest(Long idCurve, Long idBaseline) throws JsonProcessingException {
+        ReactorQRequest request = new ReactorQRequest(idCurve,idBaseline);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesController.calculateReactorQ(request);
+        });
+        Assert.assertEquals(ResponseMessage.INVALID_REACTOR_Q_REQUEST.getMessage(), e.getReason());
+    }
+
+    @Test
+    void testJsonErrorReactorQ() throws JsonProcessingException {
+        ReactorQRequest request = new ReactorQRequest(1L,1L);
+        Mockito.when(breakCurvesService.calculateQValue(request.getCurveId(),request.getBaselineId())).thenThrow(JsonProcessingException.class);
+        ResponseStatusException e =Assert.assertThrows(ResponseStatusException.class, () ->{
+            breakCurvesMockController.calculateReactorQ(request);
         });
         Assert.assertEquals(ResponseMessage.INTERNAL_ERROR.getMessage(), e.getReason());
     }

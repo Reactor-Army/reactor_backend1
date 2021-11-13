@@ -13,6 +13,7 @@ import fiuba.tpp.reactorapp.model.request.chemicalmodels.AdamsBohartRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.ThomasRequest;
 import fiuba.tpp.reactorapp.model.request.chemicalmodels.YoonNelsonRequest;
 import fiuba.tpp.reactorapp.model.response.BreakCurvesDataResponse;
+import fiuba.tpp.reactorapp.model.response.ReactorQResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.AdamsBohartResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.ThomasResponse;
 import fiuba.tpp.reactorapp.model.response.chemicalmodels.YoonNelsonResponse;
@@ -220,7 +221,7 @@ class BreakCurvesServiceTests {
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
         Long processId = createProcess("pruebaData1","PruebaData2").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba1"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba1", false));
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof AdamsBohartRequest);
         Assert.assertTrue(data.getResponse() instanceof AdamsBohartResponse);
@@ -232,7 +233,7 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Long processId = createProcess("pruebaData3","PruebaData4").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba2"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba2",false));
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof ThomasRequest);
         Assert.assertTrue(data.getResponse() instanceof ThomasResponse);
@@ -244,7 +245,7 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData5","PruebaData6").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
         BreakCurvesDataResponse data = breakCurvesService.getBreakCurveData(result.getDataId());
         Assert.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
         Assert.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
@@ -268,7 +269,7 @@ class BreakCurvesServiceTests {
         ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
         Long processId = createProcess("pruebaData6","PruebaData7").getId();
-        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3"));
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
         breakCurvesService.deleteBreakCurveData(result.getDataId());
         Long id = result.getDataId();
         Assert.assertThrows(ComponentNotFoundException.class, () ->{
@@ -283,7 +284,7 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData8","PruebaData9").getId();
-        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba4"));
+        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba4", false));
         Assertions.assertTrue(data.getRequest() instanceof YoonNelsonRequest);
         Assertions.assertTrue(data.getResponse() instanceof YoonNelsonResponse);
         Assertions.assertEquals("Prueba4", data.getName());
@@ -296,12 +297,12 @@ class BreakCurvesServiceTests {
         YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData10","PruebaData11").getId();
-        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba5"));
+        BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba5", false));
 
         ThomasRequest requestThomas = new ThomasRequest(file,0.9494,8D,20D);
         ThomasResponse resultThomas = breakCurvesService.calculateByThomas(requestThomas);
 
-        breakCurvesService.saveBreakCurveData(resultThomas.getDataId(),new BreakCurveDataRequest(processId,"Prueba6"));
+        breakCurvesService.saveBreakCurveData(resultThomas.getDataId(),new BreakCurveDataRequest(processId,"Prueba6", false));
 
         List<BreakCurvesDataResponse> dataResponses = breakCurvesService.getBreakCurvesDataByProcess(processId);
 
@@ -359,6 +360,7 @@ class BreakCurvesServiceTests {
         Optional<BreakCurvesData> data =  breakCurvesDataRepository.findById(result.getDataId());
         if(!data.isPresent()) throw new ComponentNotFoundException();
         data.get().setFree(true);
+        data.get().setBaseline(false);
         data.get().setName("PruebaFree");
         breakCurvesDataRepository.save(data.get());
 
@@ -368,6 +370,60 @@ class BreakCurvesServiceTests {
 
     }
 
+    @Test
+    void testAdamsBohartReactorQ() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        AdamsBohartRequest request = new AdamsBohartRequest(file,0.95041,8D,0.24,5D);
+        AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
+        Long processId = createProcess("pruebaData1Q","PruebaData2Q").getId();
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba1Q", false));
+
+        AdamsBohartResponse resultBase = breakCurvesService.calculateByAdamsBohart(request);
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"Prueba1QBase", true));
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(0D, qResponse.getReactorQ());
+        Assertions.assertEquals(41.86D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(41.86D, qResponse.getBaselineArea(),0.01);
+    }
+
+    @Test
+    void testThomasReactorQ() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        ThomasRequest request = new ThomasRequest(file,0.9494,8D,20D);
+        ThomasResponse result = breakCurvesService.calculateByThomas(request);
+        Long processId = createProcess("pruebaData3Q","PruebaData4Q").getId();
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba2Q",false));
+
+        ThomasResponse resultBase = breakCurvesService.calculateByThomas(request);
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"Prueba2QBase",true));
+
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(0D, qResponse.getReactorQ());
+        Assertions.assertEquals(43.14D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(43.14D, qResponse.getBaselineArea(),0.01);
+    }
+
+    @Test
+    void testYoonNelsonReactorQ() throws JsonProcessingException {
+        MockMultipartFile file = dataFromJuancho();
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
+        Long processId = createProcess("pruebaData5Q","PruebaData6Q").getId();
+        breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
+
+        YoonNelsonResponse resultBase = breakCurvesService.calculateByYoonNelson(request);
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", true));
+
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(0D, qResponse.getReactorQ());
+        Assertions.assertEquals(43.14D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(43.14D, qResponse.getBaselineArea(),0.01);
+    }
+
+    
     private Process createProcess(String adsorbateName, String adsorbentName) {
         AdsorbentRequest requestAdsorbent = new AdsorbentRequest(adsorbentName, adsorbentName + "Size", 1f, 1f,1f);
         Adsorbent adsorbent = adsorbentService.createAdsorbent(requestAdsorbent);
