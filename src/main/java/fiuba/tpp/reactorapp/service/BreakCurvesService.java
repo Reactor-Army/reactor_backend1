@@ -181,22 +181,34 @@ public class BreakCurvesService {
     }
 
     private double calculateBreakCurveArea(BreakCurvesDataResponse data, double upperLimit){
-        if(data.getModel().getModel().equals(EModel.THOMAS.name())){
-            ThomasRequest request = (ThomasRequest) data.getRequest();
-            ThomasResponse response = (ThomasResponse) data.getResponse();
-            return thomasModelService.calculateArea(request,response, upperLimit);
+        ModelResponse response = (ModelResponse) data.getResponse();
+        List<Observation> inverses = invertObservations(response.getObservations());
+        return integrateOrigins(inverses,upperLimit);
+    }
+
+    private double integrateOrigins(List<Observation> obs, double upperLimit){
+        double sum = 0D;
+        for (int i = 0; i< obs.size(); i++) {
+            if(obs.get(i).getX() < upperLimit){
+                Observation x1 = obs.get(i+1);
+                Observation x0 = obs.get(i);
+                sum += (x1.getX() - x0.getX()) * (0.5) * (x1.getY() + x0.getY());
+            }
         }
-        if(data.getModel().getModel().equals(EModel.YOON_NELSON.name())){
-            YoonNelsonRequest request = (YoonNelsonRequest) data.getRequest();
-            YoonNelsonResponse response = (YoonNelsonResponse) data.getResponse();
-            return yoonNelsonModelService.calculateArea(request,response, upperLimit);
+        return sum;
+
+    }
+
+    private List<Observation> invertObservations(List<Observation> obs){
+        List<Observation> inverses = new ArrayList<>();
+        for (Observation  ob: obs) {
+            Observation inv = new Observation();
+            inv.setX(ob.getX());
+            double invY = 1 - ob.getY();
+            inv.setY(Math.abs(invY));
+            inverses.add(inv);
         }
-        if(data.getModel().getModel().equals(EModel.ADAMS_BOHART.name())){
-            AdamsBohartRequest request = (AdamsBohartRequest) data.getRequest();
-            AdamsBohartResponse response = (AdamsBohartResponse) data.getResponse();
-            return adamsBohartModelService.calculateArea(request,response, upperLimit);
-        }
-        throw new InvalidRequestException();
+        return inverses;
     }
 
     private Observation getLastObservation(BreakCurvesDataResponse data){

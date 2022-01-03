@@ -115,7 +115,7 @@ class BreakCurvesServiceTests {
         MultipartFile file = new MockMultipartFile("filename", "thomas.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/thomas.xlsx").getInputStream());
         ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(2.38, result.getThomasConstant(),0.1);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
 
     }
@@ -125,7 +125,7 @@ class BreakCurvesServiceTests {
         MultipartFile file = new MockMultipartFile("filename", "thomas.xls", "application/vnd.ms-excel", new ClassPathResource("testFiles/thomas.xls").getInputStream());
         ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(2.38, result.getThomasConstant(),0.01);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
 
     }
@@ -135,7 +135,7 @@ class BreakCurvesServiceTests {
         MockMultipartFile file = dataFromTesisThomas();
         ThomasRequest request = new ThomasRequest(file,0.5,42.1,4.612);
         ThomasResponse result = breakCurvesService.calculateByThomas(request);
-        Assertions.assertEquals(2.37, result.getThomasConstant(),0.01);
+        Assertions.assertEquals(2.38, result.getThomasConstant(),0.1);
         Assertions.assertEquals(0.62, result.getMaxConcentration(),0.01);
         Assertions.assertEquals(0.99, result.getRms(),0.01);
         Assertions.assertNotNull(result.getDataId());
@@ -159,7 +159,7 @@ class BreakCurvesServiceTests {
         MockMultipartFile file = dataFromTesisAdams();
         AdamsBohartRequest request = new AdamsBohartRequest(file,0.5,42.1,0.4723,15.0);
         AdamsBohartResponse result = breakCurvesService.calculateByAdamsBohart(request);
-        Assertions.assertEquals(1.61, result.getAdamsBohartConstant(),0.01);
+        Assertions.assertEquals(1.63, result.getAdamsBohartConstant(),0.01);
         Assertions.assertEquals(0.195, result.getMaxAbsorptionCapacity(),0.01);
         Assertions.assertEquals(0.97, result.getRms(),0.01);
         Assertions.assertNotNull(result.getDataId());
@@ -383,8 +383,8 @@ class BreakCurvesServiceTests {
         ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
 
         Assertions.assertEquals(0D, qResponse.getReactorQ());
-        Assertions.assertEquals(41.86D, qResponse.getCurveArea(), 0.01);
-        Assertions.assertEquals(41.86D, qResponse.getBaselineArea(),0.01);
+        Assertions.assertEquals(41.76D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(41.76D, qResponse.getBaselineArea(),0.01);
     }
 
     @Test
@@ -401,8 +401,8 @@ class BreakCurvesServiceTests {
         ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
 
         Assertions.assertEquals(0D, qResponse.getReactorQ());
-        Assertions.assertEquals(43.14D, qResponse.getCurveArea(), 0.01);
-        Assertions.assertEquals(43.14D, qResponse.getBaselineArea(),0.01);
+        Assertions.assertEquals(41.73D, qResponse.getCurveArea(), 0.1);
+        Assertions.assertEquals(41.73D, qResponse.getBaselineArea(),0.1);
     }
 
     @Test
@@ -419,8 +419,8 @@ class BreakCurvesServiceTests {
         ReactorQResponse qResponse = breakCurvesService.calculateQValue(result.getDataId(), resultBase.getDataId());
 
         Assertions.assertEquals(0D, qResponse.getReactorQ());
-        Assertions.assertEquals(43.14D, qResponse.getCurveArea(), 0.01);
-        Assertions.assertEquals(43.14D, qResponse.getBaselineArea(),0.01);
+        Assertions.assertEquals(41.76D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(41.76D, qResponse.getBaselineArea(),0.01);
     }
 
     
@@ -446,16 +446,16 @@ class BreakCurvesServiceTests {
         breakCurvesService.saveBreakCurveData(resultCurve.getDataId(),new BreakCurveDataRequest(processId,"PruebaCurveAndrea",false));
 
         MultipartFile fileBase = new MockMultipartFile("filename", "FluidoAndrea.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/FluidoAndrea.xlsx").getInputStream());
-        ThomasRequest requestBase = new ThomasRequest(fileBase,0.5,0.048,1D);
+        ThomasRequest requestBase = new ThomasRequest(fileBase,0.5,42.1,4.612);
         ThomasResponse resultBase = breakCurvesService.calculateByThomas(requestBase);
 
         breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"PruebaAndreaBase",true));
 
         ReactorQResponse qResponse = breakCurvesService.calculateQValue(resultCurve.getDataId(), resultBase.getDataId());
 
-        //Assertions.assertEquals(32.79D, qResponse.getReactorQ());
-        Assertions.assertEquals(51.68D, qResponse.getCurveArea(), 0.01);
-        //Assertions.assertEquals(14.47D, qResponse.getBaselineArea(),0.01);
+        Assertions.assertEquals(31.19D, qResponse.getReactorQ(), 0.01);
+        Assertions.assertEquals(45.66D, qResponse.getCurveArea(), 0.01);
+        Assertions.assertEquals(14.47D, qResponse.getBaselineArea(),0.01);
     }
 
     private MockMultipartFile dataFromTesisThomas(){
