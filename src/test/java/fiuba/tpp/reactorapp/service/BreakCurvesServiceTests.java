@@ -437,7 +437,26 @@ class BreakCurvesServiceTests {
         return processService.createProcess(request);
     }
 
+    @Test
+    void testAndreaReactorQ() throws IOException {
+        MultipartFile fileCurve = new MockMultipartFile("filename", "AzollaAndrea.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/AzollaAndrea.xlsx").getInputStream());
+        ThomasRequest requestCurve = new ThomasRequest(fileCurve,0.5,42.1,4.612);
+        ThomasResponse resultCurve = breakCurvesService.calculateByThomas(requestCurve);
+        Long processId = createProcess("pruebaDataAndrea1","PruebaDataAndrea2").getId();
+        breakCurvesService.saveBreakCurveData(resultCurve.getDataId(),new BreakCurveDataRequest(processId,"PruebaCurveAndrea",false));
 
+        MultipartFile fileBase = new MockMultipartFile("filename", "FluidoAndrea.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/FluidoAndrea.xlsx").getInputStream());
+        ThomasRequest requestBase = new ThomasRequest(fileBase,0.5,0.048,1D);
+        ThomasResponse resultBase = breakCurvesService.calculateByThomas(requestBase);
+
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"PruebaAndreaBase",true));
+
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(resultCurve.getDataId(), resultBase.getDataId());
+
+        //Assertions.assertEquals(32.79D, qResponse.getReactorQ());
+        Assertions.assertEquals(51.68D, qResponse.getCurveArea(), 0.01);
+        //Assertions.assertEquals(14.47D, qResponse.getBaselineArea(),0.01);
+    }
 
     private MockMultipartFile dataFromTesisThomas(){
         return new MockMultipartFile("thomas","thomas.csv",MediaType.TEXT_PLAIN_VALUE,tesisData().getBytes());
