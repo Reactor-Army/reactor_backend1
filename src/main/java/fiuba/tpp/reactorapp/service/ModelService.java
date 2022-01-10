@@ -19,7 +19,7 @@ public interface ModelService {
                 obs.setY(chemical.getRelacionConcentraciones());
                 observations.add(obs);
             }
-            if(chemical.getRelacionConcentraciones() == 0){
+            if(chemical.getRelacionConcentraciones() <= 0){
                 Observation obs = new Observation();
                 obs.setX(chemical.getVolumenEfluente());
                 obs.setY(MIN_CONCENTRATION);
