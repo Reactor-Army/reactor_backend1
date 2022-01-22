@@ -145,7 +145,7 @@ class BreakCurvesServiceTests {
     @Test
     void testYoonNelsonWithDataFromTesis() throws JsonProcessingException {
         MockMultipartFile file = dataFromTesisThomas();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.0005);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.0005, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Assertions.assertEquals(0.1, result.getYoonNelsonConstant(),0.01);
         Assertions.assertEquals(136.314, result.getTimeFiftyPercent(),0.01);
@@ -179,7 +179,7 @@ class BreakCurvesServiceTests {
     @Test
     void testYoonNelsonWithJuancho() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Assertions.assertEquals(0.1564, result.getYoonNelsonConstant(),0.0001);
         Assertions.assertEquals(44.033, result.getTimeFiftyPercent(),0.001);
@@ -242,7 +242,7 @@ class BreakCurvesServiceTests {
     @Test
     void testYoonNelsonGetData() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData5","PruebaData6").getId();
         breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
@@ -281,7 +281,7 @@ class BreakCurvesServiceTests {
     @Test
     void testSaveData() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData8","PruebaData9").getId();
         BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba4", false));
@@ -294,7 +294,7 @@ class BreakCurvesServiceTests {
     @Test
     void testGetDataByProcess() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData10","PruebaData11").getId();
         BreakCurvesDataResponse data = breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba5", false));
@@ -355,7 +355,7 @@ class BreakCurvesServiceTests {
     @Test
     void testGetFreeData() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Optional<BreakCurvesData> data =  breakCurvesDataRepository.findById(result.getDataId());
         if(!data.isPresent()) throw new ComponentNotFoundException();
@@ -408,7 +408,7 @@ class BreakCurvesServiceTests {
     @Test
     void testYoonNelsonReactorQ() throws JsonProcessingException {
         MockMultipartFile file = dataFromJuancho();
-        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,0.941, 10D);
         YoonNelsonResponse result = breakCurvesService.calculateByYoonNelson(request);
         Long processId = createProcess("pruebaData5Q","PruebaData6Q").getId();
         breakCurvesService.saveBreakCurveData(result.getDataId(),new BreakCurveDataRequest(processId,"Prueba3", false));
@@ -457,6 +457,26 @@ class BreakCurvesServiceTests {
         Assertions.assertEquals(45.66D, qResponse.getCurveArea(), 0.01);
         Assertions.assertEquals(14.47D, qResponse.getBaselineArea(),0.01);
     }
+
+    @Test
+    void testAndreaReactorAdsorbentContaminant() throws IOException {
+        MultipartFile fileCurve = new MockMultipartFile("filename", "AzollaAndrea.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/AzollaAndrea.xlsx").getInputStream());
+        ThomasRequest requestCurve = new ThomasRequest(fileCurve,0.5,42.1,4.612);
+        ThomasResponse resultCurve = breakCurvesService.calculateByThomas(requestCurve);
+        Long processId = createProcess("pruebaDataAndrea1","PruebaDataAndrea2").getId();
+        breakCurvesService.saveBreakCurveData(resultCurve.getDataId(),new BreakCurveDataRequest(processId,"PruebaCurveAndrea",false));
+
+        MultipartFile fileBase = new MockMultipartFile("filename", "FluidoAndrea.xlsx", "application/vnd.ms-excel", new ClassPathResource("testFiles/FluidoAndrea.xlsx").getInputStream());
+        ThomasRequest requestBase = new ThomasRequest(fileBase,0.5,42.1,4.612);
+        ThomasResponse resultBase = breakCurvesService.calculateByThomas(requestBase);
+
+        breakCurvesService.saveBreakCurveData(resultBase.getDataId(),new BreakCurveDataRequest(processId,"PruebaAndreaBase",true));
+
+        ReactorQResponse qResponse = breakCurvesService.calculateQValue(resultCurve.getDataId(), resultBase.getDataId());
+
+        Assertions.assertEquals(1313.30D, qResponse.getAdsorbedContaminant(), 0.01);
+    }
+
 
     private MockMultipartFile dataFromTesisThomas(){
         return new MockMultipartFile("thomas","thomas.csv",MediaType.TEXT_PLAIN_VALUE,tesisData().getBytes());

@@ -19,12 +19,16 @@ public class ReactorQResponse {
     @JsonProperty("reactorQ")
     private double reactorQ;
 
-    public ReactorQResponse(BreakCurvesDataResponse baseline, BreakCurvesDataResponse curve, double baselineArea, double curveArea, double reactorQ) {
+    @JsonProperty("contaminanteAdsorbido")
+    private double adsorbedContaminant;
+
+    public ReactorQResponse(BreakCurvesDataResponse baseline, BreakCurvesDataResponse curve, double baselineArea, double curveArea, double reactorQ, double adsorbedContaminant) {
         this.baseline = baseline;
         this.curve = curve;
         this.baselineArea = baselineArea;
         this.curveArea = curveArea;
         this.reactorQ = reactorQ;
+        this.adsorbedContaminant = adsorbedContaminant;
     }
 
     public BreakCurvesDataResponse getBaseline() {
@@ -65,5 +69,13 @@ public class ReactorQResponse {
 
     public void setReactorQ(double reactorQ) {
         this.reactorQ = reactorQ;
+    }
+
+    public double getAdsorbedContaminant() {
+        return adsorbedContaminant;
+    }
+
+    public void setAdsorbedContaminant(double adsorbedContaminant) {
+        this.adsorbedContaminant = adsorbedContaminant;
     }
 }

@@ -266,7 +266,7 @@ class BreakCurvesControllerTest {
                 ("volumenEfluente,C/C0\n" + "1,2\n" +"2,4\n").getBytes()
         );
 
-        YoonNelsonRequest request = new YoonNelsonRequest(file,caudal);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,caudal, 10D);
 
         Errors errors = new BeanPropertyBindingResult(request, "request");
 
@@ -327,7 +327,7 @@ class BreakCurvesControllerTest {
                 MediaType.TEXT_PLAIN_VALUE,
                 "blabla".getBytes()
         );
-        YoonNelsonRequest request = new YoonNelsonRequest(file,1.0);
+        YoonNelsonRequest request = new YoonNelsonRequest(file,1.0, 10D);
 
         Errors errors = new BeanPropertyBindingResult(request, "request");
         Mockito.when(breakCurvesService.calculateByYoonNelson(request)).thenThrow(JsonProcessingException.class);
