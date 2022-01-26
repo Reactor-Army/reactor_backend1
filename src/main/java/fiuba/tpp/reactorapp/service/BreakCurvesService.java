@@ -60,6 +60,9 @@ public class BreakCurvesService {
     @Autowired
     private ProcessRepository processRepository;
 
+    @Autowired
+    private MathService mathService;
+
     public ThomasResponse calculateByThomas(ThomasRequest request) throws JsonProcessingException {
         List<ChemicalObservation> chemicalObservations = csvParserService.parse(request.getObservaciones());
 
@@ -117,13 +120,13 @@ public class BreakCurvesService {
         switch (data.getModel()){
             case THOMAS:
                 BreakCurvesThomasDTO dtoThomas = mapper.readValue(data.getData(), BreakCurvesThomasDTO.class);
-                return new BreakCurvesDataResponse(data,dtoThomas.getRequest(), dtoThomas.getResponse());
+                return new BreakCurvesDataResponse(data,dtoThomas.getRequest(), dtoThomas.getResponse(), dtoThomas.getRequest().getConcentracionInicial());
             case YOON_NELSON:
                 BreakCurvesYoonNelsonDTO dtoYoon = mapper.readValue(data.getData(),BreakCurvesYoonNelsonDTO.class);
-                return new BreakCurvesDataResponse(data,dtoYoon.getRequest(),dtoYoon.getResponse());
+                return new BreakCurvesDataResponse(data,dtoYoon.getRequest(),dtoYoon.getResponse(), dtoYoon.getRequest().getConcentracionInicial());
             case ADAMS_BOHART:
                 BreakCurvesAdamsDTO dtoAdams = mapper.readValue(data.getData(),BreakCurvesAdamsDTO.class);
-                return new BreakCurvesDataResponse(data,dtoAdams.getRequest(),dtoAdams.getResponse());
+                return new BreakCurvesDataResponse(data,dtoAdams.getRequest(),dtoAdams.getResponse(), dtoAdams.getRequest().getConcentracionInicial());
             default:
                 throw new ComponentNotFoundException();
         }
@@ -177,13 +180,15 @@ public class BreakCurvesService {
 
         double reactorQ = curveArea - baseArea;
 
-        return new ReactorQResponse(baseline,curve,baseArea,curveArea,reactorQ);
+        double adsorbedContaminant = mathService.round(reactorQ * curve.getCo());
+
+        return new ReactorQResponse(baseline,curve,baseArea,curveArea,reactorQ, adsorbedContaminant);
     }
 
     private double calculateBreakCurveArea(BreakCurvesDataResponse data, double upperLimit){
         ModelResponse response = (ModelResponse) data.getResponse();
         List<Observation> inverses = invertObservations(response.getObservations());
-        return integrateOrigins(inverses,upperLimit);
+        return mathService.round(integrateOrigins(inverses,upperLimit));
     }
 
     private double integrateOrigins(List<Observation> obs, double upperLimit){

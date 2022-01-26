@@ -1,5 +1,6 @@
 package fiuba.tpp.reactorapp.model.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fiuba.tpp.reactorapp.entities.BreakCurvesData;
@@ -30,8 +31,11 @@ public class BreakCurvesDataResponse {
     @JsonProperty("esLineaBase")
     private boolean isBaseline;
 
+    @JsonIgnore
+    private double co;
 
-    public BreakCurvesDataResponse(BreakCurvesData data, Object request, Object response){
+
+    public BreakCurvesDataResponse(BreakCurvesData data, Object request, Object response, double co){
         this.id = data.getId();
         this.name = data.getName();
         if(data.getProcess() != null){
@@ -42,6 +46,7 @@ public class BreakCurvesDataResponse {
         this.uploadDate = data.getUploadDate();
         this.model = new EModelResponse(data.getModel());
         this.isBaseline = data.getBaseline();
+        this.co = co;
     }
 
     public Long getId() {
@@ -100,5 +105,13 @@ public class BreakCurvesDataResponse {
 
     public void setModel(EModelResponse model) {
         this.model = model;
+    }
+
+    public double getCo() {
+        return co;
+    }
+
+    public void setCo(double co) {
+        this.co = co;
     }
 }

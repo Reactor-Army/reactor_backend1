@@ -11,12 +11,16 @@ public class YoonNelsonRequest {
     //F
     private Double caudalVolumetrico;
 
+    //Co
+    private Double concentracionInicial;
+
     public YoonNelsonRequest() {
     }
 
-    public YoonNelsonRequest(MultipartFile observaciones, Double caudalVolumetrico) {
+    public YoonNelsonRequest(MultipartFile observaciones, Double caudalVolumetrico, Double concentracionInicial) {
         this.observaciones = observaciones;
         this.caudalVolumetrico = caudalVolumetrico;
+        this.concentracionInicial = concentracionInicial;
     }
 
     public MultipartFile getObservaciones() {
@@ -34,4 +38,13 @@ public class YoonNelsonRequest {
     public void setCaudalVolumetrico(Double caudalVolumetrico) {
         this.caudalVolumetrico = caudalVolumetrico;
     }
+
+    public Double getConcentracionInicial() {
+        return concentracionInicial;
+    }
+
+    public void setConcentracionInicial(Double concentracionInicial) {
+        this.concentracionInicial = concentracionInicial;
+    }
 }
+
